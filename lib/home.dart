@@ -28,9 +28,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Center(
         child: _controller.value.initialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+            ? Container(
+              width: MediaQuery.of(context).size.width        ,
+              child: VideoPlayer(_controller),
               )
             : Container(),
       ),
