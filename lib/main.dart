@@ -1,3 +1,4 @@
+import 'package:ffmpegtest/changer.dart';
 import 'package:ffmpegtest/home.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(),
+      home: Changer(),
     );
   }
 }
