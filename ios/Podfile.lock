@@ -1,0 +1,41 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_ffmpeg/full-gpl (0.3.0):
+    - Flutter
+    - mobile-ffmpeg-full-gpl (= 4.4)
+  - mobile-ffmpeg-full-gpl (4.4)
+  - path_provider (0.0.1):
+    - Flutter
+  - video_player (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_ffmpeg/full-gpl (from `.symlinks/plugins/flutter_ffmpeg/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
+
+SPEC REPOS:
+  trunk:
+    - mobile-ffmpeg-full-gpl
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_ffmpeg:
+    :path: ".symlinks/plugins/flutter_ffmpeg/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_ffmpeg: 657ce8a1502c3d25bf34efc58b380b248836f772
+  mobile-ffmpeg-full-gpl: 77de728206f08f30c70f530b18abb4e8f6413eb6
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
+
+PODFILE CHECKSUM: ff7e5e35cbb280ca6435127a6cbaf6ce953e5444
+
+COCOAPODS: 1.10.0

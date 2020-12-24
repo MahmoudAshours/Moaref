@@ -11,11 +11,13 @@ class Changer extends StatelessWidget {
           Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Home(_controller.text)));
         },
       ),
-      body: Container(
-        width: 200,
-        child: TextField(
-          controller: _controller,
-          decoration: InputDecoration(hintText: 'Type here. . .'),
+      body: Center(
+        child: Container(
+          width: 200,
+          child: TextField(
+            controller: _controller,
+            decoration: InputDecoration(hintText: 'Type here. . .'),
+          ),
         ),
       ),
     );

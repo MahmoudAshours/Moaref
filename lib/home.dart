@@ -53,11 +53,11 @@ class _HomeState extends State<Home> {
 
   Future _createFile(String text) async {
     try {
-      var appDir = (await getTemporaryDirectory()).path;
+      var appDir = (await getApplicationDocumentsDirectory()).path;
       Directory(appDir).delete(recursive: true);
       final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
       final FlutterFFmpegConfig _config = FlutterFFmpegConfig();
-      Directory directory = await getTemporaryDirectory();
+      Directory directory = await getApplicationDocumentsDirectory();
 
       var dbPath = join(directory.path, "input.mp4");
       ByteData data = await rootBundle.load("assets/input.mp4");
@@ -95,8 +95,9 @@ class _HomeState extends State<Home> {
                       ..initialize().then((_) {
                         setState(() {
                           _loading = false;
+                        
                         });
-                      }),
+                      })..play(),
               ));
     } catch (e) {
       print(e);
