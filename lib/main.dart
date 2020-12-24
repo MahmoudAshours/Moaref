@@ -1,5 +1,5 @@
-import 'package:ffmpegtest/changer.dart';
-import 'package:ffmpegtest/home.dart';
+import 'package:ffmpegtest/home_screen.dart';
+import 'package:flutter/Cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,13 +10,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Changer(),
+      title: 'كن معرفا برسول الله ',
+      home: HomeScreen(),
     );
   }
 }
-

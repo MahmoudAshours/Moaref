@@ -30,9 +30,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Center(
         child: _loading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? Center(child: CircularProgressIndicator())
             : Container(
                 width: MediaQuery.of(context).size.width,
                 child: VideoPlayer(_controller),
@@ -95,9 +93,9 @@ class _HomeState extends State<Home> {
                       ..initialize().then((_) {
                         setState(() {
                           _loading = false;
-                        
                         });
-                      })..play(),
+                      })
+                      ..play(),
               ));
     } catch (e) {
       print(e);
