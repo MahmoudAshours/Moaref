@@ -18,9 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     assetToFile(assetPath: 'assets/Videos/bg_video_mobile_1.mp4')
         .then((v) => _controller = VideoPlayerController.file(File(v))
-          ..initialize().then((_) {
-            setState(() {});
-          })
+          ..initialize()
           ..play());
 
     super.initState();
@@ -80,27 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
-                        child: currindex == 0
-                            ? ListView.builder(
-                                controller: scrollController,
-                                itemCount: 25,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    title: Text('Item $index'),
-                                    trailing: Icon(Icons.ac_unit),
-                                  );
-                                },
-                              )
-                            : ListView.builder(
-                                controller: scrollController,
-                                itemCount: 25,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    title: Text('Itemss'),
-                                    trailing: Icon(Icons.ac_unit),
-                                  );
-                                },
-                              ),
+                        child: _itemsBody(),
                       )
                     ],
                   ),
@@ -111,6 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  _itemsBody() {
+    return ListView();
   }
 
   SingleChildScrollView _bottomNavigationItemBuilder(

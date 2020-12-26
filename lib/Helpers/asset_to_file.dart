@@ -7,10 +7,10 @@ import 'package:path_provider/path_provider.dart';
 assetToFile({String assetPath}) async {
   Directory directory = await getApplicationDocumentsDirectory();
 
-  var soundPath = join(directory.path, assetPath.split('/')[2]);
-  ByteData soundData = await rootBundle.load(assetPath);
-  List<int> soundBytes = soundData.buffer
-      .asUint8List(soundData.offsetInBytes, soundData.lengthInBytes);
-  var file = await File(soundPath).writeAsBytes(soundBytes);
+  var path = join(directory.path, assetPath.split('/')[2]);
+  ByteData data = await rootBundle.load(assetPath);
+  List<int> bytes = data.buffer
+      .asUint8List(data.offsetInBytes, data.lengthInBytes);
+  var file = await File(path).writeAsBytes(bytes);
   return file.path;
 }
