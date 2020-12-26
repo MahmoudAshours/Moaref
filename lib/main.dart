@@ -1,5 +1,4 @@
-import 'package:ffmpegtest/home_screen.dart';
-import 'package:flutter/Cupertino.dart';
+import 'package:ffmpegtest/Screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

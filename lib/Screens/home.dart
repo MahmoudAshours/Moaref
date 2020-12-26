@@ -43,8 +43,7 @@ class _HomeState extends State<Home> {
         child: _loading
             ? SizedBox()
             : Icon(
-                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              ),
+                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
       ),
     );
   }

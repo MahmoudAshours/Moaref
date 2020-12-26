@@ -27,6 +27,7 @@ dependencies:
   path: ^1.7.0
   video_player: ^1.0.0
   flutter_ffmpeg: ^0.3.0
+  expandable_bottom_bar: ^1.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
