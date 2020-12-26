@@ -1,5 +1,8 @@
-import 'package:ffmpegtest/Themes/theme.dart';
+import 'dart:io';
+
+import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,83 +12,108 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   double height = 60;
   var currindex = 0;
+  VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    assetToFile(assetPath: 'assets/Videos/bg_video_mobile_1.mp4')
+        .then((v) => _controller = VideoPlayerController.file(File(v))
+          ..initialize().then((_) {
+            setState(() {});
+          })
+          ..play());
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red,
-      body: DraggableScrollableSheet(
-        minChildSize: 0.11,
-        maxChildSize: 0.5,
-        initialChildSize: 0.11,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Container(
-            color: Colors.white,
-            child: Wrap(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  textDirection: TextDirection.rtl,
-                  children: [
-                    _bottomNavigationItemBuilder(
-                        activeAssetPath: 'assets/maedit.png',
-                        nonActiveAssetPath: 'assets/mdedit.png',
-                        controller: scrollController,
-                        label: 'التصنيف',
-                        index: 0),
-                    _bottomNavigationItemBuilder(
-                        activeAssetPath: 'assets/mamic.png',
-                        nonActiveAssetPath: 'assets/mdmic.png',
-                        controller: scrollController,
-                        label: 'تسجيل',
-                        index: 1),
-                    _bottomNavigationItemBuilder(
-                        activeAssetPath: 'assets/mabrush.png',
-                        nonActiveAssetPath: 'assets/mdbrush.png',
-                        controller: scrollController,
-                        label: 'ملف صوتي',
-                        index: 2),
-                    _bottomNavigationItemBuilder(
-                        activeAssetPath: 'assets/maphoto.png',
-                        nonActiveAssetPath: 'assets/mdphoto.png',
-                        controller: scrollController,
-                        label: 'المكتبة',
-                        index: 3),
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: currindex == 0
-                      ? ListView.builder(
-                          controller: scrollController,
-                          itemCount: 25,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ListTile(
-                              title: Text('Item $index'),
-                              trailing: Icon(Icons.ac_unit),
-                            );
-                          },
-                        )
-                      : ListView.builder(
-                          controller: scrollController,
-                          itemCount: 25,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ListTile(
-                              title: Text('Itemss'),
-                              trailing: Icon(Icons.ac_unit),
-                            );
-                          },
-                        ),
-                )
-              ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: VideoPlayer(_controller),
             ),
-          );
-        },
+            DraggableScrollableSheet(
+              minChildSize: 0.11,
+              maxChildSize: 0.5,
+              initialChildSize: 0.11,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return Container(
+                  color: Colors.white,
+                  child: Wrap(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        textDirection: TextDirection.rtl,
+                        children: [
+                          _bottomNavigationItemBuilder(
+                              activeAssetPath: 'assets/maedit.png',
+                              nonActiveAssetPath: 'assets/mdedit.png',
+                              controller: scrollController,
+                              label: 'التصنيف',
+                              index: 0),
+                          _bottomNavigationItemBuilder(
+                              activeAssetPath: 'assets/mamic.png',
+                              nonActiveAssetPath: 'assets/mdmic.png',
+                              controller: scrollController,
+                              label: 'تسجيل',
+                              index: 1),
+                          _bottomNavigationItemBuilder(
+                              activeAssetPath: 'assets/mabrush.png',
+                              nonActiveAssetPath: 'assets/mdbrush.png',
+                              controller: scrollController,
+                              label: 'ملف صوتي',
+                              index: 2),
+                          _bottomNavigationItemBuilder(
+                              activeAssetPath: 'assets/maphoto.png',
+                              nonActiveAssetPath: 'assets/mdphoto.png',
+                              controller: scrollController,
+                              label: 'المكتبة',
+                              index: 3),
+                        ],
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: currindex == 0
+                            ? ListView.builder(
+                                controller: scrollController,
+                                itemCount: 25,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ListTile(
+                                    title: Text('Item $index'),
+                                    trailing: Icon(Icons.ac_unit),
+                                  );
+                                },
+                              )
+                            : ListView.builder(
+                                controller: scrollController,
+                                itemCount: 25,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ListTile(
+                                    title: Text('Itemss'),
+                                    trailing: Icon(Icons.ac_unit),
+                                  );
+                                },
+                              ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  _bottomNavigationItemBuilder(
+  SingleChildScrollView _bottomNavigationItemBuilder(
       {String activeAssetPath,
       String nonActiveAssetPath,
       String label,
