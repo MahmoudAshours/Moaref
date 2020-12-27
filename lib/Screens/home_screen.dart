@@ -95,10 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               index: 3),
                         ],
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: _itemsBody(),
+                      SafeArea(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: _itemsBody(),
+                        ),
                       )
                     ],
                   ),
