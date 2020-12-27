@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'كن معرفا برسول الله ',
       home: HomeScreen(),
+      theme: ThemeData(fontFamily: 'NeoSansArabic'),
     );
   }
 }

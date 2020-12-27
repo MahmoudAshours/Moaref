@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 
 import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,16 +13,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   double height = 60;
   var currindex = 0;
-  VideoPlayerController _controller;
+  VideoPlayerController _videoPlayerController1;
+  ChewieController _chewieController;
 
   @override
   void initState() {
-    assetToFile(assetPath: 'assets/Videos/bg_video_mobile_1.mp4')
-        .then((v) => _controller = VideoPlayerController.file(File(v))
-          ..initialize()
-          ..play());
-
     super.initState();
+    this.initializePlayer();
+  }
+
+  Future<void> initializePlayer() async {
+    final path =
+        await assetToFile(assetPath: 'assets/Videos/bg_video_mobile_1.mp4');
+    _videoPlayerController1 = VideoPlayerController.file(File(path));
+    await _videoPlayerController1.initialize();
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController1,
+      autoPlay: true,
+      looping: true,
+      
+    );
+    setState(() {});
   }
 
   @override
@@ -33,7 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: VideoPlayer(_controller),
+              child: Chewie(
+                controller: _chewieController,
+              ),
             ),
             DraggableScrollableSheet(
               minChildSize: 0.11,
