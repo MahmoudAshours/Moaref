@@ -40,75 +40,75 @@ class _HomeScreenState extends State<HomeScreen> {
         autoPlay: true,
         looping: true,
         autoInitialize: true,
-        showControls: false);
+        showControls: false,
+        allowFullScreen: true,
+        aspectRatio: MediaQuery.of(context).size.aspectRatio);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Chewie(controller: _chewieController),
-            ),
-            DraggableScrollableSheet(
-              minChildSize: 0.11,
-              maxChildSize: 0.5,
-              initialChildSize: 0.11,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return Container(
-                  color: Colors.white,
-                  child: Wrap(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        textDirection: TextDirection.rtl,
-                        children: [
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/maedit.png',
-                              nonActiveAssetPath: 'assets/mdedit.png',
-                              controller: scrollController,
-                              label: 'التصنيف',
-                              index: 0),
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/mamic.png',
-                              nonActiveAssetPath: 'assets/mdmic.png',
-                              controller: scrollController,
-                              label: 'تسجيل',
-                              index: 1),
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/mabrush.png',
-                              nonActiveAssetPath: 'assets/mdbrush.png',
-                              controller: scrollController,
-                              label: 'ملف صوتي',
-                              index: 2),
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/maphoto.png',
-                              nonActiveAssetPath: 'assets/mdphoto.png',
-                              controller: scrollController,
-                              label: 'المكتبة',
-                              index: 3),
-                        ],
+      body: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Chewie(controller: _chewieController),
+          ),
+          DraggableScrollableSheet(
+            minChildSize: 0.11,
+            maxChildSize: 0.5,
+            initialChildSize: 0.11,
+            builder:
+                (BuildContext context, ScrollController scrollController) {
+              return Container(
+                color: Colors.white,
+                child: Wrap(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      textDirection: TextDirection.rtl,
+                      children: [
+                        _bottomNavigationItemBuilder(
+                            activeAssetPath: 'assets/maedit.png',
+                            nonActiveAssetPath: 'assets/mdedit.png',
+                            controller: scrollController,
+                            label: 'التصنيف',
+                            index: 0),
+                        _bottomNavigationItemBuilder(
+                            activeAssetPath: 'assets/mamic.png',
+                            nonActiveAssetPath: 'assets/mdmic.png',
+                            controller: scrollController,
+                            label: 'تسجيل',
+                            index: 1),
+                        _bottomNavigationItemBuilder(
+                            activeAssetPath: 'assets/mabrush.png',
+                            nonActiveAssetPath: 'assets/mdbrush.png',
+                            controller: scrollController,
+                            label: 'ملف صوتي',
+                            index: 2),
+                        _bottomNavigationItemBuilder(
+                            activeAssetPath: 'assets/maphoto.png',
+                            nonActiveAssetPath: 'assets/mdphoto.png',
+                            controller: scrollController,
+                            label: 'المكتبة',
+                            index: 3),
+                      ],
+                    ),
+                    SafeArea(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: _itemsBody(),
                       ),
-                      SafeArea(
-                        child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: _itemsBody(),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
