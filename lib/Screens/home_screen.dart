@@ -1,8 +1,9 @@
-import 'dart:io';
 import 'package:chewie/chewie.dart';
+import 'package:ffmpegtest/Utils/category.dart';
+import 'package:ffmpegtest/Utils/gallery.dart';
+import 'package:ffmpegtest/Utils/recording.dart';
+import 'package:ffmpegtest/Utils/upload_file.dart';
 import 'package:video_player/video_player.dart';
-
-import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,25 +15,32 @@ class _HomeScreenState extends State<HomeScreen> {
   double height = 60;
   var currindex = 0;
   VideoPlayerController _videoPlayerController1;
-  ChewieController _chewieController;
 
+  ChewieController _chewieController;
+  final _assetsList = List.unmodifiable([
+    'assets/Videos/bg_video_mobile_1.mp4',
+    'assets/Videos/bg_video_mobile_2.mp4',
+    'assets/Videos/bg_video_mobile_3.mp4',
+    'assets/Videos/bg_video_mobile_4.mp4',
+    'assets/Videos/bg_video_mobile_5.mp4',
+  ]);
   @override
   void initState() {
     super.initState();
-    this.initializePlayer();
+    this.initializePlayer(1);
   }
 
-  Future<void> initializePlayer() async {
-    final path =
-        await assetToFile(assetPath: 'assets/Videos/bg_video_mobile_1.mp4');
-    _videoPlayerController1 = VideoPlayerController.file(File(path));
+  Future<void> initializePlayer(index) async {
+    final video = _assetsList[index];
+    _videoPlayerController1 = VideoPlayerController.asset(video);
     await _videoPlayerController1.initialize();
+
     _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController1,
-      autoPlay: true,
-      looping: true,
-      
-    );
+        videoPlayerController: _videoPlayerController1,
+        autoPlay: true,
+        looping: true,
+        autoInitialize: true,
+        showControls: false);
     setState(() {});
   }
 
@@ -45,9 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: Chewie(
-                controller: _chewieController,
-              ),
+              child: Chewie(controller: _chewieController),
             ),
             DraggableScrollableSheet(
               minChildSize: 0.11,
@@ -106,7 +112,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _itemsBody() {
-    return ListView();
+    switch (currindex) {
+      case 0:
+        return Category();
+        break;
+      case 1:
+        return Recording();
+        break;
+      case 2:
+        return UploadFile();
+        break;
+      case 3:
+        return Gallery();
+        break;
+      default:
+        return CircularProgressIndicator();
+    }
   }
 
   SingleChildScrollView _bottomNavigationItemBuilder(
