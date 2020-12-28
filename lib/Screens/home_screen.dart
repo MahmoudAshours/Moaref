@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: GestureDetector(
         onTap: () => setState(() => currindex = index),
         child: Container(
-          height: 100,
+          height: 80,
           child: Column(
             children: [
               AnimatedCrossFade(

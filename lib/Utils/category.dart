@@ -15,7 +15,7 @@ class Category extends StatelessWidget {
         ),
         SizedBox(height: 10),
         Container(
-          height: MediaQuery.of(context).size.height/4,
+          height: MediaQuery.of(context).size.height/4.4,
           child: ListView.separated(
             separatorBuilder: (c, i) {
               return Divider(
@@ -27,25 +27,28 @@ class Category extends StatelessWidget {
             itemBuilder: (c, i) {
               print(i);
               return SafeArea(
-                child: ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: kSecondaryColor,
-                    ),
-                    child: Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.play,
-                        color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: kSecondaryColor,
+                      ),
+                      child: Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.play,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  title: Text(
-                    'رحمة النبي',
-                    style: TextStyle(color: kSecondaryFontColor),
-                    textDirection: TextDirection.rtl,
+                    title: Text(
+                      'رحمة النبي',
+                      style: TextStyle(color: kSecondaryFontColor),
+                      textDirection: TextDirection.rtl,
+                    ),
                   ),
                 ),
               );
