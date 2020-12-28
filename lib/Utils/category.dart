@@ -12,6 +12,7 @@ class Category extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           textDirection: TextDirection.rtl,
+          //TODO Fix search!!
           children: [_languagePicker(), _categoryPicker(), Search()],
         ),
         SizedBox(height: 10),
