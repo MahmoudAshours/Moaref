@@ -1,10 +1,17 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
-import 'package:ffmpegtest/Utils/seach.dart';
+import 'package:ffmpegtest/Utils/search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class Category extends StatelessWidget {
+class Category extends StatefulWidget {
+  @override
+  _CategoryState createState() => _CategoryState();
+}
+
+class _CategoryState extends State<Category> {
+  bool clicked = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -89,20 +96,23 @@ class Category extends StatelessWidget {
   }
 
   _categoryPicker() {
-    return Container(
-      width: 200,
-      height: 50,
-      //Changes when adding API
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
-          borderRadius: BorderRadius.circular(10)),
-      child: Center(
-        child: Text(
-          'التصنيف / مقاطع دعوية',
-          style: TextStyle(
-            color: kFontColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 19,
+    return FadeOutDown(
+      animate: clicked,
+      child: Container(
+        width: 200,
+        height: 50,
+        //Changes when adding API
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black26),
+            borderRadius: BorderRadius.circular(10)),
+        child: Center(
+          child: Text(
+            'التصنيف / مقاطع دعوية',
+            style: TextStyle(
+              color: kFontColor,
+              fontWeight: FontWeight.w700,
+              fontSize: 19,
+            ),
           ),
         ),
       ),
