@@ -10,7 +10,6 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  bool clicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,6 @@ class _CategoryState extends State<Category> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           textDirection: TextDirection.rtl,
-          //TODO Fix search!!
           children: [_languagePicker(), _categoryPicker(), Search()],
         ),
         SizedBox(height: 10),
@@ -96,26 +94,24 @@ class _CategoryState extends State<Category> {
   }
 
   _categoryPicker() {
-    return FadeOutDown(
-      animate: clicked,
-      child: Container(
-        width: 200,
-        height: 50,
-        //Changes when adding API
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black26),
-            borderRadius: BorderRadius.circular(10)),
-        child: Center(
-          child: Text(
-            'التصنيف / مقاطع دعوية',
-            style: TextStyle(
-              color: kFontColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 19,
-            ),
+    return Container(
+      width: 200,
+      height: 50,
+      //Changes when adding API
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.black26),
+          borderRadius: BorderRadius.circular(10)),
+      child: Center(
+        child: Text(
+          'التصنيف / مقاطع دعوية',
+          style: TextStyle(
+            color: kFontColor,
+            fontWeight: FontWeight.w700,
+            fontSize: 19,
           ),
         ),
       ),
     );
   }
+
 }

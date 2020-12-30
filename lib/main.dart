@@ -1,8 +1,6 @@
 import 'package:ffmpegtest/Helpers/asset_to_file.dart';
-import 'package:ffmpegtest/Provider/search_provider.dart';
 import 'package:ffmpegtest/Screens/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,13 +13,10 @@ class MyApp extends StatelessWidget {
   MyApp(this.splashVideo);
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => SearchProvider())],
-      child: MaterialApp(
-        title: 'كن معرفا برسول الله ',
-        home: SplashScreen(splashVideo),
-        theme: ThemeData(fontFamily: 'NeoSansArabic'),
-      ),
+    return MaterialApp(
+      title: 'كن معرفا برسول الله ',
+      home: SplashScreen(splashVideo),
+      theme: ThemeData(fontFamily: 'NeoSansArabic'),
     );
   }
 }
