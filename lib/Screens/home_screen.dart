@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:ffmpegtest/Utils/category.dart';
 import 'package:ffmpegtest/Utils/gallery.dart';
+import 'package:ffmpegtest/Utils/play_settings.dart';
 import 'package:ffmpegtest/Utils/recording.dart';
 import 'package:ffmpegtest/Utils/upload_file.dart';
 import 'package:video_player/video_player.dart';
@@ -56,12 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
             height: MediaQuery.of(context).size.height,
             child: Chewie(controller: _chewieController),
           ),
+          Positioned(
+            bottom: MediaQuery.of(context).size.height / 8.2,
+            child: PlaySettings(),
+          ),
           DraggableScrollableSheet(
             minChildSize: 0.11,
             maxChildSize: 0.5,
             initialChildSize: 0.11,
-            builder:
-                (BuildContext context, ScrollController scrollController) {
+            builder: (BuildContext context, ScrollController scrollController) {
               return Container(
                 color: Colors.white,
                 child: Wrap(

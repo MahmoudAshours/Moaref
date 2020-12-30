@@ -2,7 +2,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Gallery extends StatefulWidget {

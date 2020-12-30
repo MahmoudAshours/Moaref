@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/search.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UploadFile extends StatelessWidget {
   @override

@@ -1,20 +1,25 @@
+import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:ffmpegtest/Provider/search_provider.dart';
-import 'package:ffmpegtest/Screens/home_screen.dart';
+import 'package:ffmpegtest/Screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final splashVideo = await assetToFile(assetPath: 'assets/Videos/splash.mp4');
+  runApp(MyApp(splashVideo));
 }
 
 class MyApp extends StatelessWidget {
+  final splashVideo;
+  MyApp(this.splashVideo);
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => SearchProvider())],
       child: MaterialApp(
         title: 'كن معرفا برسول الله ',
-        home: HomeScreen(),
+        home: SplashScreen(splashVideo),
         theme: ThemeData(fontFamily: 'NeoSansArabic'),
       ),
     );

@@ -9,7 +9,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="ffmpegtest"
+        android:label="كن معرفا"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
