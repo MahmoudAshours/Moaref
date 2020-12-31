@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/langs_categories.dart';
@@ -21,12 +22,13 @@ class _CategoryState extends State<Category> {
         Container(
           height: MediaQuery.of(context).size.height / 4.4,
           child: Consumer<DataProvider>(
-            builder: (c, provider, widg) => FutureBuilder(
+            builder: (BuildContext c, DataProvider provider, _) =>
+                FutureBuilder(
               future: provider.fetchSounds(),
               builder: (c, snapshot) => !snapshot.hasData
                   ? Center(child: SizedBox())
                   : ListView.separated(
-                      separatorBuilder: (c, i) {
+                      separatorBuilder: (BuildContext c, int i) {
                         return FadeInUpBig(
                           delay: Duration(milliseconds: 50 * i),
                           child: Divider(
@@ -43,17 +45,30 @@ class _CategoryState extends State<Category> {
                             child: FadeInUp(
                               delay: Duration(milliseconds: 20 * i),
                               child: ListTile(
+                                key: Key(i.toString()),
                                 leading: Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 30,
+                                  width: 30,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: kSecondaryColor,
                                   ),
                                   child: Center(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.play,
-                                      color: Colors.white,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          provider.fetchSoundData(snapshot, i),
+                                      child:
+                                          provider.sound == Sound.IsNotPlaying
+                                              ? FaIcon(
+                                                  FontAwesomeIcons.play,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                )
+                                              : FaIcon(
+                                                  FontAwesomeIcons.stop,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
                                     ),
                                   ),
                                 ),
@@ -61,7 +76,9 @@ class _CategoryState extends State<Category> {
                                   snapshot.data[i]
                                       .toString()
                                       .replaceAll('.mp3', ''),
-                                  style: TextStyle(color: kSecondaryFontColor),
+                                  style: TextStyle(
+                                      color: kSecondaryFontColor,
+                                      fontWeight: FontWeight.w600),
                                   textDirection: TextDirection.rtl,
                                 ),
                               ),
