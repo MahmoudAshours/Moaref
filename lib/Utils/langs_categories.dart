@@ -9,7 +9,7 @@ class LangsCats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
       builder: (c, provider, d) => FutureBuilder(
-        future: provider.fetchData(),
+        future: provider.fetchCategory(),
         builder: (_, snap) => Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           textDirection: TextDirection.rtl,
