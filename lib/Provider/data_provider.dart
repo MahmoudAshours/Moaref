@@ -4,16 +4,34 @@ import 'package:html/parser.dart' as parser;
 import 'package:dio/dio.dart';
 
 class DataProvider extends ChangeNotifier {
-  var lang = Uri.encodeComponent('عربي');
-  var category = Uri.encodeComponent('أخلاقنا على نهج رسول الله');
+  var lang = 'عربي';
+  var category;
   var url;
 
-  fetchCategory() async {
-    url = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
+  Future<List<String>> fetchCategory() async {
+    var language = Uri.encodeComponent(lang);
+    url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
     var response = await Dio().get(url);
     var document = parser.parse(response.data);
     var links = linkManipulator(document);
-    var x = Uri.decodeComponent(links[0]);
-    return x;
+    return links;
+  }
+
+  Future<List<String>> fetchLanguage() async {
+    url = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
+    var response = await Dio().get(url);
+    var document = parser.parse(response.data);
+    var links = languageManipulator(document);
+    return links;
+  }
+
+  changeLanguage(String newLanguage) {
+    lang = newLanguage;
+    notifyListeners();
+  }
+
+  changeCategory(String newCategory) {
+    category = newCategory;
+    notifyListeners();
   }
 }

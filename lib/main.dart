@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'كن معرفا برسول الله ',
         home: SplashScreen(splashVideo),
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'NeoSansArabic'),
       ),
     );
