@@ -25,7 +25,7 @@ class _CategoryState extends State<Category> {
             builder: (BuildContext c, DataProvider provider, _) =>
                 FutureBuilder(
               future: provider.fetchSounds(),
-              builder: (c, snapshot) => !snapshot.hasData
+              builder: (c, AsyncSnapshot snapshot) => !snapshot.hasData
                   ? Center(child: SizedBox())
                   : ListView.separated(
                       separatorBuilder: (BuildContext c, int i) {
@@ -45,10 +45,10 @@ class _CategoryState extends State<Category> {
                             child: FadeInUp(
                               delay: Duration(milliseconds: 20 * i),
                               child: ListTile(
-                                key: Key(i.toString()),
                                 leading: Container(
                                   height: 30,
                                   width: 30,
+                                  key: Key(i.toString()),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: kSecondaryColor,
@@ -57,18 +57,21 @@ class _CategoryState extends State<Category> {
                                     child: GestureDetector(
                                       onTap: () =>
                                           provider.fetchSoundData(snapshot, i),
-                                      child:
-                                          provider.sound == Sound.IsNotPlaying
-                                              ? FaIcon(
-                                                  FontAwesomeIcons.play,
-                                                  color: Colors.white,
-                                                  size: 16,
-                                                )
-                                              : FaIcon(
-                                                  FontAwesomeIcons.stop,
-                                                  color: Colors.white,
-                                                  size: 16,
-                                                ),
+                                      child: provider.sound ==
+                                                  Sound.IsNotPlaying &&
+                                              provider.currentIndex == i
+                                          ? FaIcon(
+                                              FontAwesomeIcons.play,
+                                              color: Colors.white,
+                                              key: Key(i.toString()),
+                                              size: 16,
+                                            )
+                                          : FaIcon(
+                                              FontAwesomeIcons.stop,
+                                              color: Colors.white,
+                                              key: Key(i.toString()),
+                                              size: 16,
+                                            ),
                                     ),
                                   ),
                                 ),

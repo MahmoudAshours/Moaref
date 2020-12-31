@@ -10,7 +10,7 @@ class DataProvider extends ChangeNotifier {
   var url;
   var sound = Sound.IsNotPlaying;
   var _assetsAudioPlayer = AssetsAudioPlayer();
-
+  var currentIndex;
   Future<List<String>> fetchCategory() async {
     var language = Uri.encodeComponent(lang);
     url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
@@ -56,6 +56,7 @@ class DataProvider extends ChangeNotifier {
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}"),
         showNotification: true,
       );
+      currentIndex = index;
       sound = Sound.IsPlaying;
       notifyListeners();
     } else {
