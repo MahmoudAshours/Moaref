@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
+import 'package:ffmpegtest/Utils/langs_categories.dart';
 import 'package:ffmpegtest/Utils/search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,16 +11,11 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          textDirection: TextDirection.rtl,
-          children: [_languagePicker(), _categoryPicker(), Search()],
-        ),
+        LangsCats(),
         SizedBox(height: 10),
         Container(
           height: MediaQuery.of(context).size.height / 4.4,
@@ -71,47 +67,4 @@ class _CategoryState extends State<Category> {
       ],
     );
   }
-
-  _languagePicker() {
-    return Container(
-      width: 100,
-      height: 50,
-      //Changes when adding API
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
-          borderRadius: BorderRadius.circular(10)),
-      child: Center(
-        child: Text(
-          'عربي',
-          style: TextStyle(
-            color: kFontColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 19,
-          ),
-        ),
-      ),
-    );
-  }
-
-  _categoryPicker() {
-    return Container(
-      width: 200,
-      height: 50,
-      //Changes when adding API
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
-          borderRadius: BorderRadius.circular(10)),
-      child: Center(
-        child: Text(
-          'التصنيف / مقاطع دعوية',
-          style: TextStyle(
-            color: kFontColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 19,
-          ),
-        ),
-      ),
-    );
-  }
-
 }

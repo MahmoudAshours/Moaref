@@ -1,18 +1,14 @@
+import 'package:ffmpegtest/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
-import 'package:ffmpegtest/Utils/search.dart';
 
 class UploadFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          textDirection: TextDirection.rtl,
-          children: [_languagePicker(), _categoryPicker(), Search()],
-        ),
+        LangsCats(),
         SizedBox(height: 20),
         FadeInUp(
           duration: Duration(milliseconds: 500),
@@ -43,48 +39,6 @@ class UploadFile extends StatelessWidget {
           ),
         )
       ],
-    );
-  }
-
-  _languagePicker() {
-    return Container(
-      width: 100,
-      height: 50,
-      //Changes when adding API
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
-          borderRadius: BorderRadius.circular(10)),
-      child: Center(
-        child: Text(
-          'عربي',
-          style: TextStyle(
-            color: kFontColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
-        ),
-      ),
-    );
-  }
-
-  _categoryPicker() {
-    return Container(
-      width: 200,
-      height: 50,
-      //Changes when adding API
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
-          borderRadius: BorderRadius.circular(10)),
-      child: Center(
-        child: Text(
-          'التصنيف / مقاطع دعوية',
-          style: TextStyle(
-            color: kFontColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 19,
-          ),
-        ),
-      ),
     );
   }
 }
