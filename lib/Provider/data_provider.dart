@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 
 class DataProvider extends ChangeNotifier {
   var lang = 'عربي';
-  var category;
+  var category = 'دروس من السيرة';
   var url;
 
   Future<List<String>> fetchCategory() async {
@@ -25,12 +25,16 @@ class DataProvider extends ChangeNotifier {
     return links;
   }
 
-  changeLanguage(String newLanguage) {
+  void changeLanguage(String newLanguage) {
     lang = newLanguage;
+    fetchCategory().then((value) {
+      category = value[0];
+      notifyListeners();
+    });
     notifyListeners();
   }
 
-  changeCategory(String newCategory) {
+  void changeCategory(String newCategory) {
     category = newCategory;
     notifyListeners();
   }

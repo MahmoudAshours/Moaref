@@ -3,6 +3,7 @@ import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/search.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class LangsCats extends StatelessWidget {
@@ -14,7 +15,7 @@ class LangsCats extends StatelessWidget {
         textDirection: TextDirection.rtl,
         children: [
           _languagePicker(provider),
-          Expanded(child: _categoryPicker(provider)),
+          _categoryPicker(provider),
           Search()
         ],
       ),
@@ -27,37 +28,38 @@ class LangsCats extends StatelessWidget {
       builder: (_, AsyncSnapshot<List<String>> snapshot) => Container(
         width: 150,
         height: 50,
-        //Changes when adding API
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black26),
             borderRadius: BorderRadius.circular(10)),
-        child: Center(
-          child: DropdownButton<String>(
-            items: snapshot.data
-                .map<DropdownMenuItem<String>>(
-                  (String value) => DropdownMenuItem<String>(
-                    child: Center(
-                      child: SlideInUp(
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                            color: kFontColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
+        child: !snapshot.hasData
+            ? Center(child: CircularProgressIndicator())
+            : Center(
+                child: DropdownButton<String>(
+                  items: snapshot.data
+                      .map<DropdownMenuItem<String>>(
+                        (String value) => DropdownMenuItem<String>(
+                          child: Center(
+                            child: SlideInUp(
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  color: kFontColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
                           ),
+                          value: value,
                         ),
-                      ),
-                    ),
-                    value: value,
-                  ),
-                )
-                .toList(),
-            onChanged: (String value) {
-              provider.changeLanguage(value);
-            },
-            value: provider.lang,
-          ),
-        ),
+                      )
+                      .toList(),
+                  onChanged: (String value) {
+                    provider.changeLanguage(value);
+                  },
+                  value: provider.lang,
+                ),
+              ),
       ),
     );
   }
@@ -73,34 +75,44 @@ class LangsCats extends StatelessWidget {
             border: Border.all(color: Colors.black26),
             borderRadius: BorderRadius.circular(10)),
         child: Center(
-          child: DropdownButton<String>(
-            items: snapshot.data
-                .map<DropdownMenuItem<String>>(
-                  (String value) => DropdownMenuItem<String>(
-                    child: Center(
-                      child: Container(
-                        width: 130,
-                        child: SlideInUp(
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                              color: kFontColor,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
+          child: snapshot.connectionState != ConnectionState.done
+              ? CircularProgressIndicator()
+              : Center(
+                  child: DropdownButton<String>(
+                    items: snapshot.data
+                        .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
+                            child: Center(
+                              child: Container(
+                                width: 130,
+                                child: SlideInUp(
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                      color: kFontColor,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
+                            value: value,
                           ),
-                        ),
-                      ),
+                        )
+                        .toList(),
+                    onChanged: (String value) {
+                      provider.changeCategory(value);
+                    },
+                    iconSize: 13,
+                    dropdownColor: Colors.black,
+                    value: provider.category,
+                    icon: FaIcon(
+                      FontAwesomeIcons.chevronCircleDown,
+                      color: Colors.green,
                     ),
-                    value: value,
                   ),
-                )
-                .toList(),
-            onChanged: (String value) {
-              provider.changeCategory(value);
-            },
-            value: provider.category,
-          ),
+                ),
         ),
       ),
     );
