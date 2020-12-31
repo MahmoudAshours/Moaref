@@ -29,9 +29,18 @@ class DataProvider extends ChangeNotifier {
     lang = newLanguage;
     fetchCategory().then((value) {
       category = value[0];
-      notifyListeners();
     });
     notifyListeners();
+  }
+
+  Future<List<String>> fetchSounds() async {
+    var language = Uri.encodeComponent(lang);
+    var cat = Uri.encodeComponent(category);
+    var url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
+    var response = await Dio().get(url);
+    var document = parser.parse(response.data);
+    var links = linkManipulator(document);
+    return links;
   }
 
   void changeCategory(String newCategory) {

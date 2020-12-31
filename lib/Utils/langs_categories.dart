@@ -39,13 +39,16 @@ class LangsCats extends StatelessWidget {
                       .map<DropdownMenuItem<String>>(
                         (String value) => DropdownMenuItem<String>(
                           child: Center(
-                            child: SlideInUp(
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                  color: kFontColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
+                            child: Container(
+                              width: 100,
+                              child: SlideInUp(
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                    color: kFontColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
