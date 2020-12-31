@@ -12,23 +12,24 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: AnimatedContainer(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.decelerate,
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 2,
-          color: _primaryColor,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.decelerate,
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: _primaryColor,
+          ),
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(100),
         ),
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(100),
+        child: Icon(
+          Icons.search,
+          color: kSecondaryColor,
+        ),
       ),
-      child: Icon(
-        Icons.search,
-        color: kSecondaryColor,
-      ),
-    ));
+    );
   }
 }
