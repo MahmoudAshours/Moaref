@@ -13,33 +13,33 @@ class PlayPauseButton extends StatefulWidget {
 
 class _PlayPauseButtonState extends State<PlayPauseButton> {
   final assetsAudioPlayer = AssetsAudioPlayer.withId('0');
-  bool ispresed = false;
+  bool isPressed = false;
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    assetsAudioPlayer.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
       builder: (c, prov, _) => FlatButton(
-        child: Icon(ispresed ? Icons.pause : Icons.play_arrow),
+        child: Icon(!isPressed ? Icons.pause : Icons.play_arrow),
         onPressed: () {
           var language = Uri.encodeComponent(prov.lang);
           var cat = Uri.encodeComponent(prov.category);
           var url =
               "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${widget.snapshot.data[widget.index]}";
-          assetsAudioPlayer.open(Audio.network(url));
+          var x = assetsAudioPlayer.isPlaying.value;
+
           setState(() {
-            print(ispresed);
-            if (ispresed == false) {
+            isPressed = x;
+            if (!x) {
+              assetsAudioPlayer.open(Audio.network(url));
               assetsAudioPlayer.play();
-              ispresed = true;
-            } else if (ispresed == false) {
+              isPressed = x;
+            } else {
               assetsAudioPlayer.pause();
-              ispresed = false;
+              isPressed = x;
             }
           });
         },
