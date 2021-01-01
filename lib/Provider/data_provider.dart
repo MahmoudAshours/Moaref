@@ -9,8 +9,13 @@ class DataProvider extends ChangeNotifier {
   var category = 'دروس من السيرة';
   var url;
   var sound = Sound.IsNotPlaying;
-  var _assetsAudioPlayer = AssetsAudioPlayer();
-  var currentIndex;
+  var assetsAudioPlayer = AssetsAudioPlayer.withId('0');
+  bool ispresed = false;
+  pressed(bool press) {
+    ispresed = press;
+    notifyListeners();
+  }
+
   Future<List<String>> fetchCategory() async {
     var language = Uri.encodeComponent(lang);
     url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
@@ -50,20 +55,12 @@ class DataProvider extends ChangeNotifier {
   fetchSoundData(snapshot, index) async {
     var language = Uri.encodeComponent(lang);
     var cat = Uri.encodeComponent(category);
-    if (sound == Sound.IsNotPlaying) {
-      await _assetsAudioPlayer.open(
-        Audio.network(
-            "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}"),
-        showNotification: true,
-      );
-      currentIndex = index;
-      sound = Sound.IsPlaying;
-      notifyListeners();
-    } else {
-      await _assetsAudioPlayer.stop();
-      sound = Sound.IsNotPlaying;
-      notifyListeners();
-    }
+
+    await assetsAudioPlayer.open(
+      Audio.network(
+          "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}"),
+      showNotification: true,
+    );
   }
 
   void changeCategory(String newCategory) {
@@ -72,4 +69,4 @@ class DataProvider extends ChangeNotifier {
   }
 }
 
-enum Sound { IsPlaying, IsNotPlaying }
+enum Sound { IsPlaying, IsNotPlaying, Another }
