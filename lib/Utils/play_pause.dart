@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PlayPauseButton extends StatefulWidget {
-  PlayPauseButton({this.snapshot, this.index});
+  PlayPauseButton({Key key, this.snapshot, this.index}) : super(key: key);
   final snapshot;
   final index;
   @override
