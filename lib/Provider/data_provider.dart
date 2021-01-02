@@ -8,11 +8,11 @@ class DataProvider extends ChangeNotifier {
   var lang = 'عربي';
   var category = 'دروس من السيرة';
   var url;
-  var _sound = Sound.IsNotPlaying;
+  Sound _sound = Sound.IsNotPlaying;
   var assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   List boolList = [];
 
-  get sound => _sound;
+  Sound get sound => _sound;
 
   set setSound(sound) {
     _sound = sound;
@@ -20,7 +20,6 @@ class DataProvider extends ChangeNotifier {
   }
 
   void dispose() {
-    super.dispose();
     assetsAudioPlayer.dispose();
   }
 

@@ -13,43 +13,44 @@ class PlayPauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
-      builder: (c, prov, _) => FlatButton(
-        child: prov.sound == Sound.Loading
-            ? Icon(Icons.arrow_downward)
-            : PlayerBuilder.isPlaying(
-                player: prov.assetsAudioPlayer,
-                builder: (context, play) {
-                  return Icon(prov.boolList.isNotEmpty &&
-                          prov.boolList[index] == true &&
-                          play
-                      ? Icons.pause
-                      : Icons.play_arrow);
-                },
-              ),
-        onPressed: () {
-          prov.fetchSoundData(snapshot, index);
-          prov.assetsAudioPlayer.isPlaying.listen(
-            (event) {
-              if (event) {
-                prov.setSound = Sound.IsPlaying;
-              } else {
-                prov.setSound = Sound.IsNotPlaying;
-              }
+      builder: (c, prov, _) {
+        return FlatButton(
+          child: PlayerBuilder.isPlaying(
+            player: prov.assetsAudioPlayer,
+            builder: (BuildContext context, bool play) {
+              print(play);
+              return Icon(prov.boolList.isNotEmpty &&
+                      prov.boolList[index] == true &&
+                      play
+                  ? Icons.pause
+                  : Icons.play_arrow);
             },
-          );
+          ),
+          onPressed: () {
+            prov.fetchSoundData(snapshot, index);
+            prov.assetsAudioPlayer.isPlaying.listen(
+              (event) {
+                if (event) {
+                  prov.setSound = Sound.IsPlaying;
+                } else {
+                  prov.setSound = Sound.IsNotPlaying;
+                }
+              },
+            );
 
-          if (prov.sound == Sound.IsNotPlaying) {
-            prov.playSoundData(snapshot, index);
-          } else {
-            if ((prov.boolList.isNotEmpty && !prov.boolList[index]) ||
-                prov.boolList.isEmpty) {
-              prov.assetsAudioPlayer.pause();
-            } else {
+            if (prov.sound == Sound.IsNotPlaying) {
               prov.playSoundData(snapshot, index);
+            } else {
+              if ((prov.boolList.isNotEmpty && !prov.boolList[index]) ||
+                  prov.boolList.isEmpty) {
+                prov.assetsAudioPlayer.pause();
+              } else {
+                prov.playSoundData(snapshot, index);
+              }
             }
-          }
-        },
-      ),
+          },
+        );
+      },
     );
   }
 }

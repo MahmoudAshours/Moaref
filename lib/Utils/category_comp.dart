@@ -9,12 +9,11 @@ import 'package:provider/provider.dart';
 class CategoryComponent extends StatefulWidget {
   final provider;
   final i;
-  final snapshot;
-  final s;
+  final snapshot; 
   final e;
 
   const CategoryComponent(
-      {Key key, this.provider, this.i, this.e, this.snapshot, this.s})
+      {Key key, this.provider, this.i, this.e, this.snapshot })
       : super(key: key);
 
   @override
