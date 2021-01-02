@@ -8,10 +8,11 @@ class CategoryComponent extends StatelessWidget {
   final provider;
   final i;
   final snapshot;
+  final s;
   final e;
 
   const CategoryComponent(
-      {Key key, this.provider, this.i, this.e, this.snapshot})
+      {Key key, this.provider, this.i, this.e, this.snapshot, this.s})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -24,14 +25,20 @@ class CategoryComponent extends StatelessWidget {
             leading: PlayPauseButton(
               snapshot: snapshot,
               index: i,
-              key: ValueKey('$i'),
+              s: s,
+              provider: provider,
             ),
-            subtitle: PlayerBuilder.isPlaying(
-              player: provider.assetsAudioPlayer,
-              builder: (context, duration) {
-                return Text("$duration");
-              },
-            ),
+            subtitle: !provider.boolList.isEmpty && provider.boolList[i] == true
+                ? PlayerBuilder.realtimePlayingInfos(
+                    player: provider.assetsAudioPlayer,
+                    builder: (context, realTimeInfo) {
+                      return realTimeInfo != null
+                          ? Text(
+                              "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
+                          : SizedBox();
+                    },
+                  )
+                : SizedBox(),
             title: Text(
               e.toString().replaceAll('.mp3', ''),
               style: TextStyle(

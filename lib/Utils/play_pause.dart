@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PlayPauseButton extends StatefulWidget {
-  PlayPauseButton({Key key, this.snapshot, this.index}) : super(key: key);
+  PlayPauseButton({Key key, this.snapshot, this.index, this.s, this.provider})
+      : super(key: key);
   final snapshot;
   final index;
+  final s;
+  final provider;
   @override
   _PlayPauseButtonState createState() => _PlayPauseButtonState();
 }
@@ -23,25 +26,38 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
       builder: (c, prov, _) => FlatButton(
-        child: Icon(!isPressed ? Icons.pause : Icons.play_arrow),
+        child: PlayerBuilder.isPlaying(
+          player: prov.assetsAudioPlayer,
+          builder: (context, play) {
+            return Icon(prov.boolList.isNotEmpty &&
+                    prov.boolList[widget.index] == true &&
+                    play
+                ? Icons.pause
+                : Icons.play_arrow);
+          },
+        ),
         onPressed: () {
-          var language = Uri.encodeComponent(prov.lang);
-          var cat = Uri.encodeComponent(prov.category);
-          var url =
-              "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${widget.snapshot.data[widget.index]}";
-          var x = assetsAudioPlayer.isPlaying.value;
-
-          setState(() {
-            isPressed = x;
-            if (!x) {
-              assetsAudioPlayer.open(Audio.network(url));
-              assetsAudioPlayer.play();
-              isPressed = x;
-            } else {
-              assetsAudioPlayer.pause();
-              isPressed = x;
-            }
+          prov.fetchSoundData(widget.snapshot, widget.index);
+          prov.assetsAudioPlayer.isPlaying.listen((event) {
+            setState(() {
+              isPressed = event;
+            });
           });
+
+          setState(
+            () {
+              if (!isPressed) {
+                prov.playSoundData(widget.snapshot, widget.index);
+                prov.assetsAudioPlayer.play();
+              } else {
+                if (prov.boolList.isNotEmpty && !prov.boolList[widget.index]) {
+                  prov.assetsAudioPlayer.pause();
+                } else {
+                  prov.playSoundData(widget.snapshot, widget.index);
+                }
+              }
+            },
+          );
         },
       ),
     );

@@ -10,11 +10,8 @@ class DataProvider extends ChangeNotifier {
   var url;
   var sound = Sound.IsNotPlaying;
   var assetsAudioPlayer = AssetsAudioPlayer.withId('0');
+  List boolList = [];
   bool ispresed = false;
-  pressed(bool press) {
-    ispresed = press;
-    notifyListeners();
-  }
 
   Future<List<String>> fetchCategory() async {
     var language = Uri.encodeComponent(lang);
@@ -52,11 +49,21 @@ class DataProvider extends ChangeNotifier {
     return links;
   }
 
-  fetchSoundData(snapshot, index) async {
+  fetchSoundData(snapshot, index) {
+    if (boolList.isNotEmpty && boolList[index] == true) {
+      boolList[index] = false;
+    } else {
+      boolList = [];
+      boolList = List.generate(snapshot.data.length, (index) => false);
+      boolList[index] = true;
+      notifyListeners();
+    }
+  }
+
+  playSoundData(snapshot, index) {
     var language = Uri.encodeComponent(lang);
     var cat = Uri.encodeComponent(category);
-
-    await assetsAudioPlayer.open(
+    assetsAudioPlayer.open(
       Audio.network(
           "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}"),
       showNotification: true,
