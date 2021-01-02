@@ -73,12 +73,12 @@ class LangsCats extends StatelessWidget {
       builder: (_, AsyncSnapshot<List<String>> snapshot) => Container(
         width: 150,
         height: 60,
-        //Changes when adding API
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black26),
             borderRadius: BorderRadius.circular(10)),
         child: Center(
-          child: snapshot.connectionState != ConnectionState.done
+          child: !snapshot.hasData &&
+                  snapshot.connectionState != ConnectionState.done
               ? CircularProgressIndicator()
               : Center(
                   child: DropdownButton<String>(

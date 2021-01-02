@@ -3,61 +3,51 @@ import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PlayPauseButton extends StatefulWidget {
-  PlayPauseButton({Key key, this.snapshot, this.index, this.s, this.provider})
+class PlayPauseButton extends StatelessWidget {
+  PlayPauseButton({Key key, this.snapshot, this.index, this.provider})
       : super(key: key);
   final snapshot;
   final index;
-  final s;
   final provider;
-  @override
-  _PlayPauseButtonState createState() => _PlayPauseButtonState();
-}
-
-class _PlayPauseButtonState extends State<PlayPauseButton> {
-  final assetsAudioPlayer = AssetsAudioPlayer.withId('0');
-  bool isPressed = false;
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
       builder: (c, prov, _) => FlatButton(
-        child: PlayerBuilder.isPlaying(
-          player: prov.assetsAudioPlayer,
-          builder: (context, play) {
-            return Icon(prov.boolList.isNotEmpty &&
-                    prov.boolList[widget.index] == true &&
-                    play
-                ? Icons.pause
-                : Icons.play_arrow);
-          },
-        ),
+        child: prov.sound == Sound.Loading
+            ? Icon(Icons.arrow_downward)
+            : PlayerBuilder.isPlaying(
+                player: prov.assetsAudioPlayer,
+                builder: (context, play) {
+                  return Icon(prov.boolList.isNotEmpty &&
+                          prov.boolList[index] == true &&
+                          play
+                      ? Icons.pause
+                      : Icons.play_arrow);
+                },
+              ),
         onPressed: () {
-          prov.fetchSoundData(widget.snapshot, widget.index);
-          prov.assetsAudioPlayer.isPlaying.listen((event) {
-            setState(() {
-              isPressed = event;
-            });
-          });
-
-          setState(
-            () {
-              if (!isPressed) {
-                prov.playSoundData(widget.snapshot, widget.index);
-                prov.assetsAudioPlayer.play();
+          prov.fetchSoundData(snapshot, index);
+          prov.assetsAudioPlayer.isPlaying.listen(
+            (event) {
+              if (event) {
+                prov.setSound = Sound.IsPlaying;
               } else {
-                if (prov.boolList.isNotEmpty && !prov.boolList[widget.index]) {
-                  prov.assetsAudioPlayer.pause();
-                } else {
-                  prov.playSoundData(widget.snapshot, widget.index);
-                }
+                prov.setSound = Sound.IsNotPlaying;
               }
             },
           );
+
+          if (prov.sound == Sound.IsNotPlaying) {
+            prov.playSoundData(snapshot, index);
+          } else {
+            if ((prov.boolList.isNotEmpty && !prov.boolList[index]) ||
+                prov.boolList.isEmpty) {
+              prov.assetsAudioPlayer.pause();
+            } else {
+              prov.playSoundData(snapshot, index);
+            }
+          }
         },
       ),
     );
