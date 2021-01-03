@@ -1,9 +1,11 @@
 import 'package:chewie/chewie.dart';
+import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Utils/category.dart';
 import 'package:ffmpegtest/Utils/gallery.dart';
 import 'package:ffmpegtest/Utils/play_settings.dart';
 import 'package:ffmpegtest/Utils/recording.dart';
 import 'package:ffmpegtest/Utils/upload_file.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double height = 60;
   var currindex = 0;
   VideoPlayerController _videoPlayerController1;
+  DataProvider _dataProvider;
 
   ChewieController _chewieController;
   final _assetsList = List.unmodifiable([
@@ -25,12 +28,23 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/Videos/bg_video_mobile_4.mp4',
     'assets/Videos/bg_video_mobile_5.mp4',
   ]);
+  
   @override
   void initState() {
     super.initState();
     this.initializePlayer(1);
   }
 
+  @override
+  void didChangeDependencies() {
+    _dataProvider = Provider.of<DataProvider>(context, listen: false);
+    super.didChangeDependencies();
+  }
+@override
+  void dispose() {
+    _dataProvider.dispose();
+    super.dispose();
+  }
   Future<void> initializePlayer(index) async {
     final video = _assetsList[index];
     _videoPlayerController1 = VideoPlayerController.asset(video);
@@ -64,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
           DraggableScrollableSheet(
             minChildSize: 0.11,
             maxChildSize: 0.5,
+            
             initialChildSize: 0.11,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(

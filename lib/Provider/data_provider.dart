@@ -19,6 +19,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ignore: must_call_super
   void dispose() {
     assetsAudioPlayer.dispose();
   }

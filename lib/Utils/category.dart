@@ -10,15 +10,9 @@ class Category extends StatefulWidget {
   _CategoryState createState() => _CategoryState();
 }
 
-class _CategoryState extends State<Category>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
+class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Column(
       children: [
         LangsCats(),

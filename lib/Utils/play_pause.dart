@@ -23,7 +23,7 @@ class PlayPauseButton extends StatelessWidget {
                       prov.boolList[index] == true &&
                       play
                   ? Icons.pause
-                  : Icons.play_arrow);
+                  : Icons.play_arrow);  
             },
           ),
           onPressed: () {
@@ -43,7 +43,7 @@ class PlayPauseButton extends StatelessWidget {
             } else {
               if ((prov.boolList.isNotEmpty && !prov.boolList[index]) ||
                   prov.boolList.isEmpty) {
-                prov.assetsAudioPlayer.pause();
+                prov.assetsAudioPlayer.stop();
               } else {
                 prov.playSoundData(snapshot, index);
               }
