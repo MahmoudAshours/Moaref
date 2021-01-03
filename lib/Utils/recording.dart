@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,24 @@ class Recording extends StatelessWidget {
         BounceInUp(
           duration: Duration(seconds: 1),
           child: Center(
-            child: CircleAvatar(
-              backgroundColor: kSecondaryColor,
-              child: FaIcon(
-                FontAwesomeIcons.microphoneAlt,
-                color: Colors.white,
+            child: AvatarGlow(
+              glowColor: Colors.orange,
+              endRadius: 40.0,
+              duration: Duration(milliseconds: 2000),
+              repeat: true,
+              showTwoGlows: true,
+              repeatPauseDuration: Duration(milliseconds: 100),
+              child: Material( 
+                elevation: 8.0,
+                shape: CircleBorder(),
+                child: CircleAvatar(
+                  backgroundColor: kSecondaryColor,
+                  child: FaIcon(
+                    FontAwesomeIcons.microphoneAlt,
+                    color: Colors.white,
+                  ),
+                  radius: 20.0,
+                ),
               ),
             ),
           ),

@@ -7,11 +7,12 @@ import 'package:html/parser.dart' as parser;
 class DataProvider extends ChangeNotifier {
   var lang = 'عربي';
   var category = 'دروس من السيرة';
-  var url;
+  String url;
   Sound _sound = Sound.IsNotPlaying;
-  var mp3Picked;
-  var assetsAudioPlayer = AssetsAudioPlayer.withId('0');
+  String mp3Picked;
+  AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   List boolList = [];
+  List categoryItems = [];
 
   Sound get sound => _sound;
 
@@ -46,6 +47,8 @@ class DataProvider extends ChangeNotifier {
     var response = await Dio().get(url);
     var document = parser.parse(response.data);
     List<String> links = linkManipulator(document);
+    categoryItems = links;
+    notifyListeners();
     return links;
   }
 
@@ -104,4 +107,4 @@ class DataProvider extends ChangeNotifier {
   }
 }
 
-enum Sound { IsPlaying, IsNotPlaying, Navigating, Loading }
+enum Sound { IsPlaying, IsNotPlaying, Loading }

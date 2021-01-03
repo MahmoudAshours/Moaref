@@ -22,25 +22,26 @@ class _CategoryState extends State<Category> {
           child: Consumer<DataProvider>(
             builder: (BuildContext c, DataProvider provider, _) {
               return FutureBuilder(
-                  future: provider.fetchSounds(),
-                  builder: (c, AsyncSnapshot<List<String>> snapshot) {
-                    return !snapshot.hasData
-                        ? Center(child: SizedBox())
-                        : SingleChildScrollView(
-                            child: Column(
-                              children: snapshot.data
-                                  .mapIndexed(
-                                    (e, i) => CategoryComponent(
-                                      provider: provider,
-                                      i: i,
-                                      e: e,
-                                      snapshot: snapshot,
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          );
-                  });
+                future: provider.fetchSounds(),
+                builder: (c, AsyncSnapshot<List<String>> snapshot) {
+                  return !snapshot.hasData
+                      ? Center(child: SizedBox())
+                      : SingleChildScrollView(
+                          child: Column(
+                            children: snapshot.data
+                                .mapIndexed(
+                                  (String e, int i) => CategoryComponent(
+                                    provider: provider,
+                                    i: i,
+                                    e: e,
+                                    snapshot: snapshot,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        );
+                },
+              );
             },
           ),
         )
