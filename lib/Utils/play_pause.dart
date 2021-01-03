@@ -44,6 +44,7 @@ class PlayPauseButton extends StatelessWidget {
               if ((prov.boolList.isNotEmpty && !prov.boolList[index]) ||
                   prov.boolList.isEmpty) {
                 prov.assetsAudioPlayer.stop();
+                prov.nullifymp3();
               } else {
                 prov.playSoundData(snapshot, index);
               }

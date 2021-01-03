@@ -9,6 +9,7 @@ class DataProvider extends ChangeNotifier {
   var category = 'دروس من السيرة';
   var url;
   Sound _sound = Sound.IsNotPlaying;
+  var mp3Picked;
   var assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   List boolList = [];
 
@@ -77,20 +78,26 @@ class DataProvider extends ChangeNotifier {
     return links;
   }
 
+  nullifymp3() {
+    mp3Picked = null;
+    notifyListeners();
+  }
+
   playSoundData(snapshot, index) {
     _sound = Sound.Loading;
     notifyListeners();
 
     var language = Uri.encodeComponent(lang);
     var cat = Uri.encodeComponent(category);
-
+    var url =
+        "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}";
     assetsAudioPlayer
         .open(
-      Audio.network(
-          "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}"),
+      Audio.network(url),
       showNotification: true,
     )
         .whenComplete(() {
+      mp3Picked = url;
       _sound = Sound.IsPlaying;
       notifyListeners();
     });

@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/Videos/bg_video_mobile_4.mp4',
     'assets/Videos/bg_video_mobile_5.mp4',
   ]);
-  
+
   @override
   void initState() {
     super.initState();
@@ -40,11 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
     _dataProvider = Provider.of<DataProvider>(context, listen: false);
     super.didChangeDependencies();
   }
-@override
+
+  @override
   void dispose() {
     _dataProvider.dispose();
     super.dispose();
   }
+
   Future<void> initializePlayer(index) async {
     final video = _assetsList[index];
     _videoPlayerController1 = VideoPlayerController.asset(video);
@@ -71,6 +73,38 @@ class _HomeScreenState extends State<HomeScreen> {
             height: MediaQuery.of(context).size.height,
             child: Chewie(controller: _chewieController),
           ),
+          Consumer<DataProvider>(
+            builder: (_, prov, __) => Positioned(
+              top: 100,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AnimatedCrossFade(
+                  crossFadeState: prov.mp3Picked == null
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  duration: Duration(seconds: 1),
+                  firstChild: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(10)),
+                    width: 240,
+                    height: 40,
+                    child: AnimatedDefaultTextStyle(
+                      child: Text(
+                          '${prov.mp3Picked == null ? '' : prov.mp3Picked.toString().split('/')[8]}'),
+                      duration: Duration(seconds: 3),
+                      style: TextStyle(fontSize: 13),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  secondChild: Container(
+                       width: 240,
+                    height: 40,
+                  ),
+                ),
+              ),
+            ),
+          ),
           Positioned(
             bottom: MediaQuery.of(context).size.height / 8.2,
             child: PlaySettings(),
@@ -78,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
           DraggableScrollableSheet(
             minChildSize: 0.11,
             maxChildSize: 0.5,
-            
             initialChildSize: 0.11,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
