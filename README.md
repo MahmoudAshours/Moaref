@@ -2,7 +2,7 @@
  
 ![top](https://user-images.githubusercontent.com/50237142/103490561-64648d80-4e25-11eb-9938-f8a84beec7a5.jpg)
 
-This is a repository of [Kon Moaref (كن معرفا برسول الله )](https://play.google.com/store/apps/details?id=konMoarfan.rasoulallah.net&hl=ar&gl=US)
+This is a repository of [Kon Moaref (كن معرفا برسول الله )](https://play.google.com/store/apps/details?id=konMoarfan.rasoulallah.net&hl=ar&gl=US) Flutter version.
 
 ## Description 
 
