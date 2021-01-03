@@ -18,7 +18,7 @@ class PlayPauseButton extends StatelessWidget {
           child: PlayerBuilder.isPlaying(
             player: prov.assetsAudioPlayer,
             builder: (BuildContext context, bool play) {
-              print(play);
+        
               return Icon(prov.boolList.isNotEmpty &&
                       prov.boolList[index] == true &&
                       play
