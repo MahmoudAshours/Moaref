@@ -58,15 +58,33 @@ Switched to single child scroll view with column
 
 - [x] Should stop the current playing if clicked on
 - [x] If clicked on another item , it should stop the current and play the new one.
-- [ ] When switching languages , The url gives null at first (fetching categories) then gets the list.
+- [x] When switching languages , The url gives null at first (fetching categories) then gets the list.
 - [ ] Loading of splash video gives null at beginning
 - [ ] Loading of background video gives null at beginning
 - [x] Categories section reloads every setState()
 - [x]  Can't control single play button individually
 - [x] Categories section reloads when moving the bottom menu.
-- [ ] App is so so so so slow (laggy) in release and debug due to future builders + consumer builders ( Use isolates)
+- [x] App is so so so so slow (laggy) in release and debug due to future builders + consumer builders ( Use isolates)
 
+Performance Tips : 
+To use Future builder effeciently , pass it a function that return value only & not processing data.
+For example :
+Using this is not efficent.
+```
+Future<List<String>>> getData(){
+ http request
+ get Data
+ return data as list
+ }
 
  
+FutureBuilder(
+future:getData
+builder : ...
+)
+```
 
+Future builder rebuilds up to 60 times per second ( I don't know why , even in docs it's said that futurebuilder rebuilds only when data changes)
 
+Also , Using Consumer (Provider package) to the whole DataProvider class isnt efficent. 
+The consumer detects any change in the whole class then rebuilds the widgets.
