@@ -11,6 +11,19 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
+  DataProvider _dataProvider;
+
+  @override
+  void didChangeDependencies() {
+    _dataProvider = Provider.of<DataProvider>(context, listen: false);
+    _dataProvider.fetchLanguage();
+
+    _dataProvider.fetchCategory();
+
+    _dataProvider.fetchSounds();
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,8 +34,8 @@ class _CategoryState extends State<Category> {
           height: MediaQuery.of(context).size.height / 4.4,
           child: Consumer<DataProvider>(
             builder: (BuildContext c, DataProvider provider, _) {
-              return FutureBuilder(
-                future: provider.fetchSounds(),
+              return StreamBuilder(
+                stream: provider.soundLinks.stream.asBroadcastStream(),
                 builder: (c, AsyncSnapshot<List<String>> snapshot) {
                   return !snapshot.hasData
                       ? Center(child: SizedBox())

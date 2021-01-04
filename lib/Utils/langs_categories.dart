@@ -6,9 +6,32 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class LangsCats extends StatelessWidget {
+class LangsCats extends StatefulWidget {
+  @override
+  _LangsCatsState createState() => _LangsCatsState();
+}
+
+class _LangsCatsState extends State<LangsCats>
+    with AutomaticKeepAliveClientMixin {
+  DataProvider _dataProvider;
+
+  @override
+  void didChangeDependencies() {
+    _dataProvider = Provider.of<DataProvider>(context, listen: false);
+    _dataProvider.fetchLanguage();
+    _dataProvider.fetchCategory();
+     _dataProvider.fetchSounds();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+  
     return Consumer<DataProvider>(
       builder: (c, provider, d) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -23,8 +46,8 @@ class LangsCats extends StatelessWidget {
   }
 
   _languagePicker(DataProvider provider) {
-    return FutureBuilder<List<String>>(
-      future: provider.fetchLanguage(),
+    return StreamBuilder<List<String>>(
+      stream: provider.languageLinks.stream,
       builder: (_, AsyncSnapshot<List<String>> snapshot) => Container(
         width: 150,
         height: 50,
@@ -68,8 +91,8 @@ class LangsCats extends StatelessWidget {
   }
 
   _categoryPicker(DataProvider provider) {
-    return FutureBuilder<List<String>>(
-      future: provider.fetchCategory(),
+    return StreamBuilder<List<String>>(
+      stream: provider.categoryLinks.stream.asBroadcastStream(),
       builder: (_, AsyncSnapshot<List<String>> snapshot) => Container(
         width: 150,
         height: 60,
@@ -120,4 +143,7 @@ class LangsCats extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

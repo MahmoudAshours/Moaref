@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dio/dio.dart';
 import 'package:ffmpegtest/Helpers/link_manipulation.dart';
@@ -13,6 +15,10 @@ class DataProvider extends ChangeNotifier {
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   List boolList = [];
   List categoryItems = [];
+  StreamController<List<String>> languageLinks = StreamController.broadcast();
+  StreamController<List<String>> categoryLinks = StreamController.broadcast();
+
+  StreamController<List<String>> soundLinks = StreamController.broadcast();
 
   Sound get sound => _sound;
 
@@ -24,11 +30,15 @@ class DataProvider extends ChangeNotifier {
   // ignore: must_call_super
   void dispose() {
     assetsAudioPlayer.dispose();
+    languageLinks.close();
+    categoryLinks.close();
+    soundLinks.close();
   }
 
   void changeCategory(String newCategory) {
     category = newCategory;
     boolList = [];
+    fetchSounds();
     notifyListeners();
   }
 
@@ -37,7 +47,11 @@ class DataProvider extends ChangeNotifier {
 
     fetchCategory().then((value) {
       category = value[0];
+      fetchSounds();
+          boolList = [];
+
     });
+
     notifyListeners();
   }
 
@@ -48,16 +62,17 @@ class DataProvider extends ChangeNotifier {
     var document = parser.parse(response.data);
     List<String> links = linkManipulator(document);
     categoryItems = links;
+    links != null ? categoryLinks.sink.add(links) : '';
     notifyListeners();
     return links;
   }
 
-  Future<List<String>> fetchLanguage() async {
+  Future<void> fetchLanguage() async {
     url = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
     var response = await Dio().get(url);
     var document = parser.parse(response.data);
     var links = languageManipulator(document);
-    return links;
+    links != null ? languageLinks.sink.add(links) : '';
   }
 
   fetchSoundData(snapshot, index) {
@@ -71,14 +86,19 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<String>> fetchSounds() async {
-    var language = Uri.encodeComponent(lang);
-    var cat = Uri.encodeComponent(category);
-    var url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
+  Future<void> fetchSounds() async {
+    var url;
+    if (lang.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
+      url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category";
+    } else {
+      var language = Uri.encodeComponent(lang);
+      var cat = Uri.encodeComponent(category);
+      url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
+    }
     var response = await Dio().get(url);
     var document = parser.parse(response.data);
     var links = linkManipulator(document);
-    return links;
+    links != null ? soundLinks.sink.add(links) : '';
   }
 
   nullifymp3() {

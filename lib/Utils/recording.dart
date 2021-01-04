@@ -7,7 +7,6 @@ import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
