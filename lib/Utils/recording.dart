@@ -43,10 +43,8 @@ class _RecordingState extends State<Recording> {
                   child: GestureDetector(
                     onTap: () async {
                       await Record.hasPermission();
-
-                      Directory directory = await getExternalStorageDirectory();
-
-                      path = join(directory.path, 'rec.m4a');
+                      Directory directory = await getTemporaryDirectory();
+                      path = join(directory.path, 'recz.m4a');
                       print(path);
                       await Record.start(
                         path: '$path', // required

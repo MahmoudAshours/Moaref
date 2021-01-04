@@ -14,7 +14,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   double height = 60;
   var currindex = 0;
   VideoPlayerController _videoPlayerController1;
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() {
-    _dataProvider = Provider.of<DataProvider>(context, listen: false);
+    _dataProvider = Provider.of<DataProvider>(context, listen: true);
     super.didChangeDependencies();
   }
 
@@ -57,7 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
         autoPlay: true,
         looping: true,
         autoInitialize: true,
+        
         showControls: false,
+        allowMuting: false,
+        allowedScreenSleep: false,
         allowFullScreen: true,
         aspectRatio: MediaQuery.of(context).size.aspectRatio);
     setState(() {});
@@ -65,42 +69,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Chewie(controller: _chewieController),
-          ),
-          Consumer<DataProvider>(
-            builder: (_, prov, __) => Positioned(
-              top: 100,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AnimatedCrossFade(
-                  crossFadeState: prov.mp3Picked == null
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
-                  duration: Duration(seconds: 1),
-                  firstChild: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(10)),
-                    width: 240,
-                    height: 40,
-                    child: AnimatedDefaultTextStyle(
-                      child: Text(
-                          '${prov.mp3Picked == null ? '' : prov.mp3Picked.toString().split('/')[8]}'),
-                      duration: Duration(seconds: 3),
-                      style: TextStyle(fontSize: 13),
-                      textAlign: TextAlign.center,
-                    ),
+          _chewieController != null
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Chewie(controller: _chewieController),
+                )
+              : SizedBox(),
+          Positioned(
+            top: 100,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AnimatedCrossFade(
+                crossFadeState: _dataProvider.mp3Picked == null
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                duration: Duration(seconds: 1),
+                firstChild: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(10)),
+                  width: 240,
+                  height: 40,
+                  child: AnimatedDefaultTextStyle(
+                    child: Text(
+                        '${_dataProvider.mp3Picked == null ? '' : _dataProvider.mp3Picked.toString().split('/')[8]}'),
+                    duration: Duration(seconds: 3),
+                    style: TextStyle(fontSize: 13),
+                    textAlign: TextAlign.center,
                   ),
-                  secondChild: Container(
-                       width: 240,
-                    height: 40,
-                  ),
+                ),
+                secondChild: Container(
+                  width: 240,
+                  height: 40,
                 ),
               ),
             ),
@@ -221,4 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

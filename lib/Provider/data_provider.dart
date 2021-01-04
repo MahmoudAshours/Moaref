@@ -48,8 +48,7 @@ class DataProvider extends ChangeNotifier {
     fetchCategory().then((value) {
       category = value[0];
       fetchSounds();
-          boolList = [];
-
+      boolList = [];
     });
 
     notifyListeners();
@@ -62,17 +61,17 @@ class DataProvider extends ChangeNotifier {
     var document = parser.parse(response.data);
     List<String> links = linkManipulator(document);
     categoryItems = links;
-    links != null ? categoryLinks.sink.add(links) : '';
+    if (links != null) categoryLinks.sink.add(links);
     notifyListeners();
     return links;
   }
 
-  Future<void> fetchLanguage() async {
+  fetchLanguage() async {
     url = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
     var response = await Dio().get(url);
     var document = parser.parse(response.data);
     var links = languageManipulator(document);
-    links != null ? languageLinks.sink.add(links) : '';
+    if (links != null) languageLinks.sink.add(links);
   }
 
   fetchSoundData(snapshot, index) {
@@ -98,7 +97,7 @@ class DataProvider extends ChangeNotifier {
     var response = await Dio().get(url);
     var document = parser.parse(response.data);
     var links = linkManipulator(document);
-    links != null ? soundLinks.sink.add(links) : '';
+    if (links != null) soundLinks.sink.add(links);
   }
 
   nullifymp3() {
@@ -106,7 +105,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  playSoundData(snapshot, index) {
+  FutureOr playSoundData(snapshot, index) async {
     _sound = Sound.Loading;
     notifyListeners();
 
@@ -114,10 +113,13 @@ class DataProvider extends ChangeNotifier {
     var cat = Uri.encodeComponent(category);
     var url =
         "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}";
-    assetsAudioPlayer
+    await assetsAudioPlayer
         .open(
       Audio.network(url),
-      showNotification: true,
+      audioFocusStrategy:
+          AudioFocusStrategy.request(resumeOthersPlayersAfterDone: true),
+      playInBackground: PlayInBackground.disabledRestoreOnForeground,
+      respectSilentMode: false,
     )
         .whenComplete(() {
       mp3Picked = url;

@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/search.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +12,7 @@ class LangsCats extends StatefulWidget {
   _LangsCatsState createState() => _LangsCatsState();
 }
 
-class _LangsCatsState extends State<LangsCats>
-    with AutomaticKeepAliveClientMixin {
+class _LangsCatsState extends State<LangsCats> {
   DataProvider _dataProvider;
 
   @override
@@ -140,7 +140,4 @@ class _LangsCatsState extends State<LangsCats>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

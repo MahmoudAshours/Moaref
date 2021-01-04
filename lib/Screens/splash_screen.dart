@@ -24,7 +24,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Chewie(controller: _chewieController),
+      child: _chewieController != null
+          ? Chewie(controller: _chewieController)
+          : SizedBox(),
     );
   }
 
