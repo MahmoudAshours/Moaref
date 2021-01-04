@@ -22,7 +22,7 @@ class _RecordingState extends State<Recording> {
   Widget build(BuildContext context) {
     var dataProvider = Provider.of<DataProvider>(context);
     var soundProvider = Provider.of<RecordProvider>(context);
-
+    soundProvider.isRecording();
     return Column(
       children: [
         LangsCats(),
@@ -30,29 +30,45 @@ class _RecordingState extends State<Recording> {
         BounceInUp(
           duration: Duration(seconds: 1),
           child: Center(
-            child: AvatarGlow(
-              glowColor: Colors.orange,
-              endRadius: 40.0,
-              duration: Duration(milliseconds: 2000),
-              repeat: true,
-              showTwoGlows: true,
-              repeatPauseDuration: Duration(milliseconds: 100),
-              child: Material(
-                elevation: 8.0,
-                shape: CircleBorder(),
-                child: CircleAvatar(
-                  backgroundColor: kSecondaryColor,
-                  child: GestureDetector(
-                    onTap: () async {},
-                    child: FaIcon(
-                      FontAwesomeIcons.microphoneAlt,
-                      color: Colors.white,
+            child: soundProvider.recording
+                ? AvatarGlow(
+                    glowColor: Colors.orange,
+                    endRadius: 40.0,
+                    duration: Duration(milliseconds: 2000),
+                    repeat: true,
+                    showTwoGlows: true,
+                    repeatPauseDuration: Duration(milliseconds: 100),
+                    child: Material(
+                      elevation: 8.0,
+                      shape: CircleBorder(),
+                      child: CircleAvatar(
+                        backgroundColor: kSecondaryColor,
+                        child: GestureDetector(
+                          onTap: () {
+                            soundProvider.endRecord();
+                          },
+                          child: FaIcon(
+                            FontAwesomeIcons.microphoneAlt,
+                            color: Colors.white,
+                          ),
+                        ),
+                        radius: 20.0,
+                      ),
                     ),
+                  )
+                : CircleAvatar(
+                    backgroundColor: kSecondaryColor,
+                    child: GestureDetector(
+                      onTap: () async {
+                        await soundProvider.recordSound();
+                      },
+                      child: FaIcon(
+                        FontAwesomeIcons.microphoneAlt,
+                        color: Colors.white,
+                      ),
+                    ),
+                    radius: 20.0,
                   ),
-                  radius: 20.0,
-                ),
-              ),
-            ),
           ),
         ),
         SizedBox(height: 20),

@@ -9,6 +9,13 @@ import 'package:record/record.dart';
 class RecordProvider extends ChangeNotifier {
   var path;
   var sounds = [];
+  var recording = false;
+  isRecording() {
+    Record.isRecording().asStream().listen((event) {
+      recording = event;
+      notifyListeners();
+    });
+  }
 
   Future<void> recordSound() async {
     await Record.hasPermission();
@@ -25,5 +32,6 @@ class RecordProvider extends ChangeNotifier {
       sounds.add(path);
       notifyListeners();
     });
+    print(sounds);
   }
 }

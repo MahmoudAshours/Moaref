@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen>
         autoPlay: true,
         looping: true,
         autoInitialize: true,
-        
         showControls: false,
         allowMuting: false,
         allowedScreenSleep: false,
