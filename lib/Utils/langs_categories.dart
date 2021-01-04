@@ -17,10 +17,10 @@ class _LangsCatsState extends State<LangsCats>
 
   @override
   void didChangeDependencies() {
-    _dataProvider = Provider.of<DataProvider>(context, listen: false);
+    _dataProvider = Provider.of<DataProvider>(context, listen: true);
     _dataProvider.fetchLanguage();
     _dataProvider.fetchCategory();
-     _dataProvider.fetchSounds();
+    _dataProvider.fetchSounds();
     super.didChangeDependencies();
   }
 
@@ -31,17 +31,14 @@ class _LangsCatsState extends State<LangsCats>
 
   @override
   Widget build(BuildContext context) {
-  
-    return Consumer<DataProvider>(
-      builder: (c, provider, d) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        textDirection: TextDirection.rtl,
-        children: [
-          _languagePicker(provider),
-          _categoryPicker(provider),
-          Search()
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      textDirection: TextDirection.rtl,
+      children: [
+        _languagePicker(_dataProvider),
+        _categoryPicker(_dataProvider),
+        Search()
+      ],
     );
   }
 
