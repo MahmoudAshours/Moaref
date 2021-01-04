@@ -1,5 +1,6 @@
 import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
+import 'package:ffmpegtest/Provider/record_provider.dart';
 import 'package:ffmpegtest/Screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => DataProvider(),
-        )
+        ChangeNotifierProvider(create: (_) => DataProvider()),
+        ChangeNotifierProvider(create: (_) => RecordProvider())
       ],
       child: MaterialApp(
         title: 'كن معرفا برسول الله ',

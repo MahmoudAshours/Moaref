@@ -32,29 +32,25 @@ class _CategoryState extends State<Category> {
         SizedBox(height: 10),
         Container(
           height: MediaQuery.of(context).size.height / 4.4,
-          child: Consumer<DataProvider>(
-            builder: (BuildContext c, DataProvider provider, _) {
-              return StreamBuilder(
-                stream: provider.soundLinks.stream.asBroadcastStream(),
-                builder: (c, AsyncSnapshot<List<String>> snapshot) {
-                  return !snapshot.hasData
-                      ? Center(child: SizedBox())
-                      : SingleChildScrollView(
-                          child: Column(
-                            children: snapshot.data
-                                .mapIndexed(
-                                  (String e, int i) => CategoryComponent(
-                                    provider: provider,
-                                    i: i,
-                                    e: e,
-                                    snapshot: snapshot,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        );
-                },
-              );
+          child: StreamBuilder(
+            stream: _dataProvider.soundLinks.stream.asBroadcastStream(),
+            builder: (c, AsyncSnapshot<List<String>> snapshot) {
+              return !snapshot.hasData
+                  ? Center(child: SizedBox())
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: snapshot.data
+                            .mapIndexed(
+                              (String e, int i) => CategoryComponent(
+                                provider: _dataProvider,
+                                i: i,
+                                e: e,
+                                snapshot: snapshot,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    );
             },
           ),
         )
