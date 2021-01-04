@@ -88,3 +88,5 @@ Future builder rebuilds up to 60 times per second ( I don't know why , even in d
 
 Also , Using Consumer (Provider package) to the whole DataProvider class isnt efficent. 
 The consumer detects any change in the whole class then rebuilds the widgets.
+
+This also is a great guide for [best practices for better performances in Flutter](https://flutter.dev/docs/perf/rendering/best-practices)
