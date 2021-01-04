@@ -51,6 +51,7 @@ The app is composed in 4 main parts :
 
 
 Bugs & issues :
+
 - [x] Playing one audio animates all play icon 
 - [x] Listview kills the audio playing when scrolling
 
@@ -59,8 +60,8 @@ Switched to single child scroll view with column
 - [x] Should stop the current playing if clicked on
 - [x] If clicked on another item , it should stop the current and play the new one.
 - [x] When switching languages , The url gives null at first (fetching categories) then gets the list.
-- [ ] Loading of splash video gives null at beginning
-- [ ] Loading of background video gives null at beginning
+- [x] Loading of splash video gives null at beginning
+- [x] Loading of background video gives null at beginning
 - [x] Categories section reloads every setState()
 - [x]  Can't control single play button individually
 - [x] Categories section reloads when moving the bottom menu.
