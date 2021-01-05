@@ -8,7 +8,7 @@ import 'package:ffmpegtest/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:record/record.dart';
+import 'package:ffmpegtest/Helpers/map_indexed.dart';
 
 class Recording extends StatefulWidget {
   @override
@@ -79,15 +79,23 @@ class _RecordingState extends State<Recording> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: soundProvider.sounds
-                        .map(
-                          (e) => AudioWidget.file(
-                            child: Container(
-                              width: 200,
-                              height: 200,
-                              color: Colors.red,
+                        .mapIndexed(
+                          (e, i) => FadeInUp(
+                            delay: Duration(milliseconds: 20 * i),
+                            child: ListTile(
+                              // subtitle:  soundProvider.boolList.isEmpty &&
+                              //         soundProvider.boolList[i] == true
+                              //     ? PlayerBuilder.realtimePlayingInfos(
+                              //         player:  soundProvider.assetsAudioPlayer,
+                              //         builder: (context, realTimeInfo) {
+                              //           return realTimeInfo != null
+                              //               ? Text(
+                              //                   "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
+                              //               : SizedBox();
+                              //         },
+                              //       )
+                              //     : SizedBox(),
                             ),
-                            path: e,
-                            play: true,
                           ),
                         )
                         .toList(),

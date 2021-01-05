@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/play_pause.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategoryComponent extends StatefulWidget {
   final provider;
@@ -19,6 +21,23 @@ class CategoryComponent extends StatefulWidget {
 }
 
 class _CategoryComponentState extends State<CategoryComponent> {
+  DataProvider _dataProvider;
+
+  @override
+  void didChangeDependencies() {
+    _dataProvider = Provider.of<DataProvider>(context, listen: true);
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _dataProvider.assetsAudioPlayer
+        .stop()
+        .then((value) => _dataProvider.nullifymp3());
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

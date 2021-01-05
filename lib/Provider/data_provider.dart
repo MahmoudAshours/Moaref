@@ -102,6 +102,7 @@ class DataProvider extends ChangeNotifier {
 
   nullifymp3() {
     mp3Picked = null;
+    boolList = [];
     notifyListeners();
   }
 
@@ -118,7 +119,6 @@ class DataProvider extends ChangeNotifier {
       Audio.network(url),
       audioFocusStrategy:
           AudioFocusStrategy.request(resumeOthersPlayersAfterDone: true),
-      playInBackground: PlayInBackground.disabledRestoreOnForeground,
       respectSilentMode: false,
     )
         .whenComplete(() {
