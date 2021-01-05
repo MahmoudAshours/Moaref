@@ -1,6 +1,6 @@
 import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Utils/category_comp.dart';
-import 'package:ffmpegtest/Utils/langs_categories.dart';
+import 'package:ffmpegtest/Utils/Categories/category_comp.dart';
+import 'package:ffmpegtest/Utils/Commons/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ffmpegtest/Helpers/map_indexed.dart';

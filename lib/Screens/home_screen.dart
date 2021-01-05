@@ -1,8 +1,8 @@
 import 'package:chewie/chewie.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Utils/category.dart';
+import 'package:ffmpegtest/Utils/Categories/category.dart';
 import 'package:ffmpegtest/Utils/gallery.dart';
-import 'package:ffmpegtest/Utils/play_settings.dart';
+import 'package:ffmpegtest/Utils/Commons/play_settings.dart';
 import 'package:ffmpegtest/Utils/recording.dart';
 import 'package:ffmpegtest/Utils/upload_file.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +14,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AutomaticKeepAliveClientMixin {
+class _HomeScreenState extends State<HomeScreen> {
   double height = 60;
   var currindex = 0;
   VideoPlayerController _videoPlayerController1;
@@ -68,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -225,7 +223,4 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
