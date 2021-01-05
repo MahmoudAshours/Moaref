@@ -1,4 +1,5 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 40,
                   child: AnimatedDefaultTextStyle(
                     child: Text(
-                        '${_dataProvider.mp3Picked == null ? '' : _dataProvider.mp3Picked.toString().split('/')[8]}'),
+                        '${_dataProvider.mp3Picked == null ? '' : _dataProvider.mp3Picked.contains('/') ? _dataProvider.mp3Picked.toString().split('/')[8] : _dataProvider.mp3Picked}'),
                     duration: Duration(seconds: 3),
                     style: TextStyle(fontSize: 13),
                     textAlign: TextAlign.center,

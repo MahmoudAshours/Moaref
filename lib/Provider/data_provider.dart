@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dio/dio.dart';
 import 'package:ffmpegtest/Helpers/link_manipulation.dart';
+import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart' as parser;
 
@@ -17,7 +18,6 @@ class DataProvider extends ChangeNotifier {
   List categoryItems = [];
   StreamController<List<String>> languageLinks = StreamController.broadcast();
   StreamController<List<String>> categoryLinks = StreamController.broadcast();
-
   StreamController<List<String>> soundLinks = StreamController.broadcast();
 
   Sound get sound => _sound;
@@ -51,6 +51,11 @@ class DataProvider extends ChangeNotifier {
       boolList = [];
     });
 
+    notifyListeners();
+  }
+
+  setMp3(mp3) {
+    mp3Picked = mp3;
     notifyListeners();
   }
 
@@ -128,5 +133,3 @@ class DataProvider extends ChangeNotifier {
     });
   }
 }
-
-enum Sound { IsPlaying, IsNotPlaying, Loading }

@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Provider/record_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
@@ -16,11 +18,25 @@ class Recording extends StatefulWidget {
 
 class _RecordingState extends State<Recording> {
   var path;
+  DataProvider dataProvider;
+  RecordProvider soundProvider;
+  @override
+  void didChangeDependencies() {
+    dataProvider = Provider.of<DataProvider>(context);
+    soundProvider = Provider.of<RecordProvider>(context, listen: true);
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    soundProvider.assetsAudioPlayer
+        .stop()
+        .then((value) => dataProvider.nullifymp3());
+  }
 
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<DataProvider>(context);
-    var soundProvider = Provider.of<RecordProvider>(context);
     soundProvider.isRecording();
     return Column(
       children: [
@@ -43,9 +59,7 @@ class _RecordingState extends State<Recording> {
                       child: CircleAvatar(
                         backgroundColor: kSecondaryColor,
                         child: GestureDetector(
-                          onTap: () {
-                            soundProvider.endRecord();
-                          },
+                          onTap: () => soundProvider.endRecord(),
                           child: FaIcon(
                             FontAwesomeIcons.microphoneAlt,
                             color: Colors.white,
@@ -58,9 +72,7 @@ class _RecordingState extends State<Recording> {
                 : CircleAvatar(
                     backgroundColor: kSecondaryColor,
                     child: GestureDetector(
-                      onTap: () async {
-                        await soundProvider.recordSound();
-                      },
+                      onTap: () async => await soundProvider.recordSound(),
                       child: FaIcon(
                         FontAwesomeIcons.microphoneAlt,
                         color: Colors.white,
@@ -71,10 +83,13 @@ class _RecordingState extends State<Recording> {
           ),
         ),
         SizedBox(height: 20),
-        soundProvider.sounds == null || soundProvider.sounds.isEmpty
+        soundProvider.sounds == null ||
+                soundProvider.sounds.isEmpty ||
+                soundProvider.boolList.isEmpty
             ? Center(child: Text('هذه الخاصية تمكنك من تسجيل مقطع صوتي دعوي'))
             : Container(
-                height: 400,
+                height: 150,
+                width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
                   child: Column(
                     children: soundProvider.sounds
@@ -82,18 +97,64 @@ class _RecordingState extends State<Recording> {
                           (e, i) => FadeInUp(
                             delay: Duration(milliseconds: 20 * i),
                             child: ListTile(
-                              // subtitle:  soundProvider.boolList.isEmpty &&
-                              //         soundProvider.boolList[i] == true
-                              //     ? PlayerBuilder.realtimePlayingInfos(
-                              //         player:  soundProvider.assetsAudioPlayer,
-                              //         builder: (context, realTimeInfo) {
-                              //           return realTimeInfo != null
-                              //               ? Text(
-                              //                   "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
-                              //               : SizedBox();
-                              //         },
-                              //       )
-                              //     : SizedBox(),
+                              trailing: Text('${i + 1} تسجيل '),
+                              leading: FlatButton(
+                                child: PlayerBuilder.isPlaying(
+                                  player: soundProvider.assetsAudioPlayer,
+                                  builder: (BuildContext context, bool play) {
+                                    return Icon(soundProvider
+                                                .boolList.isNotEmpty &&
+                                            soundProvider.boolList[i] == true &&
+                                            play
+                                        ? Icons.pause
+                                        : Icons.play_arrow);
+                                  },
+                                ),
+                                onPressed: () {
+                                  soundProvider.fetchSoundData(i);
+                                  soundProvider.assetsAudioPlayer.isPlaying
+                                      .listen(
+                                    (event) {
+                                      if (event) {
+                                        print(event);
+                                        soundProvider.setSound =
+                                            Sound.IsPlaying;
+                                      } else {
+                                        soundProvider.setSound =
+                                            Sound.IsNotPlaying;
+                                      }
+                                    },
+                                  );
+
+                                  if (soundProvider.sound ==
+                                      Sound.IsNotPlaying) {
+                                    soundProvider.playSoundData(i);
+                                    dataProvider.setMp3('${i + 1} تسجيل ');
+                                  } else {
+                                    if ((soundProvider.boolList.isNotEmpty &&
+                                            !soundProvider.boolList[i]) ||
+                                        soundProvider.boolList.isEmpty) {
+                                      soundProvider.assetsAudioPlayer.stop();
+                                      dataProvider.nullifymp3();
+                                    } else {
+                                      soundProvider.playSoundData(i);
+                                      dataProvider.setMp3('${i + 1} تسجيل ');
+                                    }
+                                  }
+                                },
+                              ),
+                              subtitle: soundProvider.boolList.isNotEmpty &&
+                                      soundProvider.boolList[i] == true
+                                  ? PlayerBuilder.realtimePlayingInfos(
+                                      player: soundProvider.assetsAudioPlayer,
+                                      builder: (context, realTimeInfo) {
+                                        return realTimeInfo != null
+                                            ? Text(
+                                                "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
+                                            : SizedBox();
+                                      },
+                                    )
+                                  : SizedBox(),
                             ),
                           ),
                         )

@@ -17,9 +17,7 @@ class _CategoryState extends State<Category> {
   void didChangeDependencies() {
     _dataProvider = Provider.of<DataProvider>(context, listen: false);
     _dataProvider.fetchLanguage();
-
     _dataProvider.fetchCategory();
-
     _dataProvider.fetchSounds();
     super.didChangeDependencies();
   }
