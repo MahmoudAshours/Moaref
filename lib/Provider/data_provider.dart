@@ -91,7 +91,6 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> fetchSounds() async {
-    var url;
     if (lang.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
       url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category";
     } else {
@@ -115,10 +114,16 @@ class DataProvider extends ChangeNotifier {
     _sound = Sound.Loading;
     notifyListeners();
 
-    var language = Uri.encodeComponent(lang);
-    var cat = Uri.encodeComponent(category);
-    var url =
-        "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/${snapshot.data[index]}";
+    if (lang.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
+      url =
+          "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category/${snapshot.data[index]}";
+    } else {
+      var language = Uri.encodeComponent(lang);
+      var cat = Uri.encodeComponent(category);
+      var soundData = Uri.encodeComponent(snapshot.data[index]);
+      url =
+          "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/$soundData";
+    }
     await assetsAudioPlayer
         .open(
       Audio.network(url),

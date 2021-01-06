@@ -21,13 +21,7 @@ class _LangsCatsState extends State<LangsCats> {
     _dataProvider.fetchCategory();
     _dataProvider.fetchSounds();
     super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+  } 
   @override
   Widget build(BuildContext context) {
     return Row(

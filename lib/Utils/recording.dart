@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:audio_picker/audio_picker.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
@@ -20,6 +21,7 @@ class _RecordingState extends State<Recording> {
   var path;
   DataProvider dataProvider;
   RecordProvider soundProvider;
+
   @override
   void didChangeDependencies() {
     dataProvider = Provider.of<DataProvider>(context);
@@ -33,6 +35,10 @@ class _RecordingState extends State<Recording> {
     soundProvider.assetsAudioPlayer
         .stop()
         .then((value) => dataProvider.nullifymp3());
+  }
+
+  pickAudio() async {
+    var path = await AudioPicker.pickAudio();
   }
 
   @override

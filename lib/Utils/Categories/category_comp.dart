@@ -33,9 +33,7 @@ class _CategoryComponentState extends State<CategoryComponent> {
   @override
   void dispose() {
     super.dispose();
-    _dataProvider.assetsAudioPlayer
-        .stop()
-        .then((value) => _dataProvider.nullifymp3());
+    _dataProvider.assetsAudioPlayer.stop();
   }
 
   @override

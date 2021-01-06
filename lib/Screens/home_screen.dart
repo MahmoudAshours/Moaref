@@ -93,8 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 240,
                   height: 40,
                   child: AnimatedDefaultTextStyle(
-                    child: Text(
-                        '${_dataProvider.mp3Picked == null ? '' : _dataProvider.mp3Picked.contains('/') ? _dataProvider.mp3Picked.toString().split('/')[8] : _dataProvider.mp3Picked}'),
+                    child: Text('$mp3Name'),
                     duration: Duration(seconds: 3),
                     style: TextStyle(fontSize: 13),
                     textAlign: TextAlign.center,
@@ -166,6 +165,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  mp3Name() => _dataProvider.mp3Picked == null
+      ? ''
+      : _dataProvider.mp3Picked.contains('/')
+          ? _dataProvider.mp3Picked.contains(RegExp("^[a-zA-Z0-9]*\$"))
+              ? _dataProvider.mp3Picked.toString().split('/')[8]
+              : Uri.decodeComponent(
+                  _dataProvider.mp3Picked.toString().split('/')[8])
+          : _dataProvider.mp3Picked;
+
 
   _itemsBody() {
     switch (currindex) {
