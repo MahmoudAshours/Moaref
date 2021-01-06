@@ -10,9 +10,11 @@ class Category extends StatefulWidget {
   _CategoryState createState() => _CategoryState();
 }
 
-class _CategoryState extends State<Category> {
+class _CategoryState extends State<Category>
+    with AutomaticKeepAliveClientMixin<Category> {
   DataProvider _dataProvider;
-
+  @override
+  bool get wantKeepAlive => true;
   @override
   void didChangeDependencies() {
     _dataProvider = Provider.of<DataProvider>(context, listen: false);

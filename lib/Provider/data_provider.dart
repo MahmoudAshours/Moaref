@@ -60,23 +60,31 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<List<String>> fetchCategory() async {
-    var language = Uri.encodeComponent(lang);
-    url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
-    var response = await Dio().get(url);
-    var document = parser.parse(response.data);
-    List<String> links = linkManipulator(document);
-    categoryItems = links;
-    if (links != null) categoryLinks.sink.add(links);
-    notifyListeners();
-    return links;
+    try {
+      var language = Uri.encodeComponent(lang);
+      url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
+      var response = await Dio().get(url);
+      var document = parser.parse(response.data);
+      List<String> links = linkManipulator(document);
+      categoryItems = links;
+      if (links != null) categoryLinks.sink.add(links);
+      notifyListeners();
+      return links;
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   fetchLanguage() async {
-    url = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
-    var response = await Dio().get(url);
-    var document = parser.parse(response.data);
-    var links = languageManipulator(document);
-    if (links != null) languageLinks.sink.add(links);
+    try {
+      url = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
+      var response = await Dio().get(url);
+      var document = parser.parse(response.data);
+      var links = languageManipulator(document);
+      if (links != null) languageLinks.sink.add(links);
+    } catch (e) {
+      print(e);
+    }
   }
 
   fetchSoundData(snapshot, index) {
@@ -91,17 +99,21 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> fetchSounds() async {
-    if (lang.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-      url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category";
-    } else {
-      var language = Uri.encodeComponent(lang);
-      var cat = Uri.encodeComponent(category);
-      url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
+    try {
+      if (lang.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
+        url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category";
+      } else {
+        var language = Uri.encodeComponent(lang);
+        var cat = Uri.encodeComponent(category);
+        url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
+      }
+      var response = await Dio().get(url);
+      var document = parser.parse(response.data);
+      var links = linkManipulator(document);
+      if (links != null) soundLinks.sink.add(links);
+    } on Exception catch (e) {
+      print(e);
     }
-    var response = await Dio().get(url);
-    var document = parser.parse(response.data);
-    var links = linkManipulator(document);
-    if (links != null) soundLinks.sink.add(links);
   }
 
   nullifymp3() {
@@ -114,27 +126,31 @@ class DataProvider extends ChangeNotifier {
     _sound = Sound.Loading;
     notifyListeners();
 
-    if (lang.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-      url =
-          "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category/${snapshot.data[index]}";
-    } else {
-      var language = Uri.encodeComponent(lang);
-      var cat = Uri.encodeComponent(category);
-      var soundData = Uri.encodeComponent(snapshot.data[index]);
-      url =
-          "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/$soundData";
+    try {
+      if (lang.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
+        url =
+            "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category/${snapshot.data[index]}";
+      } else {
+        var language = Uri.encodeComponent(lang);
+        var cat = Uri.encodeComponent(category);
+        var soundData = Uri.encodeComponent(snapshot.data[index]);
+        url =
+            "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/$soundData";
+      }
+      await assetsAudioPlayer
+          .open(
+        Audio.network(url),
+        audioFocusStrategy:
+            AudioFocusStrategy.request(resumeOthersPlayersAfterDone: true),
+        respectSilentMode: false,
+      )
+          .whenComplete(() {
+        mp3Picked = url;
+        _sound = Sound.IsPlaying;
+        notifyListeners();
+      });
+    } on Exception catch (e) {
+      print(e);
     }
-    await assetsAudioPlayer
-        .open(
-      Audio.network(url),
-      audioFocusStrategy:
-          AudioFocusStrategy.request(resumeOthersPlayersAfterDone: true),
-      respectSilentMode: false,
-    )
-        .whenComplete(() {
-      mp3Picked = url;
-      _sound = Sound.IsPlaying;
-      notifyListeners();
-    });
   }
 }
