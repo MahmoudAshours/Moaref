@@ -26,6 +26,7 @@ class _CategoryState extends State<Category>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       children: [
         LangsCats(),

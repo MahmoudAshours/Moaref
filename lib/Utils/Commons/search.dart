@@ -71,15 +71,10 @@ class CustomSearchClass extends SearchDelegate {
   var searchResult;
   @override
   Widget buildResults(BuildContext context) {
-//clear the old search list
-
-//find the elements that starts with the same query letters.
-// allNames is a list that contains all your data ( you can replace it here by an http request or a query from your database )
-
     return Consumer<DataProvider>(
       builder: (_, provider, __) {
         searchResult = provider.categoryItems
-            .where((element) => element.startsWith(query))
+            .where((element) => element.contains(query))
             .toList();
         return Container(
           margin: EdgeInsets.all(20),
