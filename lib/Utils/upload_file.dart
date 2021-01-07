@@ -49,7 +49,7 @@ class _UploadFileState extends State<UploadFile> {
               width: MediaQuery.of(context).size.width / 1.3,
               child: RaisedButton(
                 onPressed: () {
-                  uploadFile();
+                  uploadProvider.uploadFile(context);
                 },
                 color: kSecondaryColor,
                 child: Text('إضافة ملف صوتي',
@@ -76,7 +76,7 @@ class _UploadFileState extends State<UploadFile> {
                           (e, i) => FadeInUp(
                             delay: Duration(milliseconds: 20 * i),
                             child: ListTile(
-                              trailing: Text('$e'),
+                              trailing: Text('${e.toString().split('/')[7]}'),
                               leading: FlatButton(
                                 child: PlayerBuilder.isPlaying(
                                   player: uploadProvider.assetsAudioPlayer,
@@ -109,7 +109,7 @@ class _UploadFileState extends State<UploadFile> {
                                   if (uploadProvider.sound ==
                                       Sound.IsNotPlaying) {
                                     uploadProvider.playSoundData(i);
-                                    dataProvider.setMp3('${i + 1} تسجيل ');
+                                    dataProvider.setMp3('${e.toString().split('/')[7]}');
                                   } else {
                                     if ((uploadProvider.boolList.isNotEmpty &&
                                             !uploadProvider.boolList[i]) ||
@@ -118,7 +118,7 @@ class _UploadFileState extends State<UploadFile> {
                                       dataProvider.nullifymp3();
                                     } else {
                                       uploadProvider.playSoundData(i);
-                                      dataProvider.setMp3('${i + 1} تسجيل ');
+                                      dataProvider.setMp3('${e.toString().split('/')[7]}');
                                     }
                                   }
                                 },
@@ -145,15 +145,5 @@ class _UploadFileState extends State<UploadFile> {
       ],
     );
   }
- 
-  uploadFile() async {
-    FilePickerResult result =
-        await FilePicker.platform.pickFiles(type: FileType.audio);
-
-    if (result != null) {
-      File file = File(result.files.single.path);
-    } else {
-      // User canceled the picker
-    }
-  }
+  
 }

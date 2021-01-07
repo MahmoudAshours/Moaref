@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 
@@ -29,7 +30,7 @@ class UploadProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  uploadFile() async {
+  uploadFile(context) async {
     FilePickerResult result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
 
@@ -38,8 +39,12 @@ class UploadProvider extends ChangeNotifier {
       sounds.add(file.path);
       boolList.add(false);
       print(sounds);
+      Navigator.of(context).pop();
+
       notifyListeners();
-    } else {}
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   fetchSoundData(index) {

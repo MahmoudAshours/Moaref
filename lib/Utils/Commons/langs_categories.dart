@@ -16,12 +16,13 @@ class _LangsCatsState extends State<LangsCats> {
 
   @override
   void didChangeDependencies() {
-    _dataProvider = Provider.of<DataProvider>(context, listen: true);
+    _dataProvider = Provider.of<DataProvider>(context, listen: false);
     _dataProvider.fetchLanguage();
     _dataProvider.fetchCategory();
     _dataProvider.fetchSounds();
     super.didChangeDependencies();
   } 
+
   @override
   Widget build(BuildContext context) {
     return Row(
