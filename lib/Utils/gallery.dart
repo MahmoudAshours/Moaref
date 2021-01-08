@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Gallery extends StatefulWidget {
   @override
@@ -24,6 +26,15 @@ class _GalleryState extends State<Gallery> {
     super.didChangeDependencies();
   }
 
+  getThumbnails(videofile) async {
+    final uint8list = await VideoThumbnail.thumbnailData(
+      video: videofile,
+      imageFormat: ImageFormat.JPEG,
+      quality: 25,
+    );
+    return uint8list;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,17 +52,43 @@ class _GalleryState extends State<Gallery> {
                     mainAxisSpacing: 4,
                     padding: EdgeInsets.all(8),
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: kBackgroundIconColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.folder_open_rounded,
-                          size: 40,
-                          color: Colors.white,
+                      GestureDetector(
+                        onTap: () => provider.uploadFile(context),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: kBackgroundIconColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.folder_open_rounded,
+                            size: 40,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
+                      if (provider.wallPapers.isNotEmpty)
+                        ...provider.wallPapers.map<Widget>(
+                          (e) {
+                            return FutureBuilder(
+                              future: getThumbnails(e),
+                              builder: (c, s) => !s.hasData
+                                  ? SizedBox()
+                                  : FadeInUp(
+                                      child: ClipRRect(
+                                        child: Image.memory(
+                                          s.data,
+                                          fit: BoxFit.fill,
+                                          gaplessPlayback: true,
+                                          cacheHeight: 100,
+                                          cacheWidth: 100,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                    ),
+                            );
+                          },
+                        ).toList(),
                       ...s.data
                           .map<Widget>(
                             (e) => FadeInUp(
