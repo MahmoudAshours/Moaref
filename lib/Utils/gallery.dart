@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
+import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,37 +40,52 @@ class _GalleryState extends State<Gallery> {
                     crossAxisSpacing: 4,
                     mainAxisSpacing: 4,
                     padding: EdgeInsets.all(8),
-                    children: s.data
-                        .map<Widget>(
-                          (e) => FadeInUp(
-                            child: ClipRRect(
-                              child: Image.network(
-                                "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
-                                fit: BoxFit.fill,
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value: loadingProgress
-                                                  .expectedTotalBytes !=
-                                              null
-                                          ? loadingProgress
-                                                  .cumulativeBytesLoaded /
-                                              loadingProgress.expectedTotalBytes
-                                          : null,
-                                    ),
-                                  );
-                                },
-                                cacheHeight: 100,
-                                cacheWidth: 100,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: kBackgroundIconColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.folder_open_rounded,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                      ...s.data
+                          .map<Widget>(
+                            (e) => FadeInUp(
+                              child: ClipRRect(
+                                child: Image.network(
+                                  "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
+                                  fit: BoxFit.fill,
+                                  gaplessPlayback: true,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes
+                                            : null,
+                                      ),
+                                    );
+                                  },
+                                  cacheHeight: 100,
+                                  cacheWidth: 100,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                    ],
                   ),
           ),
         ),

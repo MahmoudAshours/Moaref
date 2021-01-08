@@ -38,7 +38,6 @@ class UploadProvider extends ChangeNotifier {
       File file = File(result.files.single.path);
       sounds.add(file.path);
       boolList.add(false);
-      print(sounds);
       Navigator.of(context).pop();
 
       notifyListeners();

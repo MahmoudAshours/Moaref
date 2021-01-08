@@ -1,16 +1,17 @@
 import 'dart:async';
-
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:ffmpegtest/Helpers/link_manipulation.dart';
-import 'package:ffmpegtest/Models/sound_state.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
 
 class GalleryProvider extends ChangeNotifier {
   String url;
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
 
+  List wallPapers = [];
   // ignore: must_call_super
   void dispose() {
     galleryLinks.close();
@@ -23,5 +24,19 @@ class GalleryProvider extends ChangeNotifier {
     var links = languageManipulator(document);
     if (links != null) galleryLinks.sink.add(links);
     print(links);
+  }
+
+  Future uploadFile(context) async {
+    FilePickerResult result =
+        await FilePicker.platform.pickFiles(type: FileType.video);
+
+    if (result != null) {
+      File file = File(result.files.single.path);
+      wallPapers.add(file.path);
+      Navigator.of(context).pop();
+      notifyListeners();
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 }
