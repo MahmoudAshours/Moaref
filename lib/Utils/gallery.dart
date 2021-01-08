@@ -1,8 +1,10 @@
+import 'dart:ui';
+
 import 'package:animate_do/animate_do.dart';
-import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -66,8 +68,8 @@ class _GalleryState extends State<Gallery> {
                           ),
                         ),
                       ),
-                      if (provider.wallPapers.isNotEmpty)
-                        ...provider.wallPapers.map<Widget>(
+                      if (provider.customWallpapers.isNotEmpty)
+                        ...provider.customWallpapers.map<Widget>(
                           (e) {
                             return FutureBuilder(
                               future: getThumbnails(e),
@@ -91,34 +93,108 @@ class _GalleryState extends State<Gallery> {
                         ).toList(),
                       ...s.data
                           .map<Widget>(
-                            (e) => FadeInUp(
-                              child: ClipRRect(
-                                child: Image.network(
-                                  "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
-                                  fit: BoxFit.fill,
-                                  gaplessPlayback: true,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                                  cacheHeight: 100,
-                                  cacheWidth: 100,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                            (e) => FutureBuilder(
+                              future: provider.checkIfExists(e),
+                              builder: (context, snapshot) {
+                                print(e);
+                                print(snapshot.data);
+                                return !snapshot.hasData
+                                    ? SizedBox()
+                                    : snapshot.data
+                                        ? FadeInUp(
+                                            child: ClipRRect(
+                                              child: Image.network(
+                                                "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
+                                                fit: BoxFit.fill,
+                                                gaplessPlayback: true,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              loadingProgress
+                                                                  .expectedTotalBytes
+                                                          : null,
+                                                    ),
+                                                  );
+                                                },
+                                                cacheHeight: 100,
+                                                cacheWidth: 100,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          )
+                                        : FadeInUp(
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                BackdropFilter(
+                                                  filter: ImageFilter.blur(
+                                                    sigmaX: 0.2,
+                                                    sigmaY: 0.2,
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Image.network(
+                                                      "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
+                                                      fit: BoxFit.fill,
+                                                      filterQuality:
+                                                          FilterQuality.low,
+                                                      gaplessPlayback: true,
+                                                      loadingBuilder: (BuildContext
+                                                              context,
+                                                          Widget child,
+                                                          ImageChunkEvent
+                                                              loadingProgress) {
+                                                        if (loadingProgress ==
+                                                            null) return child;
+                                                        return Center(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            value: loadingProgress
+                                                                        .expectedTotalBytes !=
+                                                                    null
+                                                                ? loadingProgress
+                                                                        .cumulativeBytesLoaded /
+                                                                    loadingProgress
+                                                                        .expectedTotalBytes
+                                                                : null,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: ()=>provider.downloadFile(e),
+                                                  child: Center(
+                                                    child: CircleAvatar(
+                                                      backgroundColor: Colors.black,
+                                                      child: Icon(
+                                                        Icons.download_rounded,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                              },
                             ),
                           )
                           .toList(),

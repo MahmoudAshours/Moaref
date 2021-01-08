@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
+import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Utils/Categories/category.dart';
 import 'package:ffmpegtest/Utils/gallery.dart';
 import 'package:ffmpegtest/Utils/Commons/play_settings.dart';
@@ -19,28 +20,22 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   bool get wantKeepAlive => true;
   double height = 60;
-  var currindex = 0;
-  VideoPlayerController _videoPlayerController1;
+  var currindex = 0; 
   DataProvider _dataProvider;
-
-  ChewieController _chewieController;
-  final _assetsList = List.unmodifiable([
-    'assets/Videos/bg_video_mobile_1.mp4',
-    'assets/Videos/bg_video_mobile_2.mp4',
-    'assets/Videos/bg_video_mobile_3.mp4',
-    'assets/Videos/bg_video_mobile_4.mp4',
-    'assets/Videos/bg_video_mobile_5.mp4',
-  ]);
+  GalleryProvider _galleryProvider;
+  ChewieController _chewieController; 
 
   @override
   void initState() {
     super.initState();
-    this.initializePlayer(1);
+    
   }
 
   @override
   void didChangeDependencies() {
     _dataProvider = Provider.of<DataProvider>(context, listen: true);
+    _galleryProvider = Provider.of<GalleryProvider>(context, listen: true);
+    _dataProvider.initializePlayer(context, _galleryProvider.videoPath);
     super.didChangeDependencies();
   }
 
@@ -50,23 +45,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-  Future<void> initializePlayer(index) async {
-    final video = _assetsList[index];
-    _videoPlayerController1 = VideoPlayerController.asset(video);
-    await _videoPlayerController1.initialize();
-
-    _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController1,
-        autoPlay: true,
-        looping: true,
-        autoInitialize: true,
-        showControls: false,
-        allowMuting: false,
-        allowedScreenSleep: false,
-        allowFullScreen: true,
-        aspectRatio: MediaQuery.of(context).size.aspectRatio);
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {

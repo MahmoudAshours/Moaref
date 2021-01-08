@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
 import 'package:ffmpegtest/Helpers/link_manipulation.dart';
 import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
+import 'package:video_player/video_player.dart';
 
 class DataProvider extends ChangeNotifier {
   var lang = 'عربي';
@@ -19,11 +22,29 @@ class DataProvider extends ChangeNotifier {
   StreamController<List<String>> languageLinks = StreamController.broadcast();
   StreamController<List<String>> categoryLinks = StreamController.broadcast();
   StreamController<List<String>> soundLinks = StreamController.broadcast();
-
+  VideoPlayerController _videoPlayerController1;
+  ChewieController _chewieController;
   Sound get sound => _sound;
 
   set setSound(sound) {
     _sound = sound;
+    notifyListeners();
+  }
+
+  Future<void> initializePlayer(context, video) async {
+    _videoPlayerController1 = VideoPlayerController.file(video);
+    await _videoPlayerController1.initialize();
+
+    _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController1,
+        autoPlay: true,
+        looping: true,
+        autoInitialize: true,
+        showControls: false,
+        allowMuting: false,
+        allowedScreenSleep: false,
+        allowFullScreen: true,
+        aspectRatio: MediaQuery.of(context).size.aspectRatio);
     notifyListeners();
   }
 
