@@ -1,5 +1,6 @@
 import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
+import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Provider/record_provider.dart';
 import 'package:ffmpegtest/Provider/upload_provider.dart';
 import 'package:ffmpegtest/Screens/splash_screen.dart';
@@ -21,7 +22,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DataProvider()),
         ChangeNotifierProvider(create: (_) => RecordProvider()),
-        ChangeNotifierProvider(create: (_) => UploadProvider())
+        ChangeNotifierProvider(create: (_) => UploadProvider()),
+
+        ChangeNotifierProvider(create: (_) => GalleryProvider())
       ],
       child: MaterialApp(
         title: 'كن معرفا برسول الله ',

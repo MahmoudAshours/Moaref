@@ -40,7 +40,6 @@ class RecordProvider extends ChangeNotifier {
       encoder: AudioEncoder.AAC, // by default
     );
   }
-
   fetchSoundData(index) {
     if (boolList.isNotEmpty && boolList[index] == true) {
       boolList[index] = false;

@@ -1,8 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:ffmpegtest/Helpers/asset_to_file.dart';
-import 'package:ffmpegtest/Themes/theme.dart';
+import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:provider/provider.dart';
 
 class Gallery extends StatefulWidget {
   @override
@@ -10,24 +9,18 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
-  var imageMemory;
+  GalleryProvider provider;
+
   @override
   void initState() {
-    getThumbnails().then((value) => setState(() {
-          imageMemory = value;
-        }));
     super.initState();
   }
 
-  getThumbnails() async {
-    var videofile =
-        await assetToFile(assetPath: 'assets/Videos/bg_video_mobile_1.mp4');
-    final uint8list = await VideoThumbnail.thumbnailData(
-      video: videofile,
-      imageFormat: ImageFormat.JPEG,
-      quality: 25,
-    );
-    return uint8list;
+  @override
+  void didChangeDependencies() {
+    provider = Provider.of<GalleryProvider>(context);
+    provider.getGalleryImages();
+    super.didChangeDependencies();
   }
 
   @override
@@ -37,91 +30,47 @@ class _GalleryState extends State<Gallery> {
       child: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height / 2.9,
-          child: GridView.count(
-            crossAxisCount: 5,
-            crossAxisSpacing: 4,
-            mainAxisSpacing: 4,
-            padding: EdgeInsets.all(8),
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: kBackgroundIconColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.folder_open_rounded,
-                  size: 40,
-                  color: Colors.white,
-                ),
-              ),
-              FadeInUp(
-                child: ClipRRect(
-                  child: imageMemory == null
-                      ? CircularProgressIndicator()
-                      : Image.memory(
-                          imageMemory,
-                          fit: BoxFit.fill,
-                          cacheHeight: 100,
-                          cacheWidth: 100,
-                        ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              Container(
-                color: Colors.blue,
-              ),
-              Container(
-                color: Colors.black,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.red,
-              ),
-            ],
+          child: StreamBuilder(
+            stream: provider.galleryLinks.stream,
+            builder: (c, s) => !s.hasData
+                ? Center(child: CircularProgressIndicator())
+                : GridView.count(
+                    crossAxisCount: 5,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
+                    padding: EdgeInsets.all(8),
+                    children: s.data
+                        .map<Widget>(
+                          (e) => FadeInUp(
+                            child: ClipRRect(
+                              child: Image.network(
+                                "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
+                                fit: BoxFit.fill,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress
+                                                  .expectedTotalBytes !=
+                                              null
+                                          ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes
+                                          : null,
+                                    ),
+                                  );
+                                },
+                                cacheHeight: 100,
+                                cacheWidth: 100,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
           ),
         ),
       ),

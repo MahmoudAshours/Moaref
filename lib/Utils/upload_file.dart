@@ -1,12 +1,9 @@
-import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Provider/record_provider.dart';
 import 'package:ffmpegtest/Provider/upload_provider.dart';
 import 'package:ffmpegtest/Utils/Commons/langs_categories.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
