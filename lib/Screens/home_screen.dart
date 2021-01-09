@@ -1,4 +1,6 @@
+import 'dart:math';
 import 'package:chewie/chewie.dart';
+import 'package:ffmpegtest/Helpers/static_assets_files.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Utils/Categories/category.dart';
@@ -7,7 +9,6 @@ import 'package:ffmpegtest/Utils/Commons/play_settings.dart';
 import 'package:ffmpegtest/Utils/recording.dart';
 import 'package:ffmpegtest/Utils/upload_file.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,17 +25,25 @@ class _HomeScreenState extends State<HomeScreen>
   DataProvider _dataProvider;
   GalleryProvider _galleryProvider;
 
+  Random rand = Random();
+  var number;
   @override
   void initState() {
+    number = rand.nextInt(3);
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     _dataProvider = Provider.of<DataProvider>(context);
-    _galleryProvider = Provider.of<GalleryProvider>(context,listen: true);
+    _galleryProvider = Provider.of<GalleryProvider>(context, listen: true);
 
-    _dataProvider.initializePlayer(context, _galleryProvider.videoPath)..then((value) => setState((){}));
+    _dataProvider.initializePlayer(
+        context,
+        _galleryProvider.videoPath.isEmpty
+            ? StaticAssets.bgVideos[number]
+            : _galleryProvider.videoPath)
+      ..then((value) => setState(() {}));
 
     super.didChangeDependencies();
   }

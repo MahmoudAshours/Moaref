@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
@@ -20,6 +19,7 @@ class DataProvider extends ChangeNotifier {
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   List boolList = [];
   List categoryItems = [];
+
   StreamController<List<String>> languageLinks = StreamController.broadcast();
   StreamController<List<String>> categoryLinks = StreamController.broadcast();
   StreamController<List<String>> soundLinks = StreamController.broadcast();
@@ -33,8 +33,12 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initializePlayer(context, video) async {
-    _videoPlayerController1 = VideoPlayerController.file(File(video));
+  Future<void> initializePlayer(BuildContext context, String video) async {
+    if (video.contains('assets')) {
+      _videoPlayerController1 = VideoPlayerController.asset(video);
+    } else {
+      _videoPlayerController1 = VideoPlayerController.file(File(video));
+    }
     await _videoPlayerController1.initialize();
 
     chewieController = ChewieController(

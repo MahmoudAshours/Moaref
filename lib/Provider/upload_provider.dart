@@ -30,7 +30,7 @@ class UploadProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  uploadFile(context) async {
+  Future<Null> uploadFile(context) async {
     FilePickerResult result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
 
@@ -39,14 +39,13 @@ class UploadProvider extends ChangeNotifier {
       sounds.add(file.path);
       boolList.add(false);
       Navigator.of(context).pop();
-
       notifyListeners();
     } else {
       Navigator.of(context).pop();
     }
   }
 
-  fetchSoundData(index) {
+  Future<Null> fetchSoundData(index) {
     if (boolList.isNotEmpty && boolList[index] == true) {
       boolList[index] = false;
     } else {
@@ -55,6 +54,7 @@ class UploadProvider extends ChangeNotifier {
       boolList[index] = true;
       notifyListeners();
     }
+    return null;
   }
 
   FutureOr playSoundData(index) async {
