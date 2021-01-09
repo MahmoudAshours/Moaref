@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:chewie/chewie.dart';
+
 import 'package:dio/dio.dart';
 import 'package:ffmpegtest/Helpers/link_manipulation.dart';
 import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
-import 'package:video_player/video_player.dart';
 
 class DataProvider extends ChangeNotifier {
   var lang = 'عربي';
@@ -23,8 +21,6 @@ class DataProvider extends ChangeNotifier {
   StreamController<List<String>> languageLinks = StreamController.broadcast();
   StreamController<List<String>> categoryLinks = StreamController.broadcast();
   StreamController<List<String>> soundLinks = StreamController.broadcast();
-  VideoPlayerController _videoPlayerController1;
-  ChewieController chewieController;
 
   Sound get sound => _sound;
 
@@ -33,30 +29,13 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initializePlayer(BuildContext context, String video) async {
-    if (video.contains('assets')) {
-      _videoPlayerController1 = VideoPlayerController.asset(video);
-    } else {
-      _videoPlayerController1 = VideoPlayerController.file(File(video));
-    }
-    await _videoPlayerController1.initialize();
-
-    chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController1,
-        autoPlay: true,
-        looping: true,
-        showControls: false,
-        allowMuting: false,
-        allowedScreenSleep: false,
-        allowFullScreen: true,
-        aspectRatio: MediaQuery.of(context).size.aspectRatio);
-  }
-
   // ignore: must_call_super
   void dispose() {
     assetsAudioPlayer.dispose();
     languageLinks.close();
     categoryLinks.close();
+    boolList = [];
+    notifyListeners();
     soundLinks.close();
   }
 
@@ -69,13 +48,13 @@ class DataProvider extends ChangeNotifier {
 
   void changeLanguage(String newLanguage) {
     lang = newLanguage;
-
-    fetchCategory().then((value) {
-      category = value[0];
-      fetchSounds();
-      boolList = [];
-    });
-
+    try {
+      fetchCategory().then((value) {
+        category = value[0];
+        fetchSounds();
+        boolList = [];
+      });
+    } catch (e) {}
     notifyListeners();
   }
 
@@ -165,8 +144,9 @@ class DataProvider extends ChangeNotifier {
       await assetsAudioPlayer
           .open(
         Audio.network(url),
+        playInBackground: PlayInBackground.enabled,
         audioFocusStrategy:
-            AudioFocusStrategy.request(resumeOthersPlayersAfterDone: true),
+            AudioFocusStrategy.request(resumeAfterInterruption: true),
         respectSilentMode: false,
       )
           .whenComplete(() {

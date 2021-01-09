@@ -2,6 +2,7 @@ import 'package:ffmpegtest/Helpers/asset_to_file.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Provider/ffmpeg_provider.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
+import 'package:ffmpegtest/Provider/player_provider.dart';
 import 'package:ffmpegtest/Provider/record_provider.dart';
 import 'package:ffmpegtest/Provider/upload_provider.dart';
 import 'package:ffmpegtest/Screens/splash_screen.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RecordProvider()),
         ChangeNotifierProvider(create: (_) => UploadProvider()),
         ChangeNotifierProvider(create: (_) => GalleryProvider()),
+        ChangeNotifierProvider(create: (_) => PlayerProvider()),
         ChangeNotifierProvider(create: (_) => FfmpegProvider())
       ],
       child: MaterialApp(

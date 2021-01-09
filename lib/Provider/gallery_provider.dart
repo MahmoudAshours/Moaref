@@ -20,11 +20,9 @@ class GalleryProvider extends ChangeNotifier {
   }
 
   setVideoPath(path) async {
-    print(path);
     String fileName = path.replaceAll('jpg', 'mp4');
     String dir = (await getApplicationDocumentsDirectory()).path;
     String savePath = '$dir/$fileName';
-    print(savePath);
     videoPath = savePath;
     notifyListeners();
   }

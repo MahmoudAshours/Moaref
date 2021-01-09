@@ -2,7 +2,9 @@ import 'dart:math';
 import 'package:chewie/chewie.dart';
 import 'package:ffmpegtest/Helpers/static_assets_files.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
+import 'package:ffmpegtest/Provider/ffmpeg_provider.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
+import 'package:ffmpegtest/Provider/player_provider.dart';
 import 'package:ffmpegtest/Utils/Categories/category.dart';
 import 'package:ffmpegtest/Utils/gallery.dart';
 import 'package:ffmpegtest/Utils/Commons/play_settings.dart';
@@ -24,7 +26,8 @@ class _HomeScreenState extends State<HomeScreen>
   var currindex = 0;
   DataProvider _dataProvider;
   GalleryProvider _galleryProvider;
-
+  PlayerProvider _playerProvider;
+  
   Random rand = Random();
   var number;
   @override
@@ -34,17 +37,20 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   @override
-  void didChangeDependencies() {
-    _dataProvider = Provider.of<DataProvider>(context);
+  void didChangeDependencies() async {
+    _dataProvider = Provider.of<DataProvider>(context, listen: true);
     _galleryProvider = Provider.of<GalleryProvider>(context, listen: true);
-
-    _dataProvider.initializePlayer(
-        context,
-        _galleryProvider.videoPath.isEmpty
-            ? StaticAssets.bgVideos[number]
-            : _galleryProvider.videoPath)
-      ..then((value) => setState(() {}));
-
+    _playerProvider = Provider.of<PlayerProvider>(context, listen: true);
+    if (!_dataProvider.boolList.contains(true) ||
+        _dataProvider.boolList.isEmpty) {
+      _playerProvider.initializePlayer(
+          context,
+          _galleryProvider.videoPath.isEmpty
+              ? StaticAssets.bgVideos[number]
+              : _galleryProvider.videoPath)
+        ..then((value) => setState(() {}));
+    }
+    print(' heeeeeeeeeeeeeeeeeeeeeey');
     super.didChangeDependencies();
   }
 
@@ -62,14 +68,14 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         body: Stack(
           children: [
-            _dataProvider.chewieController != null
+            _playerProvider.chewieController != null
                 ? Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     child: ChangeNotifierProvider<GalleryProvider>.value(
-                      value: GalleryProvider()..videoPath,
-                      child: Chewie(controller: _dataProvider.chewieController),
-                    ),
+                        value: GalleryProvider()..videoPath,
+                        child: Chewie(
+                            controller: _playerProvider.chewieController)),
                   )
                 : SizedBox(),
             Positioned(
