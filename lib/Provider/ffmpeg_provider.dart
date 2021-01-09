@@ -32,14 +32,21 @@ class FfmpegProvider extends ChangeNotifier {
           '-i $outputPath -vf "drawtext=fontfile=${fontPath}:text=$text:fontcolor=white:fontsize=24:x=(w-text_w)/2:y=(h-text_h)/2, "drawtext=fontfile=${fontPath}:text=$text:fontcolor=white:fontsize=24:x=(w-text_w+30)/2:y=(h-text_h)/2"" -codec:a copy $outpu1';
 
       _config.setFontDirectory(fontPath, null);
+      _config.enableStatisticsCallback(this.statisticsCallback);
 
       _flutterFFmpeg.executeAsync(_loopVideo, (d, s) {
         print(d);
+        print('object');
         print(s);
       });
     } catch (e) {
       print(e);
     }
+  }
+
+  void statisticsCallback(Statistics statistics) {
+    print(
+        "Statistisadasdasdasdcs: executionId: ${statistics.executionId}, time: ${statistics.time}, size: ${statistics.size}, bitrate: ${statistics.bitrate}, speed: ${statistics.speed}, videoFrameNumber: ${statistics.videoFrameNumber}, videoQuality: ${statistics.videoQuality}, videoFps: ${statistics.videoFps}");
   }
 
   Future<String> getVideoPath(directory) async {
