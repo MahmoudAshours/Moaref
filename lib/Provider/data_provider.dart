@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chewie/chewie.dart';
@@ -23,7 +24,8 @@ class DataProvider extends ChangeNotifier {
   StreamController<List<String>> categoryLinks = StreamController.broadcast();
   StreamController<List<String>> soundLinks = StreamController.broadcast();
   VideoPlayerController _videoPlayerController1;
-  ChewieController _chewieController;
+  ChewieController chewieController;
+
   Sound get sound => _sound;
 
   set setSound(sound) {
@@ -32,20 +34,18 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> initializePlayer(context, video) async {
-    _videoPlayerController1 = VideoPlayerController.file(video);
+    _videoPlayerController1 = VideoPlayerController.file(File(video));
     await _videoPlayerController1.initialize();
 
-    _chewieController = ChewieController(
+    chewieController = ChewieController(
         videoPlayerController: _videoPlayerController1,
         autoPlay: true,
         looping: true,
-        autoInitialize: true,
         showControls: false,
         allowMuting: false,
         allowedScreenSleep: false,
         allowFullScreen: true,
         aspectRatio: MediaQuery.of(context).size.aspectRatio);
-    notifyListeners();
   }
 
   // ignore: must_call_super

@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DataProvider()),
         ChangeNotifierProvider(create: (_) => RecordProvider()),
         ChangeNotifierProvider(create: (_) => UploadProvider()),
-
         ChangeNotifierProvider(create: (_) => GalleryProvider())
       ],
       child: MaterialApp(

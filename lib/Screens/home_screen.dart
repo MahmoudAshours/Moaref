@@ -20,22 +20,22 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   bool get wantKeepAlive => true;
   double height = 60;
-  var currindex = 0; 
+  var currindex = 0;
   DataProvider _dataProvider;
   GalleryProvider _galleryProvider;
-  ChewieController _chewieController; 
 
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
   void didChangeDependencies() {
-    _dataProvider = Provider.of<DataProvider>(context, listen: true);
-    _galleryProvider = Provider.of<GalleryProvider>(context, listen: true);
-    _dataProvider.initializePlayer(context, _galleryProvider.videoPath);
+    _dataProvider = Provider.of<DataProvider>(context);
+    _galleryProvider = Provider.of<GalleryProvider>(context,listen: true);
+
+    _dataProvider.initializePlayer(context, _galleryProvider.videoPath)..then((value) => setState((){}));
+
     super.didChangeDependencies();
   }
 
@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -54,11 +53,14 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         body: Stack(
           children: [
-            _chewieController != null
+            _dataProvider.chewieController != null
                 ? Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
-                    child: Chewie(controller: _chewieController),
+                    child: ChangeNotifierProvider<GalleryProvider>.value(
+                      value: GalleryProvider()..videoPath,
+                      child: Chewie(controller: _dataProvider.chewieController),
+                    ),
                   )
                 : SizedBox(),
             Positioned(

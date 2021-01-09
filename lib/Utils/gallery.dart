@@ -96,43 +96,45 @@ class _GalleryState extends State<Gallery> {
                             (e) => FutureBuilder(
                               future: provider.checkIfExists(e),
                               builder: (context, snapshot) {
-                                print(e);
-                                print(snapshot.data);
                                 return !snapshot.hasData
                                     ? SizedBox()
                                     : snapshot.data
                                         ? FadeInUp(
-                                            child: ClipRRect(
-                                              child: Image.network(
-                                                "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
-                                                fit: BoxFit.fill,
-                                                gaplessPlayback: true,
-                                                loadingBuilder:
-                                                    (BuildContext context,
-                                                        Widget child,
-                                                        ImageChunkEvent
-                                                            loadingProgress) {
-                                                  if (loadingProgress == null)
-                                                    return child;
-                                                  return Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      value: loadingProgress
-                                                                  .expectedTotalBytes !=
-                                                              null
-                                                          ? loadingProgress
-                                                                  .cumulativeBytesLoaded /
-                                                              loadingProgress
-                                                                  .expectedTotalBytes
-                                                          : null,
-                                                    ),
-                                                  );
-                                                },
-                                                cacheHeight: 100,
-                                                cacheWidth: 100,
+                                            child: GestureDetector(
+                                              onTap: () =>
+                                                  provider.setVideoPath(e),
+                                              child: ClipRRect(
+                                                child: Image.network(
+                                                  "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
+                                                  fit: BoxFit.fill,
+                                                  gaplessPlayback: true,
+                                                  loadingBuilder:
+                                                      (BuildContext context,
+                                                          Widget child,
+                                                          ImageChunkEvent
+                                                              loadingProgress) {
+                                                    if (loadingProgress == null)
+                                                      return child;
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        value: loadingProgress
+                                                                    .expectedTotalBytes !=
+                                                                null
+                                                            ? loadingProgress
+                                                                    .cumulativeBytesLoaded /
+                                                                loadingProgress
+                                                                    .expectedTotalBytes
+                                                            : null,
+                                                      ),
+                                                    );
+                                                  },
+                                                  cacheHeight: 100,
+                                                  cacheWidth: 100,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
                                             ),
                                           )
                                         : FadeInUp(
@@ -179,10 +181,12 @@ class _GalleryState extends State<Gallery> {
                                                   ),
                                                 ),
                                                 GestureDetector(
-                                                  onTap: ()=>provider.downloadFile(e),
+                                                  onTap: () =>
+                                                      provider.downloadFile(e),
                                                   child: Center(
                                                     child: CircleAvatar(
-                                                      backgroundColor: Colors.black,
+                                                      backgroundColor:
+                                                          Colors.black,
                                                       child: Icon(
                                                         Icons.download_rounded,
                                                         size: 20,

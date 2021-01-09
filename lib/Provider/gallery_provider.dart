@@ -19,6 +19,16 @@ class GalleryProvider extends ChangeNotifier {
     galleryLinks.close();
   }
 
+  setVideoPath(path) async {
+    print(path);
+    String fileName = path.replaceAll('jpg', 'mp4');
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    String savePath = '$dir/$fileName';
+    print(savePath);
+    videoPath = savePath;
+    notifyListeners();
+  }
+
   Future<bool> checkIfExists(String url) async {
     String fileName = url.replaceAll('jpg', 'mp4');
     String dir = (await getApplicationDocumentsDirectory()).path;
@@ -39,7 +49,6 @@ class GalleryProvider extends ChangeNotifier {
   Future downloadFile(String url) async {
     Dio dio = Dio();
     var newUrl = url.replaceAll('jpg', 'mp4');
-    print(newUrl);
     var videoUrl =
         "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/$newUrl";
     try {
