@@ -17,6 +17,7 @@ class PlayerProvider extends ChangeNotifier {
     }
     try {
       await _videoPlayerController1.initialize();
+      Future.delayed(Duration(seconds:1),(){});
     } catch (e) {
     }
     chewieController = ChewieController(
