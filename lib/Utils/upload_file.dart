@@ -6,7 +6,6 @@ import 'package:ffmpegtest/Provider/upload_provider.dart';
 import 'package:ffmpegtest/Utils/Commons/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:ffmpegtest/Helpers/map_indexed.dart';
 
@@ -44,16 +43,16 @@ class _UploadFileState extends State<UploadFile> {
           child: Center(
             child: Container(
               width: MediaQuery.of(context).size.width / 1.3,
-              child: RaisedButton(
+              child: ElevatedButton(
                 onPressed: () {
                   uploadProvider.uploadFile(context);
                 },
-                color: kSecondaryColor,
+
+               
                 child: Text('إضافة ملف صوتي',
                     style: TextStyle(color: Colors.white)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(9.0),
-                ),
+                
+                 
               ),
             ),
           ),
@@ -74,7 +73,7 @@ class _UploadFileState extends State<UploadFile> {
                             delay: Duration(milliseconds: 20 * i),
                             child: ListTile(
                               trailing: Text('${e.toString().split('/')[7]}'),
-                              leading: FlatButton(
+                              leading: TextButton(
                                 child: PlayerBuilder.isPlaying(
                                   player: uploadProvider.assetsAudioPlayer,
                                   builder: (BuildContext context, bool play) {

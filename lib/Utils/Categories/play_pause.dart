@@ -15,7 +15,7 @@ class PlayPauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
       builder: (c, prov, _) {
-        return FlatButton(
+        return TextButton(
           child: PlayerBuilder.isPlaying(
             player: prov.assetsAudioPlayer,
             builder: (BuildContext context, bool play) {

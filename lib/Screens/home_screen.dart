@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:chewie/chewie.dart';
 import 'package:ffmpegtest/Helpers/static_assets_files.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Provider/ffmpeg_provider.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Provider/player_provider.dart';
 import 'package:ffmpegtest/Utils/Categories/category.dart';

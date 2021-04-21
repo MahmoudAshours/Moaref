@@ -99,7 +99,7 @@ class _RecordingState extends State<Recording> {
                             delay: Duration(milliseconds: 20 * i),
                             child: ListTile(
                               trailing: Text('${i + 1} تسجيل '),
-                              leading: FlatButton(
+                              leading: TextButton(
                                 child: PlayerBuilder.isPlaying(
                                   player: soundProvider.assetsAudioPlayer,
                                   builder: (BuildContext context, bool play) {

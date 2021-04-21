@@ -23,24 +23,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^1.6.24
+  path_provider: ^2.0.1
   path: ^1.7.0
-  video_player: ^1.0.0
-  chewie: ^0.12.0
-  flutter_ffmpeg: ^0.3.0
+  video_player: ^2.1.1
+  chewie: ^1.0.0
+  flutter_ffmpeg: ^0.4.0
   expandable_bottom_bar: ^1.0.2
-  provider: ^4.3.2+3
-  font_awesome_flutter: ^8.11.0
-  animate_do: ^1.7.5
-  video_thumbnail: ^0.2.5+1
+  provider: ^5.0.0
+  font_awesome_flutter: ^9.0.0
+  animate_do: ^2.0.0
+  video_thumbnail: ^0.3.3
   #http: ^0.12.2
-  dio: ^3.0.10
-  assets_audio_player: ^2.0.13+1
-  avatar_glow: ^1.2.0
-  record: ^1.0.2
-  permission_handler: ^5.0.1+1
-  file_picker: ^2.1.5
-
+  dio: ^4.0.0
+  assets_audio_player: ^3.0.3+2
+  avatar_glow: ^2.0.1
+  record: ^2.1.0+1
+  permission_handler: ^6.1.3
+  file_picker: ^3.0.1
+  html: ^0.15.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -49,8 +49,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.8.1
-  flutter_native_splash: ^0.1.9
+  flutter_launcher_icons: ^0.9.0
+  flutter_native_splash: ^1.1.8+4
   
 # #2E7A56
 flutter_native_splash:

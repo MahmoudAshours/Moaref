@@ -33,8 +33,6 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need to access to the microphone to record audio file</string>
 	<key>UISupportedInterfaceOrientations</key>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>To enabl uploading your audio</string>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

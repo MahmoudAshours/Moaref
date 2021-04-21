@@ -34,11 +34,11 @@ class FfmpegProvider extends ChangeNotifier {
       _config.setFontDirectory(fontPath, null);
       _config.enableStatisticsCallback(this.statisticsCallback);
 
-      _flutterFFmpeg.executeAsync(_loopVideo, (d, s) {
-        print(d);
-        print('object');
-        print(s);
-      });
+      // _flutterFFmpeg.executeAsync(_loopVideo, (d, s) {
+      //   print(d);
+      //   print('object');
+      //   print(s);
+      // });
     } catch (e) {
       print(e);
     }
