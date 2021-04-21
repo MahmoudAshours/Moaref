@@ -1,4 +1,3 @@
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
@@ -47,12 +46,8 @@ class _UploadFileState extends State<UploadFile> {
                 onPressed: () {
                   uploadProvider.uploadFile(context);
                 },
-
-               
                 child: Text('إضافة ملف صوتي',
                     style: TextStyle(color: Colors.white)),
-                
-                 
               ),
             ),
           ),
@@ -61,7 +56,11 @@ class _UploadFileState extends State<UploadFile> {
         uploadProvider.sounds == null ||
                 uploadProvider.sounds.isEmpty ||
                 uploadProvider.boolList.isEmpty
-            ? Center(child: Text('هذه الخاصية تمكنك من إضافة مقطع صوتي لاستخرجه كمقطع دعوي',textAlign: TextAlign.center,))
+            ? Center(
+                child: Text(
+                'هذه الخاصية تمكنك من إضافة مقطع صوتي لاستخرجه كمقطع دعوي',
+                textAlign: TextAlign.center,
+              ))
             : Container(
                 height: 150,
                 width: MediaQuery.of(context).size.width,
@@ -105,7 +104,8 @@ class _UploadFileState extends State<UploadFile> {
                                   if (uploadProvider.sound ==
                                       Sound.IsNotPlaying) {
                                     uploadProvider.playSoundData(i);
-                                    dataProvider.setMp3('${e.toString().split('/')[7]}');
+                                    dataProvider.setMp3(
+                                        '${e.toString().split('/')[7]}');
                                   } else {
                                     if ((uploadProvider.boolList.isNotEmpty &&
                                             !uploadProvider.boolList[i]) ||
@@ -114,7 +114,8 @@ class _UploadFileState extends State<UploadFile> {
                                       dataProvider.nullifymp3();
                                     } else {
                                       uploadProvider.playSoundData(i);
-                                      dataProvider.setMp3('${e.toString().split('/')[7]}');
+                                      dataProvider.setMp3(
+                                          '${e.toString().split('/')[7]}');
                                     }
                                   }
                                 },
@@ -141,5 +142,4 @@ class _UploadFileState extends State<UploadFile> {
       ],
     );
   }
-  
 }
