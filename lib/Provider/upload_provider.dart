@@ -6,7 +6,6 @@ import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:record/record.dart';
 
 class UploadProvider extends ChangeNotifier {
   var path;

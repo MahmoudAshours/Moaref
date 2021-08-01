@@ -33,7 +33,7 @@ class _CategoryState extends State<Category> {
           children: [
             SafeArea(
               bottom: false,
-              child: LangsCats(),
+              child: LanguagesDropDownList(),
             ),
             _categoryPicker(_dataProvider!),
             SizedBox(height: 10),
@@ -66,9 +66,9 @@ class _CategoryState extends State<Category> {
                               child: GestureDetector(
                                 onTap: () {
                                   showModalBottomSheet(
-                                      context: context,
-                                      builder: (_) =>
-                                          _categoriesDataListView());
+                                    context: context,
+                                    builder: (_) => _categoriesDataListView(),
+                                  );
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -95,9 +95,9 @@ class _CategoryState extends State<Category> {
     return Container(
       child: StreamBuilder(
         stream: _dataProvider!.soundLinks.stream.asBroadcastStream(),
-        builder: (_, AsyncSnapshot<List<String>> snapshot) {
-          return !snapshot.hasData
-              ? Center(child: SizedBox())
+        builder: (_, AsyncSnapshot<List<String>>? snapshot) {
+          return snapshot!.data == null
+              ? Center(child: Container(color: Colors.black))
               : SingleChildScrollView(
                   child: Column(
                     children: snapshot.data!

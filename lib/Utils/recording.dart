@@ -40,7 +40,7 @@ class _RecordingState extends State<Recording> {
     soundProvider.isRecording();
     return Column(
       children: [
-        LangsCats(),
+        LanguagesDropDownList(),
         SizedBox(height: 20),
         BounceInUp(
           duration: Duration(seconds: 1),

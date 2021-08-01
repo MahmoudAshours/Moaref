@@ -35,7 +35,7 @@ class _UploadFileState extends State<UploadFile> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        LangsCats(),
+        LanguagesDropDownList(),
         SizedBox(height: 20),
         FadeInUp(
           duration: Duration(milliseconds: 500),
@@ -58,9 +58,10 @@ class _UploadFileState extends State<UploadFile> {
                 uploadProvider.boolList.isEmpty
             ? Center(
                 child: Text(
-                'هذه الخاصية تمكنك من إضافة مقطع صوتي لاستخرجه كمقطع دعوي',
-                textAlign: TextAlign.center,
-              ))
+                  'هذه الخاصية تمكنك من إضافة مقطع صوتي لاستخرجه كمقطع دعوي',
+                  textAlign: TextAlign.center,
+                ),
+              )
             : Container(
                 height: 150,
                 width: MediaQuery.of(context).size.width,

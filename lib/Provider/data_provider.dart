@@ -17,7 +17,7 @@ class DataProvider extends ChangeNotifier {
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   List boolList = [];
   List categoryItems = [];
-
+  // Streams controlling links of languages , categories & Audio files.
   StreamController<List<String>> languageLinks = StreamController.broadcast();
   StreamController<List<String>> categoryLinks = StreamController.broadcast();
   StreamController<List<String>> soundLinks = StreamController.broadcast();
@@ -37,6 +37,7 @@ class DataProvider extends ChangeNotifier {
     boolList = [];
     notifyListeners();
     soundLinks.close();
+    super.dispose();
   }
 
   void changeCategory(String? newCategory) {
@@ -48,9 +49,10 @@ class DataProvider extends ChangeNotifier {
 
   void changeLanguage(String? newLanguage) {
     lang = newLanguage;
+    notifyListeners();
     try {
-      fetchCategory().then((value) {
-        category = value[0];
+      fetchCategory().then((List<String>? value) {
+        category = value![0];
         fetchSounds();
         boolList = [];
       });
@@ -63,7 +65,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<String>> fetchCategory() async {
+  Future<List<String>?> fetchCategory() async {
     try {
       var language = Uri.encodeComponent(lang!);
       url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
@@ -77,7 +79,6 @@ class DataProvider extends ChangeNotifier {
     } on Exception catch (e) {
       print(e);
     }
-    return ['Done'];
   }
 
   fetchLanguage() async {
@@ -106,7 +107,9 @@ class DataProvider extends ChangeNotifier {
   Future<void> fetchSounds() async {
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-        url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category";
+        print('object');
+        var cat = Uri.encodeComponent(category!);
+        url = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
       } else {
         var language = Uri.encodeComponent(lang!);
         var cat = Uri.encodeComponent(category!);

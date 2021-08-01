@@ -15,9 +15,7 @@ class GalleryProvider extends ChangeNotifier {
   List customWallpapers = [];
 
   // ignore: must_call_super
-  void dispose() {
-    galleryLinks.close();
-  }
+  void dispose() => galleryLinks.close();
 
   setVideoPath(path) async {
     String? fileName = path.replaceAll('jpg', 'mp4');
