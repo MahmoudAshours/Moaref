@@ -22,13 +22,13 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   bool get wantKeepAlive => true;
   double height = 60;
-  var currindex = 0;
-  DataProvider _dataProvider;
-  GalleryProvider _galleryProvider;
-  PlayerProvider _playerProvider;
+  int? currindex = 0;
+  late DataProvider _dataProvider;
+  late GalleryProvider _galleryProvider;
+  late PlayerProvider _playerProvider;
   
   Random rand = Random();
-  var number;
+  late var number;
   @override
   void initState() {
     number = rand.nextInt(3);
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen>
                     child: ChangeNotifierProvider<GalleryProvider>.value(
                         value: GalleryProvider()..videoPath,
                         child: Chewie(
-                            controller: _playerProvider.chewieController)),
+                            controller: _playerProvider.chewieController!)),
                   )
                 : SizedBox(),
             Positioned(
@@ -170,8 +170,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   mp3Name() => _dataProvider.mp3Picked == null
       ? ''
-      : _dataProvider.mp3Picked.contains('/')
-          ? _dataProvider.mp3Picked.contains(RegExp("^[a-zA-Z0-9]*\$"))
+      : _dataProvider.mp3Picked!.contains('/')
+          ? _dataProvider.mp3Picked!.contains(RegExp("^[a-zA-Z0-9]*\$"))
               ? _dataProvider.mp3Picked.toString().split('/')[8]
               : Uri.decodeComponent(
                   _dataProvider.mp3Picked.toString().split('/')[8])
@@ -197,11 +197,11 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   SingleChildScrollView _bottomNavigationItemBuilder(
-      {String activeAssetPath,
-      String nonActiveAssetPath,
-      String label,
-      ScrollController controller,
-      int index}) {
+      {required String activeAssetPath,
+      required String nonActiveAssetPath,
+      required String label,
+      ScrollController? controller,
+      int? index}) {
     return SingleChildScrollView(
       controller: controller,
       child: GestureDetector(

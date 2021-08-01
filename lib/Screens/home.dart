@@ -17,7 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  VideoPlayerController _controller;
+  late VideoPlayerController _controller;
   var _loading = true;
   @override
   void initState() {

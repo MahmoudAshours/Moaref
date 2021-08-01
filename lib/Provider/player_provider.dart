@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayerProvider extends ChangeNotifier {
-  VideoPlayerController _videoPlayerController1;
-  ChewieController chewieController;
+  late VideoPlayerController _videoPlayerController1;
+  ChewieController? chewieController;
 
   Future<void> initializePlayer(BuildContext context, String video) async {
     if (video.contains('assets')) {

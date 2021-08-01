@@ -14,8 +14,8 @@ class UploadFile extends StatefulWidget {
 }
 
 class _UploadFileState extends State<UploadFile> {
-  DataProvider dataProvider;
-  UploadProvider uploadProvider;
+  late DataProvider dataProvider;
+  late UploadProvider uploadProvider;
   @override
   void didChangeDependencies() {
     dataProvider = Provider.of<DataProvider>(context);

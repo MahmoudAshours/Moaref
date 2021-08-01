@@ -17,8 +17,8 @@ class Recording extends StatefulWidget {
 }
 
 class _RecordingState extends State<Recording> {
-  DataProvider dataProvider;
-  RecordProvider soundProvider;
+  late DataProvider dataProvider;
+  late RecordProvider soundProvider;
 
   @override
   void didChangeDependencies() {

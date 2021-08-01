@@ -13,7 +13,7 @@ class CategoryComponent extends StatefulWidget {
   final e;
 
   const CategoryComponent(
-      {Key key, this.provider, this.i, this.e, this.snapshot})
+      {Key? key, this.provider, this.i, this.e, this.snapshot})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class CategoryComponent extends StatefulWidget {
 }
 
 class _CategoryComponentState extends State<CategoryComponent> {
-  DataProvider _dataProvider;
+  late DataProvider _dataProvider;
 
   @override
   void didChangeDependencies() {
@@ -42,7 +42,7 @@ class _CategoryComponentState extends State<CategoryComponent> {
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: FadeInUp(
-          delay: Duration(milliseconds: 20 * widget.i),
+          delay: Duration(milliseconds: 20 * widget.i as int),
           child: ListTile(
             leading: PlayPauseButton(
               snapshot: widget.snapshot,

@@ -68,7 +68,7 @@ class CustomSearchClass extends SearchDelegate {
     );
   }
 
-  var searchResult;
+  late var searchResult;
   @override
   Widget buildResults(BuildContext context) {
     return Consumer<DataProvider>(

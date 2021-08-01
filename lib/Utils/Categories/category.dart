@@ -12,15 +12,15 @@ class Category extends StatefulWidget {
 
 class _CategoryState extends State<Category>
     with AutomaticKeepAliveClientMixin<Category> {
-  DataProvider _dataProvider;
+  DataProvider? _dataProvider;
   @override
   bool get wantKeepAlive => true;
   @override
   void didChangeDependencies() {
     _dataProvider = Provider.of<DataProvider>(context, listen: false);
-    _dataProvider.fetchLanguage();
-    _dataProvider.fetchCategory();
-    _dataProvider.fetchSounds();
+    _dataProvider!.fetchLanguage();
+    _dataProvider!.fetchCategory();
+    _dataProvider!.fetchSounds();
     super.didChangeDependencies();
   }
 
@@ -34,13 +34,13 @@ class _CategoryState extends State<Category>
         Container(
           height: MediaQuery.of(context).size.height / 4.4,
           child: StreamBuilder(
-            stream: _dataProvider.soundLinks.stream.asBroadcastStream(),
+            stream: _dataProvider!.soundLinks.stream.asBroadcastStream(),
             builder: (c, AsyncSnapshot<List<String>> snapshot) {
               return !snapshot.hasData
                   ? Center(child: SizedBox())
                   : SingleChildScrollView(
                       child: Column(
-                        children: snapshot.data
+                        children: snapshot.data!
                             .mapIndexed(
                               (String e, int i) => CategoryComponent(
                                 provider: _dataProvider,

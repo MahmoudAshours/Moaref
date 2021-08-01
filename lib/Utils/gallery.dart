@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:animate_do/animate_do.dart';
@@ -14,7 +15,7 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
-  GalleryProvider provider;
+  late GalleryProvider provider;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _GalleryState extends State<Gallery> {
           height: MediaQuery.of(context).size.height / 2.9,
           child: StreamBuilder(
             stream: provider.galleryLinks.stream,
-            builder: (c, s) => !s.hasData
+            builder: (c, AsyncSnapshot galleryStream) => !galleryStream.hasData
                 ? Center(child: CircularProgressIndicator())
                 : GridView.count(
                     crossAxisCount: 5,
@@ -73,29 +74,30 @@ class _GalleryState extends State<Gallery> {
                           (e) {
                             return FutureBuilder(
                               future: getThumbnails(e),
-                              builder: (c, s) => !s.hasData
-                                  ? SizedBox()
-                                  : FadeInUp(
-                                      child: ClipRRect(
-                                        child: Image.memory(
-                                          s.data,
-                                          fit: BoxFit.fill,
-                                          gaplessPlayback: true,
-                                          cacheHeight: 100,
-                                          cacheWidth: 100,
+                              builder: (c, AsyncSnapshot customImagesFuture) =>
+                                  !customImagesFuture.hasData
+                                      ? SizedBox()
+                                      : FadeInUp(
+                                          child: ClipRRect(
+                                            child: Image.memory(
+                                              customImagesFuture.data,
+                                              fit: BoxFit.fill,
+                                              gaplessPlayback: true,
+                                              cacheHeight: 100,
+                                              cacheWidth: 100,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                    ),
                             );
                           },
                         ).toList(),
-                      ...s.data
+                      ...galleryStream.data
                           .map<Widget>(
                             (e) => FutureBuilder(
                               future: provider.checkIfExists(e),
-                              builder: (context, snapshot) {
+                              builder: (context, AsyncSnapshot snapshot) {
                                 return !snapshot.hasData
                                     ? SizedBox()
                                     : snapshot.data
@@ -111,7 +113,7 @@ class _GalleryState extends State<Gallery> {
                                                   loadingBuilder:
                                                       (BuildContext context,
                                                           Widget child,
-                                                          ImageChunkEvent
+                                                          ImageChunkEvent?
                                                               loadingProgress) {
                                                     if (loadingProgress == null)
                                                       return child;
@@ -124,7 +126,7 @@ class _GalleryState extends State<Gallery> {
                                                             ? loadingProgress
                                                                     .cumulativeBytesLoaded /
                                                                 loadingProgress
-                                                                    .expectedTotalBytes
+                                                                    .expectedTotalBytes!
                                                             : null,
                                                       ),
                                                     );
@@ -159,7 +161,7 @@ class _GalleryState extends State<Gallery> {
                                                       loadingBuilder: (BuildContext
                                                               context,
                                                           Widget child,
-                                                          ImageChunkEvent
+                                                          ImageChunkEvent?
                                                               loadingProgress) {
                                                         if (loadingProgress ==
                                                             null) return child;
@@ -172,7 +174,7 @@ class _GalleryState extends State<Gallery> {
                                                                 ? loadingProgress
                                                                         .cumulativeBytesLoaded /
                                                                     loadingProgress
-                                                                        .expectedTotalBytes
+                                                                        .expectedTotalBytes!
                                                                 : null,
                                                           ),
                                                         );

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PlayPauseButton extends StatelessWidget {
-  PlayPauseButton({Key key, this.snapshot, this.index, this.provider})
+  PlayPauseButton({Key? key, this.snapshot, this.index, this.provider})
       : super(key: key);
   final snapshot;
   final index;

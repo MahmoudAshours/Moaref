@@ -13,17 +13,9 @@ class UploadProvider extends ChangeNotifier {
   var sounds = [];
   List boolList = [];
   Sound _sound = Sound.IsNotPlaying;
-
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   Sound get sound => _sound;
   var recording = false;
-
-  isRecording() {
-    Record.isRecording().asStream().listen((event) {
-      recording = event;
-      notifyListeners();
-    });
-  }
 
   set setSound(sound) {
     _sound = sound;
@@ -31,11 +23,11 @@ class UploadProvider extends ChangeNotifier {
   }
 
   Future<Null> uploadFile(context) async {
-    FilePickerResult result =
+    FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
 
     if (result != null) {
-      File file = File(result.files.single.path);
+      File file = File(result.files.single.path!);
       sounds.add(file.path);
       boolList.add(false);
       Navigator.of(context).pop();
@@ -45,7 +37,7 @@ class UploadProvider extends ChangeNotifier {
     }
   }
 
-  Future<Null> fetchSoundData(index) {
+  Future<Null>? fetchSoundData(index) {
     if (boolList.isNotEmpty && boolList[index] == true) {
       boolList[index] = false;
     } else {

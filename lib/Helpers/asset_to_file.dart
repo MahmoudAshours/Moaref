@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-assetToFile({String assetPath}) async {
+assetToFile({required String assetPath}) async {
   Directory directory = await getApplicationDocumentsDirectory();
 
   var path = join(directory.path, assetPath.split('/')[2]);

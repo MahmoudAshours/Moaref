@@ -14,13 +14,12 @@ class RecordProvider extends ChangeNotifier {
   var sounds = [];
   List boolList = [];
   Sound _sound = Sound.IsNotPlaying;
-
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   Sound get sound => _sound;
   var recording = false;
-
+  Record _record = Record();
   isRecording() {
-    Record.isRecording().asStream().listen((event) {
+    _record.isRecording().asStream().listen((event) {
       recording = event;
       notifyListeners();
     });
@@ -32,14 +31,15 @@ class RecordProvider extends ChangeNotifier {
   }
 
   Future<void> recordSound() async {
-    await Record.hasPermission();
+    await _record.hasPermission();
     Directory directory = await getTemporaryDirectory();
     path = join(directory.path, '${getRandString(10)}');
-    await Record.start(
+    await _record.start(
       path: '$path', // required
       encoder: AudioEncoder.AAC, // by default
     );
   }
+
   fetchSoundData(index) {
     if (boolList.isNotEmpty && boolList[index] == true) {
       boolList[index] = false;
@@ -67,7 +67,7 @@ class RecordProvider extends ChangeNotifier {
   }
 
   void endRecord() {
-    Record.stop().then((_) {
+    _record.stop().then((_) {
       sounds.add(path);
       boolList.add(false);
       notifyListeners();

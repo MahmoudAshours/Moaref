@@ -9,7 +9,7 @@ import 'package:html/parser.dart' as parser;
 import 'package:path_provider/path_provider.dart';
 
 class GalleryProvider extends ChangeNotifier {
-  String url;
+  late String url;
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
   String videoPath = "";
   List customWallpapers = [];
@@ -20,7 +20,7 @@ class GalleryProvider extends ChangeNotifier {
   }
 
   setVideoPath(path) async {
-    String fileName = path.replaceAll('jpg', 'mp4');
+    String? fileName = path.replaceAll('jpg', 'mp4');
     String dir = (await getApplicationDocumentsDirectory()).path;
     String savePath = '$dir/$fileName';
     videoPath = savePath;
@@ -66,11 +66,11 @@ class GalleryProvider extends ChangeNotifier {
   }
 
   Future uploadFile(context) async {
-    FilePickerResult result =
+    FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.video);
 
     if (result != null) {
-      File file = File(result.files.single.path);
+      File file = File(result.files.single.path!);
       customWallpapers.add(file.path);
       Navigator.of(context).pop();
       notifyListeners();

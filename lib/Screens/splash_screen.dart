@@ -13,8 +13,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  VideoPlayerController _videoPlayerController1;
-  ChewieController _chewieController;
+  late VideoPlayerController _videoPlayerController1;
+  ChewieController? _chewieController;
   @override
   void initState() {
     initializePlayer();
@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: _chewieController != null
-          ? Chewie(controller: _chewieController)
+          ? Chewie(controller: _chewieController!)
           : SizedBox(),
     );
   }

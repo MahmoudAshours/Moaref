@@ -12,7 +12,7 @@ class LangsCats extends StatefulWidget {
 }
 
 class _LangsCatsState extends State<LangsCats> {
-  DataProvider _dataProvider;
+  late DataProvider _dataProvider;
 
   @override
   void didChangeDependencies() {
@@ -49,7 +49,7 @@ class _LangsCatsState extends State<LangsCats> {
             ? Center(child: CircularProgressIndicator())
             : Center(
                 child: DropdownButton<String>(
-                  items: snapshot.data
+                  items: snapshot.data!
                       .map<DropdownMenuItem<String>>(
                         (String value) => DropdownMenuItem<String>(
                           child: Center(
@@ -71,7 +71,7 @@ class _LangsCatsState extends State<LangsCats> {
                         ),
                       )
                       .toList(),
-                  onChanged: (String value) {
+                  onChanged: (String? value) {
                     provider.changeLanguage(value);
                   },
                   value: provider.lang,
@@ -96,7 +96,7 @@ class _LangsCatsState extends State<LangsCats> {
               ? CircularProgressIndicator()
               : Center(
                   child: DropdownButton<String>(
-                    items: snapshot.data
+                    items: snapshot.data!
                         .map<DropdownMenuItem<String>>(
                           (String value) => DropdownMenuItem<String>(
                             child: Center(
@@ -118,7 +118,7 @@ class _LangsCatsState extends State<LangsCats> {
                           ),
                         )
                         .toList(),
-                    onChanged: (String value) {
+                    onChanged: (String? value) {
                       provider.changeCategory(value);
                     },
                     iconSize: 13,
