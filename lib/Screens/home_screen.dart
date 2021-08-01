@@ -4,6 +4,7 @@ import 'package:ffmpegtest/Helpers/static_assets_files.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Provider/player_provider.dart';
+import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/Categories/category.dart';
 import 'package:ffmpegtest/Utils/gallery.dart';
 import 'package:ffmpegtest/Utils/Commons/play_settings.dart';
@@ -26,12 +27,9 @@ class _HomeScreenState extends State<HomeScreen>
   late DataProvider _dataProvider;
   late GalleryProvider _galleryProvider;
   late PlayerProvider _playerProvider;
-  
-  Random rand = Random();
-  late var number;
+
   @override
   void initState() {
-    number = rand.nextInt(3);
     super.initState();
   }
 
@@ -40,16 +38,7 @@ class _HomeScreenState extends State<HomeScreen>
     _dataProvider = Provider.of<DataProvider>(context, listen: true);
     _galleryProvider = Provider.of<GalleryProvider>(context, listen: true);
     _playerProvider = Provider.of<PlayerProvider>(context, listen: true);
-    if (!_dataProvider.boolList.contains(true) ||
-        _dataProvider.boolList.isEmpty) {
-      _playerProvider.initializePlayer(
-          context,
-          _galleryProvider.videoPath.isEmpty
-              ? StaticAssets.bgVideos[number]
-              : _galleryProvider.videoPath)
-        ..then((value) => setState(() {}));
-    }
-    print(' heeeeeeeeeeeeeeeeeeeeeey');
+
     super.didChangeDependencies();
   }
 
@@ -65,105 +54,107 @@ class _HomeScreenState extends State<HomeScreen>
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: Stack(
-          children: [
-            _playerProvider.chewieController != null
-                ? Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: ChangeNotifierProvider<GalleryProvider>.value(
-                        value: GalleryProvider()..videoPath,
-                        child: Chewie(
-                            controller: _playerProvider.chewieController!)),
-                  )
-                : SizedBox(),
-            Positioned(
-              top: 100,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AnimatedCrossFade(
-                  crossFadeState: _dataProvider.mp3Picked == null
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
-                  duration: Duration(seconds: 1),
-                  firstChild: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(10)),
-                    width: 240,
-                    height: 40,
-                    child: AnimatedDefaultTextStyle(
-                      child: Text('${mp3Name()}'),
-                      duration: Duration(seconds: 3),
-                      style: TextStyle(fontSize: 13),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  secondChild: Container(
-                    width: 240,
-                    height: 40,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: MediaQuery.of(context).size.height / 8.2,
-              child: PlaySettings(),
-            ),
-            DraggableScrollableSheet(
-              minChildSize: 0.11,
-              maxChildSize: 0.5,
-              initialChildSize: 0.11,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return Container(
-                  color: Colors.white,
-                  child: Wrap(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        textDirection: TextDirection.rtl,
-                        children: [
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/Images/maedit.png',
-                              nonActiveAssetPath: 'assets/Images/mdedit.png',
-                              controller: scrollController,
-                              label: 'التصنيف',
-                              index: 0),
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/Images/mamic.png',
-                              nonActiveAssetPath: 'assets/Images/mdmic.png',
-                              controller: scrollController,
-                              label: 'تسجيل',
-                              index: 1),
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/Images/mabrush.png',
-                              nonActiveAssetPath: 'assets/Images/mdbrush.png',
-                              controller: scrollController,
-                              label: 'ملف صوتي',
-                              index: 2),
-                          _bottomNavigationItemBuilder(
-                              activeAssetPath: 'assets/Images/maphoto.png',
-                              nonActiveAssetPath: 'assets/Images/mdphoto.png',
-                              controller: scrollController,
-                              label: 'المكتبة',
-                              index: 3),
-                        ],
-                      ),
-                      SafeArea(
-                        child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: _itemsBody(),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+        backgroundColor: kPrimaryColor,
+        body: Container(),
+        // body: Stack(
+        //   children: [
+        //     _playerProvider.chewieController != null
+        //         ? Container(
+        //             width: MediaQuery.of(context).size.width,
+        //             height: MediaQuery.of(context).size.height,
+        //             child: ChangeNotifierProvider<GalleryProvider>.value(
+        //                 value: GalleryProvider()..videoPath,
+        //                 child: Chewie(
+        //                     controller: _playerProvider.chewieController!)),
+        //           )
+        //         : SizedBox(),
+        //     Positioned(
+        //       top: 100,
+        //       child: Padding(
+        //         padding: const EdgeInsets.all(8.0),
+        //         child: AnimatedCrossFade(
+        //           crossFadeState: _dataProvider.mp3Picked == null
+        //               ? CrossFadeState.showSecond
+        //               : CrossFadeState.showFirst,
+        //           duration: Duration(seconds: 1),
+        //           firstChild: Container(
+        //             decoration: BoxDecoration(
+        //                 color: Colors.green,
+        //                 borderRadius: BorderRadius.circular(10)),
+        //             width: 240,
+        //             height: 40,
+        //             child: AnimatedDefaultTextStyle(
+        //               child: Text('${mp3Name()}'),
+        //               duration: Duration(seconds: 3),
+        //               style: TextStyle(fontSize: 13),
+        //               textAlign: TextAlign.center,
+        //             ),
+        //           ),
+        //           secondChild: Container(
+        //             width: 240,
+        //             height: 40,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //     Positioned(
+        //       bottom: MediaQuery.of(context).size.height / 8.2,
+        //       child: PlaySettings(),
+        //     ),
+        //     DraggableScrollableSheet(
+        //       minChildSize: 0.11,
+        //       maxChildSize: 0.5,
+        //       initialChildSize: 0.11,
+        //       builder:
+        //           (BuildContext context, ScrollController scrollController) {
+        //         return Container(
+        //           color: Colors.white,
+        //           child: Wrap(
+        //             children: [
+        //               Row(
+        //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //                 textDirection: TextDirection.rtl,
+        //                 children: [
+        //                   _bottomNavigationItemBuilder(
+        //                       activeAssetPath: 'assets/Images/maedit.png',
+        //                       nonActiveAssetPath: 'assets/Images/mdedit.png',
+        //                       controller: scrollController,
+        //                       label: 'التصنيف',
+        //                       index: 0),
+        //                   _bottomNavigationItemBuilder(
+        //                       activeAssetPath: 'assets/Images/mamic.png',
+        //                       nonActiveAssetPath: 'assets/Images/mdmic.png',
+        //                       controller: scrollController,
+        //                       label: 'تسجيل',
+        //                       index: 1),
+        //                   _bottomNavigationItemBuilder(
+        //                       activeAssetPath: 'assets/Images/mabrush.png',
+        //                       nonActiveAssetPath: 'assets/Images/mdbrush.png',
+        //                       controller: scrollController,
+        //                       label: 'ملف صوتي',
+        //                       index: 2),
+        //                   _bottomNavigationItemBuilder(
+        //                       activeAssetPath: 'assets/Images/maphoto.png',
+        //                       nonActiveAssetPath: 'assets/Images/mdphoto.png',
+        //                       controller: scrollController,
+        //                       label: 'المكتبة',
+        //                       index: 3),
+        //                 ],
+        //               ),
+        //               SafeArea(
+        //                 child: Container(
+        //                   height: MediaQuery.of(context).size.height,
+        //                   width: MediaQuery.of(context).size.width,
+        //                   child: _itemsBody(),
+        //                 ),
+        //               )
+        //             ],
+        //           ),
+        //         );
+        //       },
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

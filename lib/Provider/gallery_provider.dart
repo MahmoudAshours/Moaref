@@ -40,7 +40,7 @@ class GalleryProvider extends ChangeNotifier {
       var response = await Dio().get(url);
       var document = parser.parse(response.data);
       var links = languageManipulator(document);
-      if (links != null) galleryLinks.sink.add(links);
+      galleryLinks.sink.add(links);
     } catch (e) {}
   }
 

@@ -86,7 +86,7 @@ class DataProvider extends ChangeNotifier {
       var response = await Dio().get(url!);
       var document = parser.parse(response.data);
       var links = languageManipulator(document);
-      if (links != null) languageLinks.sink.add(links);
+      languageLinks.sink.add(links);
     } catch (e) {
       print(e);
     }
@@ -115,7 +115,7 @@ class DataProvider extends ChangeNotifier {
       var response = await Dio().get(url!);
       var document = parser.parse(response.data);
       var links = linkManipulator(document);
-      if (links != null) soundLinks.sink.add(links);
+      soundLinks.sink.add(links);
     } on Exception catch (e) {
       print(e);
     }
