@@ -1,15 +1,8 @@
-import 'dart:math';
-import 'package:chewie/chewie.dart';
-import 'package:ffmpegtest/Helpers/static_assets_files.dart';
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Provider/player_provider.dart';
+import 'package:ffmpegtest/Screens/Categories/category.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
-import 'package:ffmpegtest/Utils/Categories/category.dart';
-import 'package:ffmpegtest/Utils/gallery.dart';
-import 'package:ffmpegtest/Utils/Commons/play_settings.dart';
-import 'package:ffmpegtest/Utils/recording.dart';
-import 'package:ffmpegtest/Utils/upload_file.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -22,8 +15,7 @@ class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin<HomeScreen> {
   @override
   bool get wantKeepAlive => true;
-  double height = 60;
-  int? currindex = 0;
+
   late DataProvider _dataProvider;
   late GalleryProvider _galleryProvider;
   late PlayerProvider _playerProvider;
@@ -55,106 +47,77 @@ class _HomeScreenState extends State<HomeScreen>
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: kPrimaryColor,
-        body: Container(),
-        // body: Stack(
-        //   children: [
-        //     _playerProvider.chewieController != null
-        //         ? Container(
-        //             width: MediaQuery.of(context).size.width,
-        //             height: MediaQuery.of(context).size.height,
-        //             child: ChangeNotifierProvider<GalleryProvider>.value(
-        //                 value: GalleryProvider()..videoPath,
-        //                 child: Chewie(
-        //                     controller: _playerProvider.chewieController!)),
-        //           )
-        //         : SizedBox(),
-        //     Positioned(
-        //       top: 100,
-        //       child: Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: AnimatedCrossFade(
-        //           crossFadeState: _dataProvider.mp3Picked == null
-        //               ? CrossFadeState.showSecond
-        //               : CrossFadeState.showFirst,
-        //           duration: Duration(seconds: 1),
-        //           firstChild: Container(
-        //             decoration: BoxDecoration(
-        //                 color: Colors.green,
-        //                 borderRadius: BorderRadius.circular(10)),
-        //             width: 240,
-        //             height: 40,
-        //             child: AnimatedDefaultTextStyle(
-        //               child: Text('${mp3Name()}'),
-        //               duration: Duration(seconds: 3),
-        //               style: TextStyle(fontSize: 13),
-        //               textAlign: TextAlign.center,
-        //             ),
-        //           ),
-        //           secondChild: Container(
-        //             width: 240,
-        //             height: 40,
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     Positioned(
-        //       bottom: MediaQuery.of(context).size.height / 8.2,
-        //       child: PlaySettings(),
-        //     ),
-        //     DraggableScrollableSheet(
-        //       minChildSize: 0.11,
-        //       maxChildSize: 0.5,
-        //       initialChildSize: 0.11,
-        //       builder:
-        //           (BuildContext context, ScrollController scrollController) {
-        //         return Container(
-        //           color: Colors.white,
-        //           child: Wrap(
-        //             children: [
-        //               Row(
-        //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //                 textDirection: TextDirection.rtl,
-        //                 children: [
-        //                   _bottomNavigationItemBuilder(
-        //                       activeAssetPath: 'assets/Images/maedit.png',
-        //                       nonActiveAssetPath: 'assets/Images/mdedit.png',
-        //                       controller: scrollController,
-        //                       label: 'التصنيف',
-        //                       index: 0),
-        //                   _bottomNavigationItemBuilder(
-        //                       activeAssetPath: 'assets/Images/mamic.png',
-        //                       nonActiveAssetPath: 'assets/Images/mdmic.png',
-        //                       controller: scrollController,
-        //                       label: 'تسجيل',
-        //                       index: 1),
-        //                   _bottomNavigationItemBuilder(
-        //                       activeAssetPath: 'assets/Images/mabrush.png',
-        //                       nonActiveAssetPath: 'assets/Images/mdbrush.png',
-        //                       controller: scrollController,
-        //                       label: 'ملف صوتي',
-        //                       index: 2),
-        //                   _bottomNavigationItemBuilder(
-        //                       activeAssetPath: 'assets/Images/maphoto.png',
-        //                       nonActiveAssetPath: 'assets/Images/mdphoto.png',
-        //                       controller: scrollController,
-        //                       label: 'المكتبة',
-        //                       index: 3),
-        //                 ],
-        //               ),
-        //               SafeArea(
-        //                 child: Container(
-        //                   height: MediaQuery.of(context).size.height,
-        //                   width: MediaQuery.of(context).size.width,
-        //                   child: _itemsBody(),
-        //                 ),
-        //               )
-        //             ],
-        //           ),
-        //         );
-        //       },
-        //     ),
-        //   ],
-        // ),
+        body: Stack(
+          children: [
+            Opacity(
+              opacity: 0.4,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    repeat: ImageRepeat.noRepeat,
+                    image: AssetImage(
+                      'assets/Images/zakhrafa.png',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Image.asset(
+                  'assets/Images/logo.png',
+                  width: 200,
+                  height: 200,
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height / 4,
+              left: MediaQuery.of(context).size.width / 4.8,
+              child: Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                height: MediaQuery.of(context).size.height / 1.5,
+                child: GridView.count(
+                  crossAxisSpacing: 30,
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 30,
+                  children: [
+                    _gridViewItems(
+                      activeAssetPath: 'assets/Images/mic.png',
+                      label: 'تسجيل',
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => Category())),
+                      child: _gridViewItems(
+                        activeAssetPath: 'assets/Images/category_icon.png',
+                        label: 'التصنيف',
+                      ),
+                    ),
+                    _gridViewItems(
+                      activeAssetPath: 'assets/Images/upload_file.png',
+                      label: 'ملف صوتي',
+                    ),
+                    _gridViewItems(
+                      activeAssetPath: 'assets/Images/video_library.png',
+                      label: 'المكتبة',
+                    ),
+                    _gridViewItems(
+                      activeAssetPath: 'assets/Images/information_button.png',
+                      label: 'عن التطبيق',
+                    ),
+                    _gridViewItems(
+                      activeAssetPath: 'assets/Images/smartphone_icon.png',
+                      label: 'عن التطبيق',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -168,59 +131,34 @@ class _HomeScreenState extends State<HomeScreen>
                   _dataProvider.mp3Picked.toString().split('/')[8])
           : _dataProvider.mp3Picked;
 
-  _itemsBody() {
-    switch (currindex) {
-      case 0:
-        return Category();
-        break;
-      case 1:
-        return Recording();
-        break;
-      case 2:
-        return UploadFile();
-        break;
-      case 3:
-        return Gallery();
-        break;
-      default:
-        return CircularProgressIndicator();
-    }
-  }
-
-  SingleChildScrollView _bottomNavigationItemBuilder(
-      {required String activeAssetPath,
-      required String nonActiveAssetPath,
-      required String label,
-      ScrollController? controller,
-      int? index}) {
-    return SingleChildScrollView(
-      controller: controller,
-      child: GestureDetector(
-        onTap: () => setState(() => currindex = index),
-        child: Container(
-          height: 80,
-          child: Column(
-            children: [
-              AnimatedCrossFade(
-                firstChild: Image.asset(
-                  activeAssetPath,
-                  width: 70,
-                  height: 50,
-                ),
-                secondChild: Image.asset(
-                  nonActiveAssetPath,
-                  width: 70,
-                  height: 50,
-                ),
-                duration: Duration(milliseconds: 700),
-                crossFadeState: currindex == index
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-              ),
-              Expanded(child: Text(label))
-            ],
-          ),
+  Container _gridViewItems(
+      {required String activeAssetPath, required String label}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xff364122),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Color(0xffF4D04C),
         ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            activeAssetPath,
+            width: 70,
+            alignment: Alignment.center,
+            height: 50,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              label,
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
       ),
     );
   }
