@@ -1,7 +1,7 @@
 import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Provider/player_provider.dart';
-import 'package:ffmpegtest/Screens/Categories/category.dart';
+import 'package:ffmpegtest/Screens/Categories/category_screen.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                     GestureDetector(
                       onTap: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => Category())),
+                          .push(MaterialPageRoute(builder: (_) => CategoryScreen())),
                       child: _gridViewItems(
                         activeAssetPath: 'assets/Images/category_icon.png',
                         label: 'التصنيف',

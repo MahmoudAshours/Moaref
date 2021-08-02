@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ffmpegtest/Helpers/map_indexed.dart';
 
-class Category extends StatefulWidget {
+class CategoryScreen extends StatefulWidget {
   @override
-  _CategoryState createState() => _CategoryState();
+  _CategoryScreenState createState() => _CategoryScreenState();
 }
 
-class _CategoryState extends State<Category> {
+class _CategoryScreenState extends State<CategoryScreen> {
   DataProvider? _dataProvider;
 
   @override
