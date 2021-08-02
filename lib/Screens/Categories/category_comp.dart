@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:ffmpegtest/Screens/Categories/play_pause.dart';
-import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:flutter/material.dart';
 
 class CategoryComponent extends StatefulWidget {
@@ -33,19 +32,30 @@ class _CategoryComponentState extends State<CategoryComponent> {
         child: FadeInUp(
           delay: Duration(milliseconds: 20 * widget.i as int),
           child: ListTile(
-            leading: PlayPauseButton(
-              snapshot: widget.snapshot,
-              index: widget.i,
-              provider: widget.provider,
+            trailing: CircleAvatar(
+              backgroundColor: Color(0xff364122),
+              child: PlayPauseButton(
+                snapshot: widget.snapshot,
+                index: widget.i,
+                provider: widget.provider,
+              ),
             ),
             subtitle: !widget.provider.boolList.isEmpty &&
                     widget.provider.boolList[widget.i] == true
                 ? PlayerBuilder.realtimePlayingInfos(
                     player: widget.provider.assetsAudioPlayer,
-                    builder: (context, realTimeInfo) {
+                    builder: (context, RealtimePlayingInfos? realTimeInfo) {
                       return realTimeInfo != null
-                          ? Text(
-                              "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "${realTimeInfo.currentPosition.inSeconds} : ${realTimeInfo.currentPosition.inMinutes} -- ${realTimeInfo.duration.inSeconds} : ${realTimeInfo.duration.inMinutes}",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(
+                                    color: Color(0xffC19C42),
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            )
                           : SizedBox();
                     },
                   )
@@ -53,7 +63,7 @@ class _CategoryComponentState extends State<CategoryComponent> {
             title: Text(
               widget.e.toString().replaceAll('.mp3', ''),
               style: TextStyle(
-                  color: kSecondaryFontColor, fontWeight: FontWeight.w600),
+                  color: Color(0xff364122), fontWeight: FontWeight.w600),
               textDirection: TextDirection.rtl,
             ),
           ),

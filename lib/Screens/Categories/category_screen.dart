@@ -65,6 +65,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             child: Center(
                               child: GestureDetector(
                                 onTap: () {
+                                  _dataProvider!.changeCategory(value);
                                   showModalBottomSheet(
                                     context: context,
                                     builder: (_) => _categoriesDataListView(),
@@ -97,7 +98,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         stream: _dataProvider!.soundLinks.stream.asBroadcastStream(),
         builder: (_, AsyncSnapshot<List<String>>? snapshot) {
           return snapshot!.data == null
-              ? Center(child: Container(color: Colors.black))
+              ? Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   child: Column(
                     children: snapshot.data!

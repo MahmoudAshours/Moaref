@@ -3,6 +3,7 @@ import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Provider/player_provider.dart';
 import 'package:ffmpegtest/Screens/Categories/category_screen.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
+import 'package:ffmpegtest/Utils/recording.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -84,13 +85,17 @@ class _HomeScreenState extends State<HomeScreen>
                   crossAxisCount: 2,
                   mainAxisSpacing: 30,
                   children: [
-                    _gridViewItems(
-                      activeAssetPath: 'assets/Images/mic.png',
-                      label: 'تسجيل',
-                    ),
                     GestureDetector(
                       onTap: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => CategoryScreen())),
+                          .push(MaterialPageRoute(builder: (_) => Recording())),
+                      child: _gridViewItems(
+                        activeAssetPath: 'assets/Images/mic.png',
+                        label: 'تسجيل',
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => CategoryScreen())),
                       child: _gridViewItems(
                         activeAssetPath: 'assets/Images/category_icon.png',
                         label: 'التصنيف',

@@ -40,10 +40,10 @@ class DataProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  void changeCategory(String? newCategory) {
+  Future<void> changeCategory(String? newCategory) async {
     category = newCategory;
     boolList = [];
-    fetchSounds();
+    await fetchSounds();
     notifyListeners();
   }
 
@@ -53,7 +53,6 @@ class DataProvider extends ChangeNotifier {
     try {
       fetchCategory().then((List<String>? value) {
         category = value![0];
-        fetchSounds();
         boolList = [];
       });
     } catch (e) {}
@@ -67,7 +66,9 @@ class DataProvider extends ChangeNotifier {
 
   Future<List<String>?> fetchCategory() async {
     try {
+      print('category here');
       var language = Uri.encodeComponent(lang!);
+      print('$language');
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
       var response = await Dio().get(apiUrl!);
       var document = parser.parse(response.data);
@@ -108,7 +109,9 @@ class DataProvider extends ChangeNotifier {
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
         print('object');
+
         var cat = Uri.encodeComponent(category!);
+        print(cat);
         apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
       } else {
         var language = Uri.encodeComponent(lang!);
@@ -136,14 +139,19 @@ class DataProvider extends ChangeNotifier {
 
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
+        var soundData = Uri.encodeComponent(snapshot.data[index]);
+        print(soundData);
+        var cat = Uri.encodeFull(category!);
         apiUrl =
-            "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$category/${snapshot.data[index]}";
+            "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat/${soundData}";
       } else {
         var language = Uri.encodeComponent(lang!);
         var cat = Uri.encodeComponent(category!);
         var soundData = Uri.encodeComponent(snapshot.data[index]);
+        print(soundData);
         apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/$soundData";
+        notifyListeners();
       }
       await assetsAudioPlayer
           .open(

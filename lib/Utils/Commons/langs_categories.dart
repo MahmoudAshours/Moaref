@@ -31,7 +31,7 @@ class _LanguagesDropDownListState extends State<LanguagesDropDownList> {
     );
   }
 
-  _languagePicker(DataProvider provider) {
+  StreamBuilder<List<String>> _languagePicker(DataProvider provider) {
     return StreamBuilder<List<String>>(
       stream: provider.languageLinks.stream,
       builder: (_, AsyncSnapshot<List<String>> snapshot) => Container(
