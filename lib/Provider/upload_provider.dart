@@ -6,6 +6,7 @@ import 'package:ffmpegtest/Models/sound_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UploadProvider extends ChangeNotifier {
   var path;
@@ -22,6 +23,7 @@ class UploadProvider extends ChangeNotifier {
   }
 
   Future<Null> uploadFile(context) async {
+    await Permission.accessMediaLocation.request();
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.audio);
 

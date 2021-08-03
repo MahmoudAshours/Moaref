@@ -46,38 +46,7 @@ class _RecordingState extends State<Recording> {
               SizedBox(height: 20),
               BounceInUp(
                 duration: Duration(seconds: 1),
-                child: Center(
-                  child: soundProvider.recording
-                      ? AvatarGlow(
-                          glowColor: Colors.orange,
-                          endRadius: 190.0,
-                          duration: Duration(milliseconds: 2000),
-                          repeat: true,
-                          showTwoGlows: true,
-                          repeatPauseDuration: Duration(milliseconds: 100),
-                          child: Material(
-                            elevation: 18.0,
-                            shape: CircleBorder(),
-                            child: CircleAvatar(
-                              backgroundColor: kSecondaryColor,
-                              child: GestureDetector(
-                                onTap: () => soundProvider.endRecord(),
-                                child: Image.asset('assets/Images/record.png'),
-                              ),
-                              radius: 140.0,
-                            ),
-                          ),
-                        )
-                      : CircleAvatar(
-                          backgroundColor: kSecondaryColor,
-                          child: GestureDetector(
-                            onTap: () async =>
-                                await soundProvider.recordSound(),
-                            child: Image.asset('assets/Images/record.png'),
-                          ),
-                          radius: 140.0,
-                        ),
-                ),
+                child: Center(child: _recordingWidget()),
               ),
               SizedBox(height: 20),
               soundProvider.sounds == null ||
@@ -99,6 +68,38 @@ class _RecordingState extends State<Recording> {
         ),
       ),
     );
+  }
+
+  Widget _recordingWidget() {
+    return soundProvider.recording
+        ? AvatarGlow(
+            glowColor: Colors.orange,
+            endRadius: 190.0,
+            duration: Duration(milliseconds: 2000),
+            repeat: true,
+            showTwoGlows: true,
+            repeatPauseDuration: Duration(milliseconds: 100),
+            child: Material(
+              elevation: 18.0,
+              shape: CircleBorder(),
+              child: CircleAvatar(
+                backgroundColor: kSecondaryColor,
+                child: GestureDetector(
+                  onTap: () => soundProvider.endRecord(),
+                  child: Image.asset('assets/Images/record.png'),
+                ),
+                radius: 140.0,
+              ),
+            ),
+          )
+        : CircleAvatar(
+            backgroundColor: kSecondaryColor,
+            child: GestureDetector(
+              onTap: () async => await soundProvider.recordSound(),
+              child: Image.asset('assets/Images/record.png'),
+            ),
+            radius: 140.0,
+          );
   }
 
   FadeInUp _recordTile(int i) {

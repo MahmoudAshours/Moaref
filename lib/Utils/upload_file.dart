@@ -33,114 +33,133 @@ class _UploadFileState extends State<UploadFile> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        LanguagesDropDownList(),
-        SizedBox(height: 20),
-        FadeInUp(
-          duration: Duration(milliseconds: 500),
-          child: Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width / 1.3,
-              child: ElevatedButton(
-                onPressed: () {
-                  uploadProvider.uploadFile(context);
-                },
-                child: Text('إضافة ملف صوتي',
-                    style: TextStyle(color: Colors.white)),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: 7),
-        uploadProvider.sounds == null ||
-                uploadProvider.sounds.isEmpty ||
-                uploadProvider.boolList.isEmpty
-            ? Center(
-                child: Text(
-                  'هذه الخاصية تمكنك من إضافة مقطع صوتي لاستخرجه كمقطع دعوي',
-                  textAlign: TextAlign.center,
-                ),
-              )
-            : Container(
-                height: 150,
-                width: MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: uploadProvider.sounds
-                        .mapIndexed(
-                          (e, i) => FadeInUp(
-                            delay: Duration(milliseconds: 20 * i),
-                            child: ListTile(
-                              trailing: Text('${e.toString().split('/')[7]}'),
-                              leading: TextButton(
-                                child: PlayerBuilder.isPlaying(
-                                  player: uploadProvider.assetsAudioPlayer,
-                                  builder: (BuildContext context, bool play) {
-                                    return Icon(
-                                        uploadProvider.boolList.isNotEmpty &&
+    return Scaffold(
+      backgroundColor: Color(0xffD9DED5),
+      body: SafeArea(
+        child: Column(
+          children: [
+            LanguagesDropDownList(),
+            SizedBox(height: 20),
+            Image.asset('assets/Images/upload_media.png'),
+            SizedBox(height: 7),
+            uploadProvider.sounds == null ||
+                    uploadProvider.sounds.isEmpty ||
+                    uploadProvider.boolList.isEmpty
+                ? Center(
+                    child: Text(
+                      'هذه الخاصية تمكنك من إضافة مقطع صوتي لاستخرجه كمقطع دعوي',
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                : Container(
+                    height: 150,
+                    width: MediaQuery.of(context).size.width,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: uploadProvider.sounds
+                            .mapIndexed(
+                              (e, i) => FadeInUp(
+                                delay: Duration(milliseconds: 20 * i),
+                                child: ListTile(
+                                  trailing:
+                                      Text('${e.toString().split('/')[7]}'),
+                                  leading: TextButton(
+                                    child: PlayerBuilder.isPlaying(
+                                      player: uploadProvider.assetsAudioPlayer,
+                                      builder:
+                                          (BuildContext context, bool play) {
+                                        return Icon(uploadProvider
+                                                    .boolList.isNotEmpty &&
                                                 uploadProvider.boolList[i] ==
                                                     true &&
                                                 play
                                             ? Icons.pause
                                             : Icons.play_arrow);
-                                  },
-                                ),
-                                onPressed: () {
-                                  uploadProvider.fetchSoundData(i);
-                                  uploadProvider.assetsAudioPlayer.isPlaying
-                                      .listen(
-                                    (event) {
-                                      if (event) {
-                                        print(event);
-                                        uploadProvider.setSound =
-                                            Sound.IsPlaying;
+                                      },
+                                    ),
+                                    onPressed: () {
+                                      uploadProvider.fetchSoundData(i);
+                                      uploadProvider.assetsAudioPlayer.isPlaying
+                                          .listen(
+                                        (event) {
+                                          if (event) {
+                                            print(event);
+                                            uploadProvider.setSound =
+                                                Sound.IsPlaying;
+                                          } else {
+                                            uploadProvider.setSound =
+                                                Sound.IsNotPlaying;
+                                          }
+                                        },
+                                      );
+
+                                      if (uploadProvider.sound ==
+                                          Sound.IsNotPlaying) {
+                                        uploadProvider.playSoundData(i);
+                                        dataProvider.setMp3(
+                                            '${e.toString().split('/')[7]}');
                                       } else {
-                                        uploadProvider.setSound =
-                                            Sound.IsNotPlaying;
+                                        if ((uploadProvider
+                                                    .boolList.isNotEmpty &&
+                                                !uploadProvider.boolList[i]) ||
+                                            uploadProvider.boolList.isEmpty) {
+                                          uploadProvider.assetsAudioPlayer
+                                              .stop();
+                                          dataProvider.nullifymp3();
+                                        } else {
+                                          uploadProvider.playSoundData(i);
+                                          dataProvider.setMp3(
+                                              '${e.toString().split('/')[7]}');
+                                        }
                                       }
                                     },
-                                  );
-
-                                  if (uploadProvider.sound ==
-                                      Sound.IsNotPlaying) {
-                                    uploadProvider.playSoundData(i);
-                                    dataProvider.setMp3(
-                                        '${e.toString().split('/')[7]}');
-                                  } else {
-                                    if ((uploadProvider.boolList.isNotEmpty &&
-                                            !uploadProvider.boolList[i]) ||
-                                        uploadProvider.boolList.isEmpty) {
-                                      uploadProvider.assetsAudioPlayer.stop();
-                                      dataProvider.nullifymp3();
-                                    } else {
-                                      uploadProvider.playSoundData(i);
-                                      dataProvider.setMp3(
-                                          '${e.toString().split('/')[7]}');
-                                    }
-                                  }
-                                },
+                                  ),
+                                  subtitle: uploadProvider
+                                              .boolList.isNotEmpty &&
+                                          uploadProvider.boolList[i] == true
+                                      ? PlayerBuilder.realtimePlayingInfos(
+                                          player:
+                                              uploadProvider.assetsAudioPlayer,
+                                          builder: (context, realTimeInfo) {
+                                            return realTimeInfo != null
+                                                ? Text(
+                                                    "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
+                                                : SizedBox();
+                                          },
+                                        )
+                                      : SizedBox(),
+                                ),
                               ),
-                              subtitle: uploadProvider.boolList.isNotEmpty &&
-                                      uploadProvider.boolList[i] == true
-                                  ? PlayerBuilder.realtimePlayingInfos(
-                                      player: uploadProvider.assetsAudioPlayer,
-                                      builder: (context, realTimeInfo) {
-                                        return realTimeInfo != null
-                                            ? Text(
-                                                "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
-                                            : SizedBox();
-                                      },
-                                    )
-                                  : SizedBox(),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-              )
-      ],
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  )
+          ],
+        ),
+      ),
+    );
+  }
+
+  FadeInUp _uploadAudioButton(BuildContext context) {
+    return FadeInUp(
+      duration: Duration(milliseconds: 500),
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width / 1.3,
+          child: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color(0xff364122))),
+            onPressed: () {
+              uploadProvider.uploadFile(context);
+            },
+            child: Text(
+              'إضافة ملف صوتي',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

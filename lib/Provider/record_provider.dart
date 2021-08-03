@@ -32,12 +32,15 @@ class RecordProvider extends ChangeNotifier {
 
   Future<void> recordSound() async {
     await _record.hasPermission();
-    Directory directory = await getTemporaryDirectory();
-    path = join(directory.path, '${getRandString(10)}');
-    await _record.start(
-      path: '$path', // required
-      encoder: AudioEncoder.AAC, // by default
-    );
+    try {
+      Directory directory = await getTemporaryDirectory();
+      path = join(directory.path, '${getRandString(10)}');
+      print(path);
+      await _record.start(
+        path: '$path', // required
+        encoder: AudioEncoder.AAC, // by default
+      );
+    } catch (e) {}
   }
 
   fetchSoundData(index) {

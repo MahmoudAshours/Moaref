@@ -4,6 +4,7 @@ import 'package:ffmpegtest/Provider/player_provider.dart';
 import 'package:ffmpegtest/Screens/Categories/category_screen.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
 import 'package:ffmpegtest/Utils/recording.dart';
+import 'package:ffmpegtest/Utils/upload_file.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -101,9 +102,13 @@ class _HomeScreenState extends State<HomeScreen>
                         label: 'التصنيف',
                       ),
                     ),
-                    _gridViewItems(
-                      activeAssetPath: 'assets/Images/upload_file.png',
-                      label: 'ملف صوتي',
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => UploadFile())),
+                      child: _gridViewItems(
+                        activeAssetPath: 'assets/Images/upload_file.png',
+                        label: 'ملف صوتي',
+                      ),
                     ),
                     _gridViewItems(
                       activeAssetPath: 'assets/Images/video_library.png',
