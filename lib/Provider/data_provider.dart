@@ -59,7 +59,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setMp3(mp3) {
+  void setMp3(mp3) {
     mp3Picked = mp3;
     notifyListeners();
   }
@@ -82,7 +82,7 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  fetchLanguage() async {
+  Future<void> fetchLanguage() async {
     try {
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
       var response = await Dio().get(apiUrl!);
@@ -103,15 +103,13 @@ class DataProvider extends ChangeNotifier {
       boolList[index] = true;
       notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> fetchSounds() async {
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-        print('object');
-
         var cat = Uri.encodeComponent(category!);
-        print(cat);
         apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
       } else {
         var language = Uri.encodeComponent(lang!);
@@ -127,7 +125,7 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  nullifymp3() {
+  void nullifymp3() {
     mp3Picked = null;
     boolList = [];
     notifyListeners();
@@ -144,6 +142,7 @@ class DataProvider extends ChangeNotifier {
         var cat = Uri.encodeFull(category!);
         apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat/${soundData}";
+        notifyListeners();
       } else {
         var language = Uri.encodeComponent(lang!);
         var cat = Uri.encodeComponent(category!);
