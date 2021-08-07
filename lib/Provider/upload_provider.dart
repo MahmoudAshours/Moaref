@@ -11,7 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 class UploadProvider extends ChangeNotifier {
   var path;
   var sounds = [];
-  List boolList = [];
+  List uploadedAudioIsPlaying = [];
   Sound _sound = Sound.IsNotPlaying;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   Sound get sound => _sound;
@@ -23,28 +23,30 @@ class UploadProvider extends ChangeNotifier {
   }
 
   Future<Null> uploadFile(context) async {
-    await Permission.accessMediaLocation.request();
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.audio);
-
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform
+          .pickFiles(type: FileType.custom, allowedExtensions: ['mp4']);
+    } catch (e) {
+      print(e);
+    }
+    print('object');
     if (result != null) {
       File file = File(result.files.single.path!);
       sounds.add(file.path);
-      boolList.add(false);
-      Navigator.of(context).pop();
+      uploadedAudioIsPlaying.add(false);
       notifyListeners();
-    } else {
-      Navigator.of(context).pop();
-    }
+    } else {}
   }
 
   Future<Null>? fetchSoundData(index) {
-    if (boolList.isNotEmpty && boolList[index] == true) {
-      boolList[index] = false;
+    if (uploadedAudioIsPlaying.isNotEmpty &&
+        uploadedAudioIsPlaying[index] == true) {
+      uploadedAudioIsPlaying[index] = false;
     } else {
-      boolList = [];
-      boolList = List.generate(sounds.length, (index) => false);
-      boolList[index] = true;
+      uploadedAudioIsPlaying = [];
+      uploadedAudioIsPlaying = List.generate(sounds.length, (index) => false);
+      uploadedAudioIsPlaying[index] = true;
       notifyListeners();
     }
     return null;

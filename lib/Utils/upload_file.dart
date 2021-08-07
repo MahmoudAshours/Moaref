@@ -44,7 +44,7 @@ class _UploadFileState extends State<UploadFile> {
             SizedBox(height: 7),
             uploadProvider.sounds == null ||
                     uploadProvider.sounds.isEmpty ||
-                    uploadProvider.boolList.isEmpty
+                    uploadProvider.uploadedAudioIsPlaying.isEmpty
                 ? Center(
                     child: Text(
                       'هذه الخاصية تمكنك من إضافة مقطع صوتي لاستخرجه كمقطع دعوي',
@@ -69,8 +69,11 @@ class _UploadFileState extends State<UploadFile> {
                                       builder:
                                           (BuildContext context, bool play) {
                                         return Icon(uploadProvider
-                                                    .boolList.isNotEmpty &&
-                                                uploadProvider.boolList[i] ==
+                                                    .uploadedAudioIsPlaying
+                                                    .isNotEmpty &&
+                                                uploadProvider
+                                                            .uploadedAudioIsPlaying[
+                                                        i] ==
                                                     true &&
                                                 play
                                             ? Icons.pause
@@ -100,9 +103,14 @@ class _UploadFileState extends State<UploadFile> {
                                             '${e.toString().split('/')[7]}');
                                       } else {
                                         if ((uploadProvider
-                                                    .boolList.isNotEmpty &&
-                                                !uploadProvider.boolList[i]) ||
-                                            uploadProvider.boolList.isEmpty) {
+                                                    .uploadedAudioIsPlaying
+                                                    .isNotEmpty &&
+                                                !uploadProvider
+                                                        .uploadedAudioIsPlaying[
+                                                    i]) ||
+                                            uploadProvider
+                                                .uploadedAudioIsPlaying
+                                                .isEmpty) {
                                           uploadProvider.assetsAudioPlayer
                                               .stop();
                                           dataProvider.nullifymp3();
@@ -115,8 +123,11 @@ class _UploadFileState extends State<UploadFile> {
                                     },
                                   ),
                                   subtitle: uploadProvider
-                                              .boolList.isNotEmpty &&
-                                          uploadProvider.boolList[i] == true
+                                              .uploadedAudioIsPlaying
+                                              .isNotEmpty &&
+                                          uploadProvider
+                                                  .uploadedAudioIsPlaying[i] ==
+                                              true
                                       ? PlayerBuilder.realtimePlayingInfos(
                                           player:
                                               uploadProvider.assetsAudioPlayer,
@@ -134,7 +145,8 @@ class _UploadFileState extends State<UploadFile> {
                             .toList(),
                       ),
                     ),
-                  )
+                  ),
+            _uploadAudioButton(context),
           ],
         ),
       ),
@@ -149,10 +161,9 @@ class _UploadFileState extends State<UploadFile> {
           width: MediaQuery.of(context).size.width / 1.3,
           child: ElevatedButton(
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xff364122))),
-            onPressed: () {
-              uploadProvider.uploadFile(context);
-            },
+              backgroundColor: MaterialStateProperty.all(Color(0xff364122)),
+            ),
+            onPressed: () => uploadProvider.uploadFile(context),
             child: Text(
               'إضافة ملف صوتي',
               style: TextStyle(color: Colors.white),
