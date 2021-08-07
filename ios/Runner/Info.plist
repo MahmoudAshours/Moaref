@@ -14,6 +14,13 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>konmoaref</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Explain why your app uses music</string>
+	<key>UIBackgroundModes</key>
+	<array>
+   		<string>fetch</string>
+   		<string>remote-notification</string>
+	</array>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
