@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 class GalleryProvider extends ChangeNotifier {
   late String url;
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
-  String? videoPath = "";
+  String videoPath = "";
   List customWallpapers = [];
 
   // ignore: must_call_super

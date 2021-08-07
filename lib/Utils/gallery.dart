@@ -20,7 +20,6 @@ class _GalleryState extends State<Gallery> {
   @override
   void initState() {
     _videoPlayerController = VideoPlayerController.file(File(''));
-
     super.initState();
   }
 
@@ -43,6 +42,11 @@ class _GalleryState extends State<Gallery> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xff5E713B),
+        toolbarHeight: 30,
+        elevation: 0,
+      ),
       body: Stack(
         children: [
           Align(
@@ -72,14 +76,14 @@ class _GalleryState extends State<Gallery> {
             ),
           ),
           Positioned(
-            top: 100,
+            top: 80,
             left: 50,
             height: 170,
-            width: MediaQuery.of(context).size.width / 1.3,
+            width: MediaQuery.of(context).size.width / 1.4,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: provider.videoPath != null
-                  ? _loadedImage(provider.videoPath)
+                  ? VideoPlayer(_videoPlayerController)
                   : Container(
                       color: Colors.transparent,
                       width: 100,
@@ -88,19 +92,19 @@ class _GalleryState extends State<Gallery> {
             ),
           ),
           Positioned(
-            top: 280,
-            height: MediaQuery.of(context).size.height * 2,
+            top: 260,
+            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height * 2,
+                height: MediaQuery.of(context).size.height - 300,
                 width: MediaQuery.of(context).size.width,
                 child: StreamBuilder(
                   stream: provider.galleryLinks.stream,
-                  builder: (cxt, AsyncSnapshot galleryStream) =>
+                  builder: (c, AsyncSnapshot galleryStream) =>
                       !galleryStream.hasData
                           ? Center(child: CircularProgressIndicator())
-                          : _videosGridView(cxt, galleryStream),
+                          : _videosGridView(c, galleryStream),
                 ),
               ),
             ),
@@ -164,6 +168,7 @@ class _GalleryState extends State<Gallery> {
                     child: GestureDetector(
                       onTap: () async {
                         await provider.setVideoPath(video);
+                        await _initalizeNewVideo();
                       },
                       child: ClipRRect(
                         child: _loadedImage(video),
@@ -198,61 +203,58 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
-  // _initalizeNewVideo() async {
-  //   _videoPlayerController.pause();
-  //   _videoPlayerController =
-  //       VideoPlayerController.file(File(provider.videoPath));
-  //   await _videoPlayerController.initialize();
-  //   _videoPlayerController.play();
-  // }
+  _initalizeNewVideo() async {
+    _videoPlayerController =
+        VideoPlayerController.file(File(provider.videoPath));
+    await _videoPlayerController.initialize();
+    _videoPlayerController.play();
+  }
 
-  FadeInUp _blurredLoadingImage(e) {
-    return FadeInUp(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: 0.2,
-              sigmaY: 0.2,
+  Stack _blurredLoadingImage(e) {
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 0.2,
+            sigmaY: 0.2,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.network(
+              "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
+              fit: BoxFit.fill,
+              filterQuality: FilterQuality.low,
+              gaplessPlayback: true,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
-                fit: BoxFit.fill,
-                filterQuality: FilterQuality.low,
-                gaplessPlayback: true,
-                loadingBuilder: (BuildContext context, Widget child,
-                    ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  );
-                },
+          ),
+        ),
+        GestureDetector(
+          onTap: () => provider.downloadFile(e),
+          child: Center(
+            child: CircleAvatar(
+              backgroundColor: Colors.black,
+              child: Icon(
+                Icons.download_rounded,
+                size: 20,
+                color: Colors.white,
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () => provider.downloadFile(e),
-            child: Center(
-              child: CircleAvatar(
-                backgroundColor: Colors.black,
-                child: Icon(
-                  Icons.download_rounded,
-                  size: 20,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -271,5 +273,11 @@ class _GalleryState extends State<Gallery> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    super.dispose();
   }
 }
