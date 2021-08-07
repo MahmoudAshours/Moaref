@@ -3,6 +3,7 @@ import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Provider/player_provider.dart';
 import 'package:ffmpegtest/Screens/Categories/category_screen.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
+import 'package:ffmpegtest/Utils/gallery.dart';
 import 'package:ffmpegtest/Utils/recording.dart';
 import 'package:ffmpegtest/Utils/upload_file.dart';
 import 'package:provider/provider.dart';
@@ -110,9 +111,13 @@ class _HomeScreenState extends State<HomeScreen>
                         label: 'ملف صوتي',
                       ),
                     ),
-                    _gridViewItems(
-                      activeAssetPath: 'assets/Images/video_library.png',
-                      label: 'المكتبة',
+                    GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => Gallery())),
+                      child: _gridViewItems(
+                        activeAssetPath: 'assets/Images/video_library.png',
+                        label: 'المكتبة',
+                      ),
                     ),
                     _gridViewItems(
                       activeAssetPath: 'assets/Images/information_button.png',

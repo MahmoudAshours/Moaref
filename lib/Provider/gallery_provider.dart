@@ -11,21 +11,20 @@ import 'package:path_provider/path_provider.dart';
 class GalleryProvider extends ChangeNotifier {
   late String url;
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
-  String videoPath = "";
+  String? videoPath = "";
   List customWallpapers = [];
 
   // ignore: must_call_super
   void dispose() => galleryLinks.close();
 
-  setVideoPath(path) async {
+  Future setVideoPath(path) async {
     String? fileName = path.replaceAll('jpg', 'mp4');
     String dir = (await getApplicationDocumentsDirectory()).path;
-    String savePath = '$dir/$fileName';
-    videoPath = savePath;
+    videoPath = '$dir/$fileName';
     notifyListeners();
   }
 
-  Future<bool> checkIfExists(String url) async {
+  Future<bool> checkIfVideoExists(String url) async {
     String fileName = url.replaceAll('jpg', 'mp4');
     String dir = (await getApplicationDocumentsDirectory()).path;
     String savePath = '$dir/$fileName';
