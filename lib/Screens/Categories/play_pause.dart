@@ -4,13 +4,18 @@ import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PlayPauseButton extends StatelessWidget {
+class PlayPauseButton extends StatefulWidget {
   PlayPauseButton({Key? key, this.snapshot, this.index, this.provider})
       : super(key: key);
   final snapshot;
   final index;
   final provider;
 
+  @override
+  _PlayPauseButtonState createState() => _PlayPauseButtonState();
+}
+
+class _PlayPauseButtonState extends State<PlayPauseButton> {
   @override
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
@@ -20,7 +25,9 @@ class PlayPauseButton extends StatelessWidget {
             player: prov.assetsAudioPlayer,
             builder: (BuildContext context, bool play) {
               return Icon(
-                prov.boolList.isNotEmpty && prov.boolList[index] == true && play
+                prov.boolList.isNotEmpty &&
+                        prov.boolList[widget.index] == true &&
+                        play
                     ? Icons.pause
                     : Icons.play_arrow,
                 color: Colors.white,
@@ -28,25 +35,27 @@ class PlayPauseButton extends StatelessWidget {
             },
           ),
           onPressed: () {
-            prov.fetchSoundData(snapshot, index);
+            prov.fetchSoundData(widget.snapshot, widget.index);
+            setState(() {});
             prov.assetsAudioPlayer.isPlaying.listen(
-              (event) {
-                if (event) {
+              (soundEvent) {
+                if (soundEvent) {
                   prov.setSound = Sound.IsPlaying;
                 } else {
                   prov.setSound = Sound.IsNotPlaying;
                 }
               },
             );
+
             if (prov.sound == Sound.IsNotPlaying) {
-              prov.playSoundData(snapshot, index);
+              prov.playSoundData(widget.snapshot, widget.index);
             } else {
-              if ((prov.boolList.isNotEmpty && !prov.boolList[index]) ||
+              if ((prov.boolList.isNotEmpty && !prov.boolList[widget.index]) ||
                   prov.boolList.isEmpty) {
                 prov.assetsAudioPlayer.stop();
                 prov.nullifymp3();
               } else {
-                prov.playSoundData(snapshot, index);
+                prov.playSoundData(widget.snapshot, widget.index);
               }
             }
           },

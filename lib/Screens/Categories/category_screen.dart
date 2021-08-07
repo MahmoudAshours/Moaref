@@ -27,6 +27,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kSecondaryColor,
+        toolbarHeight: 30,
+        actionsIconTheme: IconThemeData(color: Colors.black),
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 30,
+            color: Colors.black,
+          ),
+        ),
+        elevation: 0,
+      ),
       backgroundColor: kSecondaryColor,
       body: SingleChildScrollView(
         child: Column(
@@ -68,7 +82,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   _dataProvider!.changeCategory(value);
                                   showModalBottomSheet(
                                     context: context,
-                                    builder: (_) => _categoriesDataListView(),
+                                    builder: (_) => _categoriesDataStream(),
                                   );
                                 },
                                 child: Container(
@@ -92,8 +106,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  Container _categoriesDataListView() {
+  Container _categoriesDataStream() {
     return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
       child: StreamBuilder(
         stream: _dataProvider!.soundLinks.stream.asBroadcastStream(),
         builder: (_, AsyncSnapshot<List<String>>? snapshot) {
@@ -103,10 +118,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   child: Column(
                     children: snapshot.data!
                         .mapIndexed(
-                          (String e, int i) => CategoryComponent(
-                            provider: _dataProvider,
-                            i: i,
-                            e: e,
+                          (String title, int index) => CategoryComponent(
+                            provider: _dataProvider!,
+                            index: index,
+                            title: title,
                             snapshot: snapshot,
                           ),
                         )

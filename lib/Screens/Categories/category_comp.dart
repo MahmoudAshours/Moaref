@@ -1,16 +1,17 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:ffmpegtest/Provider/data_provider.dart';
 import 'package:ffmpegtest/Screens/Categories/play_pause.dart';
 import 'package:flutter/material.dart';
 
 class CategoryComponent extends StatefulWidget {
-  final provider;
-  final i;
+  final DataProvider provider;
+  final index;
   final snapshot;
-  final e;
+  final title;
 
   const CategoryComponent(
-      {Key? key, this.provider, this.i, this.e, this.snapshot})
+      {Key? key, required this.provider, this.index, this.title, this.snapshot})
       : super(key: key);
 
   @override
@@ -30,44 +31,49 @@ class _CategoryComponentState extends State<CategoryComponent> {
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: FadeInUp(
-          delay: Duration(milliseconds: 20 * widget.i as int),
+          delay: Duration(milliseconds: 20 * widget.index as int),
           child: ListTile(
             trailing: CircleAvatar(
               backgroundColor: Color(0xff364122),
               child: PlayPauseButton(
                 snapshot: widget.snapshot,
-                index: widget.i,
+                index: widget.index,
                 provider: widget.provider,
               ),
             ),
-            subtitle: !widget.provider.boolList.isEmpty &&
-                    widget.provider.boolList[widget.i] == true
+            subtitle: widget.provider.boolList.isNotEmpty &&
+                    widget.provider.boolList[widget.index] == true
                 ? PlayerBuilder.realtimePlayingInfos(
                     player: widget.provider.assetsAudioPlayer,
                     builder: (context, RealtimePlayingInfos? realTimeInfo) {
                       return realTimeInfo != null
-                          ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "${realTimeInfo.currentPosition.inSeconds} : ${realTimeInfo.currentPosition.inMinutes} -- ${realTimeInfo.duration.inSeconds} : ${realTimeInfo.duration.inMinutes}",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                    color: Color(0xffC19C42),
-                                    fontWeight: FontWeight.w800),
-                              ),
-                            )
+                          ? _playTimeDisplayed(realTimeInfo)
                           : SizedBox();
                     },
                   )
                 : SizedBox(),
-            title: Text(
-              widget.e.toString().replaceAll('.mp3', ''),
-              style: TextStyle(
-                  color: Color(0xff364122), fontWeight: FontWeight.w600),
-              textDirection: TextDirection.rtl,
-            ),
+            title: _audioTitle(),
           ),
         ),
+      ),
+    );
+  }
+
+  Text _audioTitle() {
+    return Text(
+      widget.title.toString().replaceAll('.mp3', ''),
+      style: TextStyle(color: Color(0xff364122), fontWeight: FontWeight.w600),
+      textDirection: TextDirection.rtl,
+    );
+  }
+
+  Padding _playTimeDisplayed(RealtimePlayingInfos realTimeInfo) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        "${realTimeInfo.currentPosition.inSeconds} : ${realTimeInfo.currentPosition.inMinutes} -- ${realTimeInfo.duration.inSeconds} : ${realTimeInfo.duration.inMinutes}",
+        textDirection: TextDirection.rtl,
+        style: TextStyle(color: Color(0xffC19C42), fontWeight: FontWeight.w800),
       ),
     );
   }
