@@ -63,7 +63,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       builder: (_, AsyncSnapshot<List<String>> snapshot) => Center(
         child: !snapshot.hasData &&
                 snapshot.connectionState != ConnectionState.done
-            ? CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator())
             : SafeArea(
                 top: false,
                 child: Container(

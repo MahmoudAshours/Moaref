@@ -13,7 +13,7 @@ class GalleryProvider extends ChangeNotifier {
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
   String videoPath = "";
   List customWallpapers = [];
-
+  late var downloadInfo = {};
   // ignore: must_call_super
   void dispose() => galleryLinks.close();
 
@@ -52,14 +52,16 @@ class GalleryProvider extends ChangeNotifier {
         videoUrl,
         "$dir/$newUrl",
         onReceiveProgress: (rec, total) {
+          downloadInfo = {'rec': rec, 'total': total};
+          notifyListeners();
           print("Rec: $rec , Total: $total");
         },
       );
+      downloadInfo.clear();
     } catch (e) {
       print(e);
     }
-    print("Download completed");
-    notifyListeners();
+    return true;
   }
 
   Future uploadFile(context) async {

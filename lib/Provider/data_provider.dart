@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:assets_audio_player/assets_audio_player.dart';
-
 import 'package:dio/dio.dart';
 import 'package:ffmpegtest/Helpers/link_manipulation.dart';
 import 'package:ffmpegtest/Models/sound_state.dart';
@@ -66,7 +65,6 @@ class DataProvider extends ChangeNotifier {
 
   Future<List<String>?> fetchCategory() async {
     try {
-      print('category here');
       var language = Uri.encodeComponent(lang!);
       print('$language');
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
@@ -109,11 +107,12 @@ class DataProvider extends ChangeNotifier {
   Future<void> fetchSounds() async {
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-        var cat = Uri.encodeComponent(category!);
+        var cat = Uri.encodeComponent(category!.toString());
+        print(cat);
         apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
       } else {
         var language = Uri.encodeComponent(lang!);
-        var cat = Uri.encodeComponent(category!);
+        var cat = Uri.encodeFull(category!.toString());
         apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
       }
       var response = await Dio().get(apiUrl!);

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
+import 'package:ffmpegtest/Utils/Commons/downloading_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> {
   late GalleryProvider provider;
   late VideoPlayerController _videoPlayerController;
+  GlobalKey<State> _dialogKey = GlobalKey<State>();
   @override
   void initState() {
     _videoPlayerController = VideoPlayerController.file(File(''));
@@ -242,7 +244,12 @@ class _GalleryState extends State<Gallery> {
           ),
         ),
         GestureDetector(
-          onTap: () => provider.downloadFile(e),
+          onTap: () => {
+            showDownloadDialog(context, _dialogKey),
+            provider
+                .downloadFile(e)
+                .then((value) => Navigator.of(context).pop()),
+          },
           child: Center(
             child: CircleAvatar(
               backgroundColor: Colors.black,
