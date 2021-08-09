@@ -33,9 +33,9 @@ class RecordProvider extends ChangeNotifier {
   Future<void> recordSound() async {
     await _record.hasPermission();
     try {
-      Directory directory = await getTemporaryDirectory();
-      path = join(directory.path, '${getRandString(10)}');
-      print(path);
+      Directory directory = await getApplicationSupportDirectory();
+      path = join(directory.path, '${getRandString(4)}');
+
       await _record.start(
         path: '$path', // required
         encoder: AudioEncoder.AAC, // by default
@@ -59,10 +59,8 @@ class RecordProvider extends ChangeNotifier {
     notifyListeners();
 
     await assetsAudioPlayer
-        .open(
-      Audio.file(sounds[index]),
-      respectSilentMode: false,
-    )
+        .open(Audio.file(
+            Platform.isIOS ? "file:/" + sounds[index] : sounds[index]))
         .whenComplete(() {
       _sound = Sound.IsPlaying;
       notifyListeners();
@@ -70,8 +68,9 @@ class RecordProvider extends ChangeNotifier {
   }
 
   void endRecord() {
-    _record.stop().then((_) {
-      sounds.add(path);
+    _record.stop().then((audioPath) {
+      sounds.add(audioPath);
+      print(audioPath);
       boolList.add(false);
       notifyListeners();
     });

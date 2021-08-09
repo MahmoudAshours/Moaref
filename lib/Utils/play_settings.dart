@@ -14,7 +14,7 @@ class PlaySettings extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           InkWell(
-            onTap: ()=>provider.createFile('text') ,
+            onTap: () => provider.createFile('text'),
             child: Padding(
               padding: const EdgeInsets.all(1.0),
               child: Image.asset('assets/Images/render.png'),

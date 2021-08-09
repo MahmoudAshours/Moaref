@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:ffmpegtest/Provider/gallery_provider.dart';
 import 'package:ffmpegtest/Themes/theme.dart';
-import 'package:ffmpegtest/Utils/Commons/downloading_progress.dart';
+import 'package:ffmpegtest/Utils/downloading_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -170,6 +170,7 @@ class _GalleryState extends State<Gallery> {
                       onTap: () async {
                         await provider.setVideoPath(video);
                         await _initalizeNewVideo();
+                        //01007814655
                       },
                       child: ClipRRect(
                         child: _loadedImage(video),
