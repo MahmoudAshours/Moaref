@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:ffmpegtest/Helpers/random_string.dart';
-import 'package:ffmpegtest/Models/sound_state.dart';
+import 'package:konmoaref/Helpers/random_string.dart';
+import 'package:konmoaref/Models/sound_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';

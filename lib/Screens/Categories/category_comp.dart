@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Screens/Categories/play_pause.dart';
+import 'package:konmoaref/Provider/data_provider.dart';
+import 'package:konmoaref/Screens/Categories/play_pause.dart';
 import 'package:flutter/material.dart';
 
 class CategoryComponent extends StatefulWidget {

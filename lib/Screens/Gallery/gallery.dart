@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
-import 'package:ffmpegtest/Provider/gallery_provider.dart';
-import 'package:ffmpegtest/Themes/theme.dart';
-import 'package:ffmpegtest/Utils/downloading_progress.dart';
+import 'package:konmoaref/Provider/gallery_provider.dart';
+import 'package:konmoaref/Themes/theme.dart';
+import 'package:konmoaref/Utils/downloading_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';

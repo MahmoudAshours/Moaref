@@ -1,6 +1,6 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Themes/theme.dart';
+import 'package:konmoaref/Provider/data_provider.dart';
+import 'package:konmoaref/Themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,12 +1,12 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:ffmpegtest/Models/sound_state.dart';
-import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Provider/upload_provider.dart';
-import 'package:ffmpegtest/Utils/Commons/langs_categories.dart';
+import 'package:konmoaref/Models/sound_state.dart';
+import 'package:konmoaref/Provider/data_provider.dart';
+import 'package:konmoaref/Provider/upload_provider.dart';
+import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
-import 'package:ffmpegtest/Helpers/map_indexed.dart';
+import 'package:konmoaref/Helpers/map_indexed.dart';
 
 class UploadFile extends StatefulWidget {
   @override

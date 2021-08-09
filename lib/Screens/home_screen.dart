@@ -1,11 +1,11 @@
-import 'package:ffmpegtest/Provider/data_provider.dart';
-import 'package:ffmpegtest/Provider/gallery_provider.dart';
-import 'package:ffmpegtest/Provider/player_provider.dart';
-import 'package:ffmpegtest/Screens/Categories/category_screen.dart';
-import 'package:ffmpegtest/Screens/Gallery/gallery.dart';
-import 'package:ffmpegtest/Screens/Recording/recording.dart';
-import 'package:ffmpegtest/Themes/theme.dart';
-import 'package:ffmpegtest/Utils/upload_file.dart';
+import 'package:konmoaref/Provider/data_provider.dart';
+import 'package:konmoaref/Provider/gallery_provider.dart';
+import 'package:konmoaref/Provider/player_provider.dart';
+import 'package:konmoaref/Screens/AudioUpload/upload_file.dart';
+import 'package:konmoaref/Screens/Categories/category_screen.dart';
+import 'package:konmoaref/Screens/Gallery/gallery.dart';
+import 'package:konmoaref/Screens/Recording/recording.dart';
+import 'package:konmoaref/Themes/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 

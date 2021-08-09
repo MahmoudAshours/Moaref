@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dio/dio.dart';
-import 'package:ffmpegtest/Helpers/link_manipulation.dart';
-import 'package:ffmpegtest/Models/sound_state.dart';
+import 'package:konmoaref/Helpers/link_manipulation.dart';
+import 'package:konmoaref/Models/sound_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
