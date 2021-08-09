@@ -140,7 +140,7 @@ class DataProvider extends ChangeNotifier {
         print(soundData);
         var cat = Uri.encodeFull(category!);
         apiUrl =
-            "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat/${soundData}";
+            "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat/$soundData";
         notifyListeners();
       } else {
         var language = Uri.encodeComponent(lang!);

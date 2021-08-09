@@ -18,7 +18,6 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> {
   late GalleryProvider provider;
   late VideoPlayerController _videoPlayerController;
-  GlobalKey<State> _dialogKey = GlobalKey<State>();
   @override
   void initState() {
     _videoPlayerController = VideoPlayerController.file(File(''));
@@ -245,7 +244,7 @@ class _GalleryState extends State<Gallery> {
         ),
         GestureDetector(
           onTap: () => {
-            showDownloadDialog(context, _dialogKey),
+            showDownloadDialog(context),
             provider
                 .downloadFile(e)
                 .then((value) => Navigator.of(context).pop()),

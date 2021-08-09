@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-showDownloadDialog(BuildContext context, GlobalKey _key) {
+showDownloadDialog(BuildContext context) {
   return showDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
       return SimpleDialog(
-        key: _key,
         children: <Widget>[
           Center(
             child: Container(
