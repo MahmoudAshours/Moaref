@@ -10,15 +10,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
 class RecordProvider extends ChangeNotifier {
-  var path;
-  List<String?>? sounds = [];
-  List<bool> boolList = [];
+  List<String?>? recordedFilePaths = [];
+  List<bool> playingBoolList = [];
   Sound _sound = Sound.IsNotPlaying;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   Sound get sound => _sound;
   var recording = false;
   Record _record = Record();
-  isRecording() {
+
+  isRecordingListener() {
     _record.isRecording().asStream().listen((event) {
       recording = event;
       notifyListeners();
@@ -33,23 +33,25 @@ class RecordProvider extends ChangeNotifier {
   Future<void> recordSound() async {
     await _record.hasPermission();
     try {
-      Directory directory = await getApplicationSupportDirectory();
-      path = join(directory.path, '${getRandString(4)}');
-
+      Directory directory = await getApplicationDocumentsDirectory();
+      final path = join(directory.path, '${getRandString(4)}');
       await _record.start(
-        path: '$path', // required
+        path: '$path.m4a', // required
         encoder: AudioEncoder.AAC, // by default
       );
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
-  fetchSoundData(int index) {
-    if (boolList.isNotEmpty && boolList[index] == true) {
-      boolList[index] = false;
+  void fetchSoundData(int index) {
+    if (playingBoolList.isNotEmpty && playingBoolList[index] == true) {
+      playingBoolList[index] = false;
     } else {
-      boolList = [];
-      boolList = List.generate(sounds!.length, (index) => false);
-      boolList[index] = true;
+      playingBoolList = [];
+      playingBoolList =
+          List.generate(recordedFilePaths!.length, (index) => false);
+      playingBoolList[index] = true;
       notifyListeners();
     }
   }
@@ -58,22 +60,22 @@ class RecordProvider extends ChangeNotifier {
     _sound = Sound.Loading;
     notifyListeners();
 
-    await assetsAudioPlayer
-        .open(Audio.file(
-            Platform.isIOS ? "file:/" + sounds![index]! : sounds![index]!))
-        .whenComplete(() {
-      _sound = Sound.IsPlaying;
-      notifyListeners();
-    });
+    await assetsAudioPlayer.open(
+      Audio.file(recordedFilePaths![index]!),
+      showNotification: true,
+    );
+    print('object');
+    _sound = Sound.IsPlaying;
+    notifyListeners();
   }
 
   void endRecord() {
-    _record.stop().then((audioPath) {
-      sounds!.add(audioPath);
+    _record.stop().then((String? audioPath) {
+      recordedFilePaths!.add(audioPath);
       print(audioPath);
-      boolList.add(false);
+      playingBoolList.add(false);
       notifyListeners();
     });
-    print(sounds);
+    print(recordedFilePaths);
   }
 }
