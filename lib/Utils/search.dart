@@ -68,7 +68,7 @@ class CustomSearchClass extends SearchDelegate {
     );
   }
 
-  late var searchResult;
+  late List<String> searchResult;
   @override
   Widget buildResults(BuildContext context) {
     return Consumer<DataProvider>(
@@ -83,7 +83,7 @@ class CustomSearchClass extends SearchDelegate {
               scrollDirection: Axis.vertical,
               children: searchResult
                   .map<Widget>(
-                    (searched) => FadeInUp(
+                    (String searched) => FadeInUp(
                       child: ListTile(
                         title: Text(
                           '$searched',

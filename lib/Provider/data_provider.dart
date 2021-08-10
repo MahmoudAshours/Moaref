@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:dio/dio.dart';
+import 'package:html/dom.dart';
 import 'package:konmoaref/Helpers/link_manipulation.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:flutter/foundation.dart';
@@ -14,8 +15,8 @@ class DataProvider extends ChangeNotifier {
   Sound _sound = Sound.IsNotPlaying;
   String? mp3Picked;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
-  List boolList = [];
-  List categoryItems = [];
+  List<bool> boolList = [];
+  List<String> categoryItems = [];
   // Streams controlling links of languages , categories & Audio files.
   StreamController<List<String>> languageLinks = StreamController.broadcast();
   StreamController<List<String>> categoryLinks = StreamController.broadcast();
@@ -23,7 +24,7 @@ class DataProvider extends ChangeNotifier {
 
   Sound get sound => _sound;
 
-  set setSound(sound) {
+  set setSound(Sound sound) {
     _sound = sound;
     notifyListeners();
   }
@@ -58,7 +59,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setMp3(mp3) {
+  void setMp3(String? mp3) {
     mp3Picked = mp3;
     notifyListeners();
   }
@@ -69,7 +70,7 @@ class DataProvider extends ChangeNotifier {
       print('$language');
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
       var response = await Dio().get(apiUrl!);
-      var document = parser.parse(response.data);
+      Document document = parser.parse(response.data);
       List<String> links = linkManipulator(document);
       categoryItems = links;
       categoryLinks.sink.add(links);
@@ -92,12 +93,12 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  fetchSoundData(snapshot, index) {
+  fetchSoundData(AsyncSnapshot<List> snapshot, int index) {
     if (boolList.isNotEmpty && boolList[index] == true) {
       boolList[index] = false;
     } else {
       boolList = [];
-      boolList = List.generate(snapshot.data.length, (index) => false);
+      boolList = List.generate(snapshot.data!.length, (index) => false);
       boolList[index] = true;
       notifyListeners();
     }
@@ -130,14 +131,15 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  FutureOr playSoundData(snapshot, index) async {
+  FutureOr playSoundData(
+      AsyncSnapshot<List<String?>> snapshot, int index) async {
     _sound = Sound.Loading;
     notifyListeners();
-
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-        var soundData = Uri.encodeComponent(snapshot.data[index]);
-        print(soundData);
+        //ignore unchecked_use_of_nullable_value
+        final soundData = Uri.encodeComponent(snapshot.data![index]!);
+
         var cat = Uri.encodeFull(category!);
         apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat/$soundData";
@@ -145,8 +147,7 @@ class DataProvider extends ChangeNotifier {
       } else {
         var language = Uri.encodeComponent(lang!);
         var cat = Uri.encodeComponent(category!);
-        var soundData = Uri.encodeComponent(snapshot.data[index]);
-        print(soundData);
+        var soundData = Uri.encodeComponent(snapshot.data![index]!);
         apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/$soundData";
         notifyListeners();

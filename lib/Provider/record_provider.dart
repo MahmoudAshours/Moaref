@@ -11,8 +11,8 @@ import 'package:record/record.dart';
 
 class RecordProvider extends ChangeNotifier {
   var path;
-  var sounds = [];
-  List boolList = [];
+  List<String?> sounds = [];
+  List<bool> boolList = [];
   Sound _sound = Sound.IsNotPlaying;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   Sound get sound => _sound;
@@ -25,7 +25,7 @@ class RecordProvider extends ChangeNotifier {
     });
   }
 
-  set setSound(sound) {
+  set setSound(Sound sound) {
     _sound = sound;
     notifyListeners();
   }
@@ -43,7 +43,7 @@ class RecordProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  fetchSoundData(index) {
+  fetchSoundData(int index) {
     if (boolList.isNotEmpty && boolList[index] == true) {
       boolList[index] = false;
     } else {
@@ -54,13 +54,13 @@ class RecordProvider extends ChangeNotifier {
     }
   }
 
-  FutureOr playSoundData(index) async {
+  FutureOr playSoundData(int index) async {
     _sound = Sound.Loading;
     notifyListeners();
 
     await assetsAudioPlayer
         .open(Audio.file(
-            Platform.isIOS ? "file:/" + sounds[index] : sounds[index]))
+            Platform.isIOS ? "file:/" + sounds[index]! : sounds[index]!))
         .whenComplete(() {
       _sound = Sound.IsPlaying;
       notifyListeners();

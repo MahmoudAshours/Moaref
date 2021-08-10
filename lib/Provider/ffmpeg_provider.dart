@@ -49,7 +49,7 @@ class FfmpegProvider extends ChangeNotifier {
         "Statistisadasdasdasdcs: executionId: ${statistics.executionId}, time: ${statistics.time}, size: ${statistics.size}, bitrate: ${statistics.bitrate}, speed: ${statistics.speed}, videoFrameNumber: ${statistics.videoFrameNumber}, videoQuality: ${statistics.videoQuality}, videoFps: ${statistics.videoFps}");
   }
 
-  Future<String> getVideoPath(directory) async {
+  Future<String> getVideoPath(Directory directory) async {
     var dbPath = join(directory.path, "input.mp4");
     ByteData data = await rootBundle.load("assets/input.mp4");
     List<int> bytes =
@@ -59,7 +59,7 @@ class FfmpegProvider extends ChangeNotifier {
     return dbPath;
   }
 
-  Future<String> getSoundPath(directory) async {
+  Future<String> getSoundPath(Directory directory) async {
     var soundPath = join(directory.path, "input.mp3");
     ByteData soundData = await rootBundle.load("assets/input.mp3");
     List<int> soundBytes = soundData.buffer
@@ -68,7 +68,7 @@ class FfmpegProvider extends ChangeNotifier {
     return soundPath;
   }
 
-  Future<String> getFontPath(directory) async {
+  Future<String> getFontPath(Directory directory) async {
     var fontPath = join(directory.path, "arabic.ttf");
     ByteData fontData = await rootBundle.load("assets/Fonts/NeoSansArabic.ttf");
     List<int> fontBytes = fontData.buffer

@@ -6,18 +6,17 @@ import 'package:konmoaref/Models/sound_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class UploadProvider extends ChangeNotifier {
   var path;
-  var sounds = [];
-  List uploadedAudioIsPlaying = [];
+  List<String> sounds = [];
+  List<bool> uploadedAudioIsPlaying = [];
   Sound _sound = Sound.IsNotPlaying;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   Sound get sound => _sound;
   var recording = false;
 
-  set setSound(sound) {
+  set setSound(Sound sound) {
     _sound = sound;
     notifyListeners();
   }
@@ -39,7 +38,7 @@ class UploadProvider extends ChangeNotifier {
     } else {}
   }
 
-  Future<Null>? fetchSoundData(index) {
+  Future<void>? fetchSoundData(int index) {
     if (uploadedAudioIsPlaying.isNotEmpty &&
         uploadedAudioIsPlaying[index] == true) {
       uploadedAudioIsPlaying[index] = false;
@@ -49,10 +48,9 @@ class UploadProvider extends ChangeNotifier {
       uploadedAudioIsPlaying[index] = true;
       notifyListeners();
     }
-    return null;
   }
 
-  FutureOr playSoundData(index) async {
+  FutureOr playSoundData(int index) async {
     _sound = Sound.Loading;
     notifyListeners();
 

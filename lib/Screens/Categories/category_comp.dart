@@ -6,12 +6,16 @@ import 'package:flutter/material.dart';
 
 class CategoryComponent extends StatefulWidget {
   final DataProvider provider;
-  final index;
-  final snapshot;
+  final int index;
+  final AsyncSnapshot<List<String?>> snapshot;
   final title;
 
   const CategoryComponent(
-      {Key? key, required this.provider, this.index, this.title, this.snapshot})
+      {Key? key,
+      required this.provider,
+      required this.index,
+      this.title,
+      required this.snapshot})
       : super(key: key);
 
   @override

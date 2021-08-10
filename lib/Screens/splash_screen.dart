@@ -6,8 +6,8 @@ import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashScreen extends StatefulWidget {
-  final videoPath;
-  SplashScreen(this.videoPath);
+  const SplashScreen(this.videoPath);
+  final String videoPath;
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

@@ -16,7 +16,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final splashVideo;
+  final String splashVideo;
   MyApp(this.splashVideo);
   @override
   Widget build(BuildContext context) {

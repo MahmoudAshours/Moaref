@@ -12,12 +12,12 @@ class GalleryProvider extends ChangeNotifier {
   late String url;
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
   String videoPath = "";
-  List customWallpapers = [];
+  List<String> customWallpapers = [];
   late var downloadInfo = {};
   // ignore: must_call_super
   void dispose() => galleryLinks.close();
 
-  Future setVideoPath(path) async {
+  Future setVideoPath(String path) async {
     String? fileName = path.replaceAll('jpg', 'mp4');
     String dir = (await getApplicationDocumentsDirectory()).path;
     videoPath = '$dir/$fileName';
@@ -64,7 +64,7 @@ class GalleryProvider extends ChangeNotifier {
     return true;
   }
 
-  Future uploadFile(context) async {
+  Future uploadFile(BuildContext context) async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.video);
 

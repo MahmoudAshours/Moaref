@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
@@ -31,13 +32,13 @@ class _GalleryState extends State<Gallery> {
     super.didChangeDependencies();
   }
 
-  _getThumbnails(videofile) async {
+  Future<Uint8List>? _getThumbnails(String videofile) async {
     final _videoUint8list = await VideoThumbnail.thumbnailData(
       video: videofile,
       imageFormat: ImageFormat.JPEG,
       quality: 25,
     );
-    return _videoUint8list;
+    return _videoUint8list!;
   }
 
   @override
@@ -126,10 +127,10 @@ class _GalleryState extends State<Gallery> {
         _uploadVideoButton(context),
         if (provider.customWallpapers.isNotEmpty)
           ...provider.customWallpapers.map<Widget>(
-            (element) {
+            (String element) {
               return FutureBuilder(
                 future: _getThumbnails(element),
-                builder: (_, AsyncSnapshot customImagesFuture) =>
+                builder: (_, AsyncSnapshot<Uint8List> customImagesFuture) =>
                     !customImagesFuture.hasData
                         ? SizedBox()
                         : _customImageLoader(customImagesFuture),
@@ -137,17 +138,17 @@ class _GalleryState extends State<Gallery> {
             },
           ).toList(),
         ...galleryStream.data
-            .map<Widget>((element) => _videosLoader(element))
+            .map<Widget>((String element) => _videosLoader(element))
             .toList(),
       ],
     );
   }
 
-  FadeInUp _customImageLoader(AsyncSnapshot<dynamic> customImagesFuture) {
+  FadeInUp _customImageLoader(AsyncSnapshot<Uint8List> customImagesFuture) {
     return FadeInUp(
       child: ClipRRect(
         child: Image.memory(
-          customImagesFuture.data,
+          customImagesFuture.data!,
           fit: BoxFit.fill,
           gaplessPlayback: true,
           cacheHeight: 100,
@@ -158,13 +159,13 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
-  FutureBuilder<bool> _videosLoader(video) {
+  FutureBuilder<bool> _videosLoader(String video) {
     return FutureBuilder(
       future: provider.checkIfVideoExists(video),
-      builder: (context, AsyncSnapshot snapshot) {
-        return !snapshot.hasData
+      builder: (context, AsyncSnapshot<bool>? snapshot) {
+        return !snapshot!.hasData
             ? SizedBox()
-            : snapshot.data
+            : snapshot.data!
                 ? FadeInUp(
                     child: GestureDetector(
                       onTap: () async {
@@ -212,7 +213,7 @@ class _GalleryState extends State<Gallery> {
     _videoPlayerController.play();
   }
 
-  Stack _blurredLoadingImage(e) {
+  Stack _blurredLoadingImage(String e) {
     return Stack(
       fit: StackFit.passthrough,
       children: [
