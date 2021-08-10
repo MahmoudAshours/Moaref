@@ -12,22 +12,19 @@ class BlurredLoadingImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<GalleryProvider>(context);
-
-    return Stack(
-      fit: StackFit.passthrough,
-      children: [
-        BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 0.2,
-            sigmaY: 0.2,
-          ),
-          child: ClipRRect(
+    return Container(
+      width: 100,
+      height: 100,
+      child: Stack(
+        fit: StackFit.passthrough,
+        children: [
+          ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$path",
               fit: BoxFit.fill,
-              filterQuality: FilterQuality.low,
-              gaplessPlayback: true,
+              filterQuality: FilterQuality.none,
+              gaplessPlayback: false,
               loadingBuilder: (BuildContext context, Widget child,
                   ImageChunkEvent? loadingProgress) {
                 if (loadingProgress == null) return child;
@@ -42,26 +39,26 @@ class BlurredLoadingImage extends StatelessWidget {
               },
             ),
           ),
-        ),
-        GestureDetector(
-          onTap: () => {
-            showDownloadDialog(context),
-            provider
-                .downloadFile(path)
-                .then((value) => Navigator.of(context).pop()),
-          },
-          child: Center(
-            child: CircleAvatar(
-              backgroundColor: Colors.black,
-              child: Icon(
-                Icons.download_rounded,
-                size: 20,
-                color: Colors.white,
+          GestureDetector(
+            onTap: () => {
+              showDownloadDialog(context),
+              provider
+                  .downloadFile(path)
+                  .then((value) => Navigator.of(context).pop()),
+            },
+            child: Center(
+              child: CircleAvatar(
+                backgroundColor: Colors.black,
+                child: Icon(
+                  Icons.download_rounded,
+                  size: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

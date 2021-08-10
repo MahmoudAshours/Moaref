@@ -38,7 +38,7 @@ class _GalleryState extends State<Gallery> {
     final _videoUint8list = await VideoThumbnail.thumbnailData(
       video: videofile,
       imageFormat: ImageFormat.JPEG,
-      quality: 25,
+      quality: 10,
     );
     return _videoUint8list!;
   }
@@ -105,66 +105,72 @@ class _GalleryState extends State<Gallery> {
                 width: MediaQuery.of(context).size.width,
                 child: StreamBuilder(
                   stream: provider.galleryLinks.stream,
-                  builder: (c, AsyncSnapshot galleryStream) =>
-                      !galleryStream.hasData
-                          ? Center(child: CircularProgressIndicator())
-                          : _videosGridView(c, galleryStream),
+                  builder: (c, AsyncSnapshot galleryStream) => !galleryStream
+                          .hasData
+                      ? Center(child: CircularProgressIndicator())
+                      : GridView.count(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 4,
+                          mainAxisSpacing: 4,
+                          padding: EdgeInsets.all(8),
+                          children: [
+                            UploadVideo(),
+                            if (provider.customWallpapers.isNotEmpty)
+                              ...provider.customWallpapers.map<Widget>(
+                                (String element) {
+                                  return FutureBuilder(
+                                    future: _getThumbnails(element),
+                                    builder: (_,
+                                            AsyncSnapshot<Uint8List>
+                                                customImagesFuture) =>
+                                        !customImagesFuture.hasData
+                                            ? SizedBox()
+                                            : CustomImageLoader(
+                                                customImagesFuture:
+                                                    customImagesFuture),
+                                  );
+                                },
+                              ).toList(),
+                            ...galleryStream.data
+                                .map<Widget>((String element) => FutureBuilder(
+                                      future:
+                                          provider.checkIfVideoExists(element),
+                                      builder: (context,
+                                          AsyncSnapshot<bool>? snapshot) {
+                                        return !snapshot!.hasData
+                                            ? SizedBox()
+                                            : snapshot.data!
+                                                ? FadeInUp(
+                                                    child: GestureDetector(
+                                                      onTap: () async {
+                                                        await provider
+                                                            .setVideoPath(
+                                                                element);
+                                                        await _initalizeNewVideo();
+                                                        //01007814655
+                                                      },
+                                                      child: ClipRRect(
+                                                        child: LoadedImage(
+                                                            path: element),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : BlurredLoadingImage(
+                                                    path: element);
+                                      },
+                                    ))
+                                .toList(),
+                          ],
+                        ),
                 ),
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  GridView _videosGridView(
-      BuildContext context, AsyncSnapshot<dynamic> galleryStream) {
-    return GridView.count(
-      crossAxisCount: 3,
-      crossAxisSpacing: 4,
-      mainAxisSpacing: 4,
-      padding: EdgeInsets.all(8),
-      children: [
-        UploadVideo(),
-        if (provider.customWallpapers.isNotEmpty)
-          ...provider.customWallpapers.map<Widget>(
-            (String element) {
-              return FutureBuilder(
-                future: _getThumbnails(element),
-                builder: (_, AsyncSnapshot<Uint8List> customImagesFuture) =>
-                    !customImagesFuture.hasData
-                        ? SizedBox()
-                        : CustomImageLoader(
-                            customImagesFuture: customImagesFuture),
-              );
-            },
-          ).toList(),
-        ...galleryStream.data
-            .map<Widget>((String element) => FutureBuilder(
-                  future: provider.checkIfVideoExists(element),
-                  builder: (context, AsyncSnapshot<bool>? snapshot) {
-                    return !snapshot!.hasData
-                        ? SizedBox()
-                        : snapshot.data!
-                            ? FadeInUp(
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    await provider.setVideoPath(element);
-                                    await _initalizeNewVideo();
-                                    //01007814655
-                                  },
-                                  child: ClipRRect(
-                                    child: LoadedImage(path: element),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                ),
-                              )
-                            : BlurredLoadingImage(path: element);
-                  },
-                ))
-            .toList(),
-      ],
     );
   }
 

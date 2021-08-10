@@ -9,6 +9,7 @@ class LoadedImage extends StatelessWidget {
     return Image.network(
       "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$path",
       fit: BoxFit.fill,
+      filterQuality: FilterQuality.none,
       gaplessPlayback: true,
       loadingBuilder: (BuildContext context, Widget child,
           ImageChunkEvent? loadingProgress) {
