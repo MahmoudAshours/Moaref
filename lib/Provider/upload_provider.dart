@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 
 class UploadProvider extends ChangeNotifier {
   var path;
-  List<String> sounds = [];
+  List<String?>? sounds = [];
   List<bool> uploadedAudioIsPlaying = [];
   Sound _sound = Sound.IsNotPlaying;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
@@ -32,7 +32,7 @@ class UploadProvider extends ChangeNotifier {
     print('object');
     if (result != null) {
       File file = File(result.files.single.path!);
-      sounds.add(file.path);
+      sounds!.add(file.path);
       uploadedAudioIsPlaying.add(false);
       notifyListeners();
     } else {}
@@ -44,7 +44,7 @@ class UploadProvider extends ChangeNotifier {
       uploadedAudioIsPlaying[index] = false;
     } else {
       uploadedAudioIsPlaying = [];
-      uploadedAudioIsPlaying = List.generate(sounds.length, (index) => false);
+      uploadedAudioIsPlaying = List.generate(sounds!.length, (index) => false);
       uploadedAudioIsPlaying[index] = true;
       notifyListeners();
     }
@@ -56,7 +56,7 @@ class UploadProvider extends ChangeNotifier {
 
     await assetsAudioPlayer
         .open(
-      Audio.file(sounds[index]),
+      Audio.file(sounds![index]!),
       respectSilentMode: false,
     )
         .whenComplete(() {

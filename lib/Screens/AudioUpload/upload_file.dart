@@ -43,7 +43,7 @@ class _UploadFileState extends State<UploadFile> {
             Image.asset('assets/Images/upload_media.png'),
             SizedBox(height: 7),
             uploadProvider.sounds == null ||
-                    uploadProvider.sounds.isEmpty ||
+                    uploadProvider.sounds!.isEmpty ||
                     uploadProvider.uploadedAudioIsPlaying.isEmpty
                 ? Center(
                     child: Text(
@@ -56,7 +56,7 @@ class _UploadFileState extends State<UploadFile> {
                     width: MediaQuery.of(context).size.width,
                     child: SingleChildScrollView(
                       child: Column(
-                        children: uploadProvider.sounds
+                        children: uploadProvider.sounds!
                             .mapIndexed(
                               (e, i) => FadeInUp(
                                 delay: Duration(milliseconds: 20 * i),
@@ -131,7 +131,9 @@ class _UploadFileState extends State<UploadFile> {
                                       ? PlayerBuilder.realtimePlayingInfos(
                                           player:
                                               uploadProvider.assetsAudioPlayer,
-                                          builder: (context, realTimeInfo) {
+                                          builder: (context,
+                                              RealtimePlayingInfos?
+                                                  realTimeInfo) {
                                             return realTimeInfo != null
                                                 ? Text(
                                                     "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")

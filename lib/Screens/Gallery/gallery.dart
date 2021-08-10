@@ -86,7 +86,7 @@ class _GalleryState extends State<Gallery> {
             width: MediaQuery.of(context).size.width / 1.4,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
-              child: provider.videoPath != null
+              child: provider.videoPath.isNotEmpty
                   ? VideoPlayer(_videoPlayerController)
                   : Container(
                       color: Colors.transparent,

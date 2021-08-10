@@ -50,7 +50,7 @@ class _RecordingState extends State<Recording> {
               ),
               SizedBox(height: 20),
               soundProvider.sounds == null ||
-                      soundProvider.sounds.isEmpty ||
+                      soundProvider.sounds!.isEmpty ||
                       soundProvider.boolList.isEmpty
                   ? Center(
                       child: Text('هذه الخاصية تمكنك من تسجيل مقطع صوتي دعوي'))
@@ -58,7 +58,7 @@ class _RecordingState extends State<Recording> {
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
                       child: Column(
-                        children: soundProvider.sounds
+                        children: soundProvider.sounds!
                             .mapIndexed((e, index) => _recordTile(index))
                             .toList(),
                       ),

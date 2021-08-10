@@ -9,7 +9,6 @@ List<String> linkDecoder(Document document) {
         .getElementsByTagName('a')[_documentLinkIterator]
         .attributes['href'];
     _link = Uri.decodeFull(_link!).replaceAll('/', '');
-    print(_link);
     _decodedLinks.add(_link);
   }
   return _decodedLinks;
@@ -21,7 +20,6 @@ List<String> languageDecoder(Document document) {
     String? _language =
         document.getElementsByTagName('a')[i].attributes['href'];
     _language = Uri.decodeFull(_language!).replaceAll('/', '');
-    print(_language);
     _decodedLangs.add(_language);
   }
   return _decodedLangs;

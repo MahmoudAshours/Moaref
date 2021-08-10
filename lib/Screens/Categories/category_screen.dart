@@ -1,11 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
-import 'package:konmoaref/Screens/Categories/category_comp.dart';
+import 'package:konmoaref/Screens/Categories/category_stream.dart';
 import 'package:konmoaref/Themes/theme.dart';
 import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:konmoaref/Helpers/map_indexed.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override
@@ -82,7 +81,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   _dataProvider!.changeCategory(value);
                                   showModalBottomSheet(
                                     context: context,
-                                    builder: (_) => _categoriesDataStream(),
+                                    builder: (_) => CategoryDataStream(),
                                   );
                                 },
                                 child: Container(
@@ -102,33 +101,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   ),
                 ),
               ),
-      ),
-    );
-  }
-
-  Container _categoriesDataStream() {
-    return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
-      child: StreamBuilder(
-        stream: _dataProvider!.soundLinks.stream.asBroadcastStream(),
-        builder: (_, AsyncSnapshot<List<String>>? snapshot) {
-          return snapshot!.data == null
-              ? Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Column(
-                    children: snapshot.data!
-                        .mapIndexed(
-                          (String title, int index) => CategoryComponent(
-                            provider: _dataProvider!,
-                            index: index,
-                            title: title,
-                            snapshot: snapshot,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                );
-        },
       ),
     );
   }

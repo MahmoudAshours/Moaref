@@ -11,7 +11,7 @@ import 'package:record/record.dart';
 
 class RecordProvider extends ChangeNotifier {
   var path;
-  List<String?> sounds = [];
+  List<String?>? sounds = [];
   List<bool> boolList = [];
   Sound _sound = Sound.IsNotPlaying;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
@@ -48,7 +48,7 @@ class RecordProvider extends ChangeNotifier {
       boolList[index] = false;
     } else {
       boolList = [];
-      boolList = List.generate(sounds.length, (index) => false);
+      boolList = List.generate(sounds!.length, (index) => false);
       boolList[index] = true;
       notifyListeners();
     }
@@ -60,7 +60,7 @@ class RecordProvider extends ChangeNotifier {
 
     await assetsAudioPlayer
         .open(Audio.file(
-            Platform.isIOS ? "file:/" + sounds[index]! : sounds[index]!))
+            Platform.isIOS ? "file:/" + sounds![index]! : sounds![index]!))
         .whenComplete(() {
       _sound = Sound.IsPlaying;
       notifyListeners();
@@ -69,7 +69,7 @@ class RecordProvider extends ChangeNotifier {
 
   void endRecord() {
     _record.stop().then((audioPath) {
-      sounds.add(audioPath);
+      sounds!.add(audioPath);
       print(audioPath);
       boolList.add(false);
       notifyListeners();

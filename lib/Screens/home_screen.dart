@@ -1,6 +1,4 @@
 import 'package:konmoaref/Provider/data_provider.dart';
-import 'package:konmoaref/Provider/gallery_provider.dart';
-import 'package:konmoaref/Provider/player_provider.dart';
 import 'package:konmoaref/Screens/AudioUpload/upload_file.dart';
 import 'package:konmoaref/Screens/Categories/category_screen.dart';
 import 'package:konmoaref/Screens/Gallery/gallery.dart';
@@ -20,8 +18,6 @@ class _HomeScreenState extends State<HomeScreen>
   bool get wantKeepAlive => true;
 
   late DataProvider _dataProvider;
-  late GalleryProvider _galleryProvider;
-  late PlayerProvider _playerProvider;
 
   @override
   void initState() {
@@ -31,8 +27,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void didChangeDependencies() async {
     _dataProvider = Provider.of<DataProvider>(context, listen: true);
-    _galleryProvider = Provider.of<GalleryProvider>(context, listen: true);
-    _playerProvider = Provider.of<PlayerProvider>(context, listen: true);
 
     super.didChangeDependencies();
   }

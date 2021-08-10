@@ -35,7 +35,7 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
               );
             },
           ),
-          onPressed: () {
+          onPressed: () async {
             prov.fetchSoundData(widget.snapshot, widget.index);
             setState(() {});
             prov.assetsAudioPlayer.isPlaying.listen(
@@ -49,8 +49,7 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
             );
 
             if (prov.sound == Sound.IsNotPlaying) {
-              prov.playSoundData(widget.snapshot, widget.index);
-              setState(() {});
+              await prov.playSoundData(widget.snapshot, widget.index);
             } else {
               if ((prov.boolList.isNotEmpty && !prov.boolList[widget.index]) ||
                   prov.boolList.isEmpty) {

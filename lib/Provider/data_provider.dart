@@ -108,7 +108,6 @@ class DataProvider extends ChangeNotifier {
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
         var cat = Uri.encodeComponent(category!.toString());
-        print(cat);
         apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
       } else {
         var language = Uri.encodeComponent(lang!);

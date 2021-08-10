@@ -57,16 +57,23 @@ class _CategoryComponentState extends State<CategoryComponent> {
                     },
                   )
                 : SizedBox(),
-            title: _audioTitle(),
+            title: AudioTitle(title: widget.title),
           ),
         ),
       ),
     );
   }
+}
 
-  Text _audioTitle() {
+class AudioTitle extends StatelessWidget {
+  final String title;
+
+  const AudioTitle({Key? key, required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Text(
-      widget.title.toString().replaceAll('.mp3', ''),
+      title.toString().replaceAll('.mp3', ''),
       style: TextStyle(color: Color(0xff364122), fontWeight: FontWeight.w600),
       textDirection: TextDirection.rtl,
     );
