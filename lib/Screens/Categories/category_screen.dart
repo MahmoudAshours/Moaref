@@ -46,7 +46,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: Column(
           children: [
             SafeArea(
-              bottom: false, 
+              bottom: false,
               child: LanguagesDropDownList(),
             ),
             _categoryPicker(_dataProvider!),

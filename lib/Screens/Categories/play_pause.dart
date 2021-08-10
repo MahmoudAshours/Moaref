@@ -50,6 +50,7 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
 
             if (prov.sound == Sound.IsNotPlaying) {
               prov.playSoundData(widget.snapshot, widget.index);
+              setState(() {});
             } else {
               if ((prov.boolList.isNotEmpty && !prov.boolList[widget.index]) ||
                   prov.boolList.isEmpty) {

@@ -8,13 +8,13 @@ class CategoryComponent extends StatefulWidget {
   final DataProvider provider;
   final int index;
   final AsyncSnapshot<List<String?>> snapshot;
-  final title;
+  final String title;
 
   const CategoryComponent(
       {Key? key,
       required this.provider,
       required this.index,
-      this.title,
+      required this.title,
       required this.snapshot})
       : super(key: key);
 
@@ -51,7 +51,8 @@ class _CategoryComponentState extends State<CategoryComponent> {
                     player: widget.provider.assetsAudioPlayer,
                     builder: (context, RealtimePlayingInfos? realTimeInfo) {
                       return realTimeInfo != null
-                          ? _playTimeDisplayed(realTimeInfo)
+                          ? PlayTimeDisplayed(
+                              realtimePlayingInfos: realTimeInfo)
                           : SizedBox();
                     },
                   )
@@ -70,12 +71,21 @@ class _CategoryComponentState extends State<CategoryComponent> {
       textDirection: TextDirection.rtl,
     );
   }
+}
 
-  Padding _playTimeDisplayed(RealtimePlayingInfos realTimeInfo) {
+class PlayTimeDisplayed extends StatelessWidget {
+  final RealtimePlayingInfos realtimePlayingInfos;
+  const PlayTimeDisplayed({
+    Key? key,
+    required this.realtimePlayingInfos,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        "${realTimeInfo.currentPosition.inSeconds} : ${realTimeInfo.currentPosition.inMinutes} -- ${realTimeInfo.duration.inSeconds} : ${realTimeInfo.duration.inMinutes}",
+        "${realtimePlayingInfos.currentPosition.inSeconds} : ${realtimePlayingInfos.currentPosition.inMinutes} -- ${realtimePlayingInfos.duration.inSeconds} : ${realtimePlayingInfos.duration.inMinutes}",
         textDirection: TextDirection.rtl,
         style: TextStyle(color: Color(0xffC19C42), fontWeight: FontWeight.w800),
       ),

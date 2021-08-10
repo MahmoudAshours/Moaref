@@ -66,12 +66,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<List<String>?> fetchCategory() async {
     try {
-      var language = Uri.encodeComponent(lang!);
-      print('$language');
+      final language = Uri.encodeComponent(lang!);
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
-      var response = await Dio().get(apiUrl!);
-      Document document = parser.parse(response.data);
-      List<String> links = linkDecoder(document);
+      final Response response = await Dio().get(apiUrl!);
+      final Document document = parser.parse(response.data);
+      final List<String> links = linkDecoder(document);
       categoryItems = links;
       categoryLinks.sink.add(links);
       notifyListeners();
@@ -84,10 +83,10 @@ class DataProvider extends ChangeNotifier {
   Future<void> fetchLanguage() async {
     try {
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
-      var response = await Dio().get(apiUrl!);
-      var document = parser.parse(response.data);
-      var links = languageDecoder(document);
-      languageLinks.sink.add(links);
+      final Response response = await Dio().get(apiUrl!);
+      final Document document = parser.parse(response.data);
+      final List<String> languages = languageDecoder(document);
+      languageLinks.sink.add(languages);
     } catch (e) {
       print(e);
     }
