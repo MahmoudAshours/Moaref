@@ -1,10 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/record_provider.dart';
-import 'package:konmoaref/Themes/theme.dart';
+import 'package:konmoaref/Screens/Recording/recording_widget.dart';
 import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,8 +35,22 @@ class _RecordingState extends State<Recording> {
 
   @override
   Widget build(BuildContext context) {
-    soundProvider.isRecording();
+    soundProvider.isRecordingListener();
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        toolbarHeight: 30,
+        actionsIconTheme: IconThemeData(color: Colors.black),
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 30,
+            color: Colors.black,
+          ),
+        ),
+        elevation: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -46,19 +59,19 @@ class _RecordingState extends State<Recording> {
               SizedBox(height: 20),
               BounceInUp(
                 duration: Duration(seconds: 1),
-                child: Center(child: _recordingWidget()),
+                child: Center(child: RecordingImage()),
               ),
               SizedBox(height: 20),
-              soundProvider.sounds == null ||
-                      soundProvider.sounds!.isEmpty ||
-                      soundProvider.boolList.isEmpty
+              soundProvider.recordedFilePaths == null ||
+                      soundProvider.recordedFilePaths!.isEmpty ||
+                      soundProvider.playingBoolList.isEmpty
                   ? Center(
                       child: Text('هذه الخاصية تمكنك من تسجيل مقطع صوتي دعوي'))
                   : Container(
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
                       child: Column(
-                        children: soundProvider.sounds!
+                        children: soundProvider.recordedFilePaths!
                             .mapIndexed((e, index) => _recordTile(index))
                             .toList(),
                       ),
@@ -70,38 +83,6 @@ class _RecordingState extends State<Recording> {
     );
   }
 
-  Widget _recordingWidget() {
-    return soundProvider.recording
-        ? AvatarGlow(
-            glowColor: Colors.orange,
-            endRadius: 190.0,
-            duration: Duration(milliseconds: 2000),
-            repeat: true,
-            showTwoGlows: true,
-            repeatPauseDuration: Duration(milliseconds: 100),
-            child: Material(
-              elevation: 18.0,
-              shape: CircleBorder(),
-              child: CircleAvatar(
-                backgroundColor: kSecondaryColor,
-                child: GestureDetector(
-                  onTap: () => soundProvider.endRecord(),
-                  child: Image.asset('assets/Images/record.png'),
-                ),
-                radius: 140.0,
-              ),
-            ),
-          )
-        : CircleAvatar(
-            backgroundColor: kSecondaryColor,
-            child: GestureDetector(
-              onTap: () async => await soundProvider.recordSound(),
-              child: Image.asset('assets/Images/record.png'),
-            ),
-            radius: 140.0,
-          );
-  }
-
   FadeInUp _recordTile(int i) {
     return FadeInUp(
       delay: Duration(milliseconds: 20 * i),
@@ -111,8 +92,8 @@ class _RecordingState extends State<Recording> {
           child: PlayerBuilder.isPlaying(
             player: soundProvider.assetsAudioPlayer,
             builder: (BuildContext context, bool play) {
-              return Icon(soundProvider.boolList.isNotEmpty &&
-                      soundProvider.boolList[i] == true &&
+              return Icon(soundProvider.playingBoolList.isNotEmpty &&
+                      soundProvider.playingBoolList[i] == true &&
                       play
                   ? Icons.pause
                   : Icons.play_arrow);
@@ -121,9 +102,8 @@ class _RecordingState extends State<Recording> {
           onPressed: () {
             soundProvider.fetchSoundData(i);
             soundProvider.assetsAudioPlayer.isPlaying.listen(
-              (event) {
-                if (event) {
-                  print(event);
+              (audioEvent) {
+                if (audioEvent) {
                   soundProvider.setSound = Sound.IsPlaying;
                 } else {
                   soundProvider.setSound = Sound.IsNotPlaying;
@@ -135,9 +115,9 @@ class _RecordingState extends State<Recording> {
               soundProvider.playSoundData(i);
               dataProvider.setMp3('${i + 1} تسجيل ');
             } else {
-              if ((soundProvider.boolList.isNotEmpty &&
-                      !soundProvider.boolList[i]) ||
-                  soundProvider.boolList.isEmpty) {
+              if ((soundProvider.playingBoolList.isNotEmpty &&
+                      !soundProvider.playingBoolList[i]) ||
+                  soundProvider.playingBoolList.isEmpty) {
                 soundProvider.assetsAudioPlayer.stop();
                 dataProvider.nullifymp3();
               } else {
@@ -147,8 +127,8 @@ class _RecordingState extends State<Recording> {
             }
           },
         ),
-        subtitle: soundProvider.boolList.isNotEmpty &&
-                soundProvider.boolList[i] == true
+        subtitle: soundProvider.playingBoolList.isNotEmpty &&
+                soundProvider.playingBoolList[i] == true
             ? _recordingInfo()
             : SizedBox(),
       ),
