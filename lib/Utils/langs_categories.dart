@@ -27,53 +27,52 @@ class _LanguagesDropDownListState extends State<LanguagesDropDownList> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       textDirection: TextDirection.rtl,
-      children: [_languagePicker(_dataProvider), Search()],
-    );
-  }
-
-  StreamBuilder<List<String>> _languagePicker(DataProvider provider) {
-    return StreamBuilder<List<String>>(
-      stream: provider.languageLinks.stream,
-      builder: (_, AsyncSnapshot<List<String>> snapshot) => Container(
-        width: 150,
-        height: 50,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black26),
-            borderRadius: BorderRadius.circular(10)),
-        child: !snapshot.hasData
-            ? Center(child: CircularProgressIndicator())
-            : Center(
-                child: DropdownButton<String>(
-                  items: snapshot.data!
-                      .map<DropdownMenuItem<String>>(
-                        (String value) => DropdownMenuItem<String>(
-                          child: Center(
-                            child: Container(
-                              width: 100,
-                              child: SlideInUp(
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                    color: kFontColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
+      children: [
+        StreamBuilder<List<String>>(
+          stream: _dataProvider.languageLinks.stream,
+          builder: (_, AsyncSnapshot<List<String>> snapshot) => Container(
+            width: 150,
+            height: 50,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black26),
+                borderRadius: BorderRadius.circular(10)),
+            child: !snapshot.hasData
+                ? Center(child: SizedBox())
+                : Center(
+                    child: DropdownButton<String>(
+                      items: snapshot.data!
+                          .map<DropdownMenuItem<String>>(
+                            (String value) => DropdownMenuItem<String>(
+                              child: Center(
+                                child: Container(
+                                  width: 100,
+                                  child: SlideInUp(
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(
+                                        color: kFontColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
+                              value: value,
                             ),
-                          ),
-                          value: value,
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (String? value) {
-                    provider.changeLanguage(value);
-                    setState(() {});
-                  },
-                  value: provider.lang,
-                ),
-              ),
-      ),
+                          )
+                          .toList(),
+                      onChanged: (String? value) {
+                        _dataProvider.changeLanguage(value);
+                        setState(() {});
+                      },
+                      value: _dataProvider.lang,
+                    ),
+                  ),
+          ),
+        ),
+        Search()
+      ],
     );
   }
 }

@@ -99,7 +99,7 @@ class _UploadFileState extends State<UploadFile> {
                                       if (uploadProvider.sound ==
                                           Sound.IsNotPlaying) {
                                         uploadProvider.playSoundData(i);
-                                        dataProvider.setMp3(
+                                        dataProvider.setAudioFile(
                                             '${e.toString().split('/')[7]}');
                                       } else {
                                         if ((uploadProvider
@@ -116,7 +116,7 @@ class _UploadFileState extends State<UploadFile> {
                                           dataProvider.nullifymp3();
                                         } else {
                                           uploadProvider.playSoundData(i);
-                                          dataProvider.setMp3(
+                                          dataProvider.setAudioFile(
                                               '${e.toString().split('/')[7]}');
                                         }
                                       }

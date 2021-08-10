@@ -3,6 +3,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/record_provider.dart';
+import 'package:konmoaref/Screens/Recording/recording_info.dart';
 import 'package:konmoaref/Screens/Recording/recording_widget.dart';
 import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,41 @@ class _RecordingState extends State<Recording> {
                       width: MediaQuery.of(context).size.width,
                       child: Column(
                         children: soundProvider.recordedFilePaths!
-                            .mapIndexed((e, index) => _recordTile(index))
+                            .mapIndexed((e, index) => FadeInUp(
+                                  delay: Duration(milliseconds: 20 * index),
+                                  child: ListTile(
+                                    trailing: Text('${index + 1} تسجيل '),
+                                    leading: TextButton(
+                                      child: PlayerBuilder.isPlaying(
+                                        player: soundProvider.assetsAudioPlayer,
+                                        builder:
+                                            (BuildContext context, bool play) {
+                                          return Icon(soundProvider
+                                                      .playingBoolList
+                                                      .isNotEmpty &&
+                                                  soundProvider.playingBoolList[
+                                                          index] ==
+                                                      true &&
+                                                  play
+                                              ? Icons.pause
+                                              : Icons.play_arrow);
+                                        },
+                                      ),
+                                      onPressed: () {
+                                        soundProvider.fetchSoundData(index);
+                                        _isPlayingListener();
+                                        _recordPicker(index);
+                                      },
+                                    ),
+                                    subtitle: soundProvider
+                                                .playingBoolList.isNotEmpty &&
+                                            soundProvider
+                                                    .playingBoolList[index] ==
+                                                true
+                                        ? RecordingInfo()
+                                        : SizedBox(),
+                                  ),
+                                ))
                             .toList(),
                       ),
                     ),
@@ -83,67 +118,32 @@ class _RecordingState extends State<Recording> {
     );
   }
 
-  FadeInUp _recordTile(int i) {
-    return FadeInUp(
-      delay: Duration(milliseconds: 20 * i),
-      child: ListTile(
-        trailing: Text('${i + 1} تسجيل '),
-        leading: TextButton(
-          child: PlayerBuilder.isPlaying(
-            player: soundProvider.assetsAudioPlayer,
-            builder: (BuildContext context, bool play) {
-              return Icon(soundProvider.playingBoolList.isNotEmpty &&
-                      soundProvider.playingBoolList[i] == true &&
-                      play
-                  ? Icons.pause
-                  : Icons.play_arrow);
-            },
-          ),
-          onPressed: () {
-            soundProvider.fetchSoundData(i);
-            soundProvider.assetsAudioPlayer.isPlaying.listen(
-              (audioEvent) {
-                if (audioEvent) {
-                  soundProvider.setSound = Sound.IsPlaying;
-                } else {
-                  soundProvider.setSound = Sound.IsNotPlaying;
-                }
-              },
-            );
-
-            if (soundProvider.sound == Sound.IsNotPlaying) {
-              soundProvider.playSoundData(i);
-              dataProvider.setMp3('${i + 1} تسجيل ');
-            } else {
-              if ((soundProvider.playingBoolList.isNotEmpty &&
-                      !soundProvider.playingBoolList[i]) ||
-                  soundProvider.playingBoolList.isEmpty) {
-                soundProvider.assetsAudioPlayer.stop();
-                dataProvider.nullifymp3();
-              } else {
-                soundProvider.playSoundData(i);
-                dataProvider.setMp3('${i + 1} تسجيل ');
-              }
-            }
-          },
-        ),
-        subtitle: soundProvider.playingBoolList.isNotEmpty &&
-                soundProvider.playingBoolList[i] == true
-            ? _recordingInfo()
-            : SizedBox(),
-      ),
+  _isPlayingListener() {
+    soundProvider.assetsAudioPlayer.isPlaying.listen(
+      (audioEvent) {
+        if (audioEvent) {
+          soundProvider.setSound = Sound.IsPlaying;
+        } else {
+          soundProvider.setSound = Sound.IsNotPlaying;
+        }
+      },
     );
   }
 
-  PlayerBuilder _recordingInfo() {
-    return PlayerBuilder.realtimePlayingInfos(
-      player: soundProvider.assetsAudioPlayer,
-      builder: (context, RealtimePlayingInfos? realTimeInfo) {
-        return realTimeInfo != null
-            ? Text(
-                "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
-            : SizedBox();
-      },
-    );
+  _recordPicker(int i) {
+    if (soundProvider.sound == Sound.IsNotPlaying) {
+      soundProvider.playSoundData(i);
+      dataProvider.setAudioFile('${i + 1} تسجيل ');
+    } else {
+      if ((soundProvider.playingBoolList.isNotEmpty &&
+              !soundProvider.playingBoolList[i]) ||
+          soundProvider.playingBoolList.isEmpty) {
+        soundProvider.assetsAudioPlayer.stop();
+        dataProvider.nullifymp3();
+      } else {
+        soundProvider.playSoundData(i);
+        dataProvider.setAudioFile('${i + 1} تسجيل ');
+      }
+    }
   }
 }

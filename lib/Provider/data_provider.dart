@@ -59,7 +59,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setMp3(String? mp3) {
+  void setAudioFile(String? mp3) {
     mp3Picked = mp3;
     notifyListeners();
   }
