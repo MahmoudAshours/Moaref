@@ -3,8 +3,10 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
-import 'package:konmoaref/Themes/theme.dart';
-import 'package:konmoaref/Utils/downloading_progress.dart';
+import 'package:konmoaref/Screens/Gallery/blurred_image.dart';
+import 'package:konmoaref/Screens/Gallery/custom_imageloader.dart';
+import 'package:konmoaref/Screens/Gallery/loaded_image.dart';
+import 'package:konmoaref/Screens/Gallery/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -124,7 +126,7 @@ class _GalleryState extends State<Gallery> {
       mainAxisSpacing: 4,
       padding: EdgeInsets.all(8),
       children: [
-        _uploadVideoButton(context),
+        UploadVideo(),
         if (provider.customWallpapers.isNotEmpty)
           ...provider.customWallpapers.map<Widget>(
             (String element) {
@@ -133,76 +135,36 @@ class _GalleryState extends State<Gallery> {
                 builder: (_, AsyncSnapshot<Uint8List> customImagesFuture) =>
                     !customImagesFuture.hasData
                         ? SizedBox()
-                        : _customImageLoader(customImagesFuture),
+                        : CustomImageLoader(
+                            customImagesFuture: customImagesFuture),
               );
             },
           ).toList(),
         ...galleryStream.data
-            .map<Widget>((String element) => _videosLoader(element))
+            .map<Widget>((String element) => FutureBuilder(
+                  future: provider.checkIfVideoExists(element),
+                  builder: (context, AsyncSnapshot<bool>? snapshot) {
+                    return !snapshot!.hasData
+                        ? SizedBox()
+                        : snapshot.data!
+                            ? FadeInUp(
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await provider.setVideoPath(element);
+                                    await _initalizeNewVideo();
+                                    //01007814655
+                                  },
+                                  child: ClipRRect(
+                                    child: LoadedImage(path: element),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              )
+                            : BlurredLoadingImage(path: element);
+                  },
+                ))
             .toList(),
       ],
-    );
-  }
-
-  FadeInUp _customImageLoader(AsyncSnapshot<Uint8List> customImagesFuture) {
-    return FadeInUp(
-      child: ClipRRect(
-        child: Image.memory(
-          customImagesFuture.data!,
-          fit: BoxFit.fill,
-          gaplessPlayback: true,
-          cacheHeight: 100,
-          cacheWidth: 100,
-        ),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-    );
-  }
-
-  FutureBuilder<bool> _videosLoader(String video) {
-    return FutureBuilder(
-      future: provider.checkIfVideoExists(video),
-      builder: (context, AsyncSnapshot<bool>? snapshot) {
-        return !snapshot!.hasData
-            ? SizedBox()
-            : snapshot.data!
-                ? FadeInUp(
-                    child: GestureDetector(
-                      onTap: () async {
-                        await provider.setVideoPath(video);
-                        await _initalizeNewVideo();
-                        //01007814655
-                      },
-                      child: ClipRRect(
-                        child: _loadedImage(video),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  )
-                : _blurredLoadingImage(video);
-      },
-    );
-  }
-
-  Image _loadedImage(e) {
-    return Image.network(
-      "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
-      fit: BoxFit.fill,
-      gaplessPlayback: true,
-      loadingBuilder: (BuildContext context, Widget child,
-          ImageChunkEvent? loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(
-          child: CircularProgressIndicator(
-            value: loadingProgress.expectedTotalBytes != null
-                ? loadingProgress.cumulativeBytesLoaded /
-                    loadingProgress.expectedTotalBytes!
-                : null,
-          ),
-        );
-      },
-      cacheHeight: 100,
-      cacheWidth: 100,
     );
   }
 
@@ -211,76 +173,6 @@ class _GalleryState extends State<Gallery> {
         VideoPlayerController.file(File(provider.videoPath));
     await _videoPlayerController.initialize();
     _videoPlayerController.play();
-  }
-
-  Stack _blurredLoadingImage(String e) {
-    return Stack(
-      fit: StackFit.passthrough,
-      children: [
-        BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 0.2,
-            sigmaY: 0.2,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$e",
-              fit: BoxFit.fill,
-              filterQuality: FilterQuality.low,
-              gaplessPlayback: true,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () => {
-            showDownloadDialog(context),
-            provider
-                .downloadFile(e)
-                .then((value) => Navigator.of(context).pop()),
-          },
-          child: Center(
-            child: CircleAvatar(
-              backgroundColor: Colors.black,
-              child: Icon(
-                Icons.download_rounded,
-                size: 20,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  GestureDetector _uploadVideoButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () => provider.uploadFile(context),
-      child: Container(
-        decoration: BoxDecoration(
-          color: kBackgroundIconColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.folder_open_rounded,
-          size: 40,
-          color: Colors.white,
-        ),
-      ),
-    );
   }
 
   @override
