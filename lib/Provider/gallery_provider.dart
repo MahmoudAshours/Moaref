@@ -13,7 +13,7 @@ class GalleryProvider extends ChangeNotifier {
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
   String videoPath = "";
   List<String> customWallpapers = [];
-  late var downloadInfo = {};
+  late Map downloadInfo = {};
   // ignore: must_call_super
   void dispose() => galleryLinks.close();
 
@@ -42,21 +42,13 @@ class GalleryProvider extends ChangeNotifier {
   }
 
   Future downloadFile(String url) async {
-    Dio dio = Dio();
-    var newUrl = url.replaceAll('jpg', 'mp4');
-    var videoUrl =
+    final newUrl = url.replaceAll('jpg', 'mp4');
+    final videoUrl =
         "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/$newUrl";
     try {
-      var dir = (await getApplicationDocumentsDirectory()).path;
-      await dio.download(
-        videoUrl,
-        "$dir/$newUrl",
-        onReceiveProgress: (rec, total) {
-          downloadInfo = {'rec': rec, 'total': total};
-          notifyListeners();
-          print("Rec: $rec , Total: $total");
-        },
-      );
+      final _dir = (await getApplicationDocumentsDirectory()).path;
+      await compute(_dioDownloadVideo, [videoUrl, "$_dir/$newUrl"]);
+      notifyListeners();
       downloadInfo.clear();
     } catch (e) {
       print(e);
@@ -77,4 +69,8 @@ class GalleryProvider extends ChangeNotifier {
       Navigator.of(context).pop();
     }
   }
+}
+
+_dioDownloadVideo(List<String> downloadData) async {
+  await Dio().download(downloadData[0], downloadData[1]);
 }
