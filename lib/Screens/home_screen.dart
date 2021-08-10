@@ -79,55 +79,60 @@ class _HomeScreenState extends State<HomeScreen>
             Positioned(
               top: MediaQuery.of(context).size.height / 4,
               left: MediaQuery.of(context).size.width / 4.8,
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.5,
-                height: MediaQuery.of(context).size.height / 1.5,
-                child: GridView.count(
-                  crossAxisSpacing: 30,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 30,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => Recording())),
-                      child: _gridViewItems(
-                        activeAssetPath: 'assets/Images/mic.png',
-                        label: 'تسجيل',
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  child: GridView.count(
+                    crossAxisSpacing: 30,
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 30,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => Recording())),
+                        child: _gridViewItems(
+                          activeAssetPath: 'assets/Images/mic.png',
+                          label: 'تسجيل',
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => CategoryScreen())),
-                      child: _gridViewItems(
-                        activeAssetPath: 'assets/Images/category_icon.png',
-                        label: 'التصنيف',
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => CategoryScreen())),
+                        child: _gridViewItems(
+                          activeAssetPath: 'assets/Images/category_icon.png',
+                          label: 'التصنيف',
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => UploadFile())),
-                      child: _gridViewItems(
-                        activeAssetPath: 'assets/Images/upload_file.png',
-                        label: 'ملف صوتي',
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => UploadFile())),
+                        child: _gridViewItems(
+                          activeAssetPath: 'assets/Images/upload_file.png',
+                          label: 'ملف صوتي',
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => Gallery())),
-                      child: _gridViewItems(
-                        activeAssetPath: 'assets/Images/video_library.png',
-                        label: 'المكتبة',
+                      GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) => Gallery())),
+                        child: _gridViewItems(
+                          activeAssetPath: 'assets/Images/video_library.png',
+                          label: 'المكتبة',
+                        ),
                       ),
-                    ),
-                    _gridViewItems(
-                      activeAssetPath: 'assets/Images/information_button.png',
-                      label: 'عن التطبيق',
-                    ),
-                    _gridViewItems(
-                      activeAssetPath: 'assets/Images/smartphone_icon.png',
-                      label: 'عن التطبيق',
-                    ),
-                  ],
+                      _gridViewItems(
+                        activeAssetPath: 'assets/Images/information_button.png',
+                        label: 'عن التطبيق',
+                      ),
+                      _gridViewItems(
+                        activeAssetPath: 'assets/Images/smartphone_icon.png',
+                        label: 'عن التطبيق',
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
