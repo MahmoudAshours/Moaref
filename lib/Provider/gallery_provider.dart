@@ -36,7 +36,7 @@ class GalleryProvider extends ChangeNotifier {
       url = "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/";
       var response = await Dio().get(url);
       var document = parser.parse(response.data);
-      var links = languageManipulator(document);
+      var links = languageDecoder(document);
       galleryLinks.sink.add(links);
     } catch (e) {}
   }

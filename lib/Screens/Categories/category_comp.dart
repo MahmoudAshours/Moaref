@@ -35,7 +35,7 @@ class _CategoryComponentState extends State<CategoryComponent> {
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: FadeInUp(
-          delay: Duration(milliseconds: 20 * widget.index as int),
+          delay: Duration(milliseconds: 20 * widget.index),
           child: ListTile(
             trailing: CircleAvatar(
               backgroundColor: Color(0xff364122),

@@ -9,7 +9,6 @@ class UploadVideo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<GalleryProvider>(context);
-
     return GestureDetector(
       onTap: () => provider.uploadFile(context),
       child: Container(
