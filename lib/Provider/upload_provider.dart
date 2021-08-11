@@ -8,13 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class UploadProvider extends ChangeNotifier {
-  var path;
+  String? uploadedAudioPath = "";
   List<String?>? sounds = [];
   List<bool> uploadedAudioIsPlaying = [];
   Sound _sound = Sound.IsNotPlaying;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   Sound get sound => _sound;
-  var recording = false;
+  bool recording = false;
 
   set setSound(Sound sound) {
     _sound = sound;
@@ -24,12 +24,11 @@ class UploadProvider extends ChangeNotifier {
   Future<Null> uploadFile(context) async {
     FilePickerResult? result;
     try {
-      result = await FilePicker.platform
-          .pickFiles(type: FileType.custom, allowedExtensions: ['mp4']);
+      result = await FilePicker.platform.pickFiles(
+          type: FileType.custom, allowedExtensions: ['mp3,mp4,m4a,mov']);
     } catch (e) {
       print(e);
     }
-    print('object');
     if (result != null) {
       File file = File(result.files.single.path!);
       sounds!.add(file.path);

@@ -7,21 +7,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class GalleryProvider extends ChangeNotifier {
   late String url;
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
-  String videoPath = "";
+  String? videoPath = "";
   List<String> customWallpapers = [];
   late Map downloadInfo = {};
   // ignore: must_call_super
   void dispose() => galleryLinks.close();
 
-  Future setVideoPath(String path) async {
-    String? fileName = path.replaceAll('jpg', 'mp4');
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    videoPath = '$dir/$fileName';
-    notifyListeners();
+  Future setVideoPath(String path, {bool isUploaded = false}) async {
+    if (!isUploaded) {
+      String? fileName = path.replaceAll('jpg', 'mp4');
+      String dir = (await getApplicationDocumentsDirectory()).path;
+      videoPath = '$dir/$fileName';
+      notifyListeners();
+    } else {
+      videoPath = path;
+      notifyListeners();
+    }
   }
 
   Future<bool> checkIfVideoExists(String url) async {
@@ -56,21 +62,24 @@ class GalleryProvider extends ChangeNotifier {
     return true;
   }
 
-  Future uploadFile(BuildContext context) async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.video);
+  Future uploadVideoFile(BuildContext context) async {
+    Permission.accessMediaLocation.request();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+      dialogTitle: 'اختر مقطعا مناسب',
+    );
 
     if (result != null) {
-      File file = File(result.files.single.path!);
-      customWallpapers.add(file.path);
-      Navigator.of(context).pop();
-      notifyListeners();
-    } else {
-      Navigator.of(context).pop();
+      try {
+        File file = File(result.files.first.path!);
+        customWallpapers.add(file.path);
+        notifyListeners();
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }
 
-_dioDownloadVideo(List<String> downloadData) async {
-  await Dio().download(downloadData[0], downloadData[1]);
-}
+_dioDownloadVideo(List<String> downloadData) async =>
+    await Dio().download(downloadData[0], downloadData[1]);

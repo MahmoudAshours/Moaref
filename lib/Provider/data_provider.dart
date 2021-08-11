@@ -13,7 +13,7 @@ class DataProvider extends ChangeNotifier {
   String? category = 'دروس من السيرة';
   String? apiUrl;
   Sound _sound = Sound.IsNotPlaying;
-  String? mp3Picked;
+  String? cloudAudioPicked;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
   List<bool> boolList = [];
   List<String> categoryItems = [];
@@ -60,7 +60,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   void setAudioFile(String? mp3) {
-    mp3Picked = mp3;
+    cloudAudioPicked = mp3;
     notifyListeners();
   }
 
@@ -124,7 +124,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   void nullifymp3() {
-    mp3Picked = null;
+    cloudAudioPicked = null;
     boolList = [];
     notifyListeners();
   }
@@ -159,7 +159,7 @@ class DataProvider extends ChangeNotifier {
         respectSilentMode: false,
       )
           .whenComplete(() {
-        mp3Picked = apiUrl;
+        cloudAudioPicked = apiUrl;
         _sound = Sound.IsPlaying;
         notifyListeners();
       });
