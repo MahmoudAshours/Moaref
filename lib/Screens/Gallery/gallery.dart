@@ -86,7 +86,7 @@ class _GalleryState extends State<Gallery> {
             width: MediaQuery.of(context).size.width / 1.4,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
-              child: provider.videoPath.isNotEmpty
+              child: provider.videoPath!.isNotEmpty
                   ? VideoPlayer(_videoPlayerController)
                   : Container(
                       color: Colors.transparent,
@@ -125,43 +125,52 @@ class _GalleryState extends State<Gallery> {
                                                 customImagesFuture) =>
                                         !customImagesFuture.hasData
                                             ? SizedBox()
-                                            : CustomImageLoader(
-                                                customImagesFuture:
-                                                    customImagesFuture),
+                                            : GestureDetector(
+                                                onTap: () async {
+                                                  await provider.setVideoPath(
+                                                      element,
+                                                      isUploaded: true);
+                                                  await _initalizeNewVideo();
+                                                },
+                                                child: CustomImageLoader(
+                                                    customImagesFuture:
+                                                        customImagesFuture),
+                                              ),
                                   );
                                 },
                               ).toList(),
                             ...galleryStream.data
-                                .map<Widget>((String element) => FutureBuilder(
-                                      future:
-                                          provider.checkIfVideoExists(element),
-                                      builder: (context,
-                                          AsyncSnapshot<bool>? snapshot) {
-                                        return !snapshot!.hasData
-                                            ? SizedBox()
-                                            : snapshot.data!
-                                                ? FadeInUp(
-                                                    child: GestureDetector(
-                                                      onTap: () async {
-                                                        await provider
-                                                            .setVideoPath(
-                                                                element);
-                                                        await _initalizeNewVideo();
-                                                        //01007814655
-                                                      },
-                                                      child: ClipRRect(
-                                                        child: LoadedImage(
-                                                            path: element),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                      ),
+                                .map<Widget>(
+                                  (String element) => FutureBuilder(
+                                    future:
+                                        provider.checkIfVideoExists(element),
+                                    builder: (context,
+                                        AsyncSnapshot<bool>? snapshot) {
+                                      return !snapshot!.hasData
+                                          ? SizedBox()
+                                          : snapshot.data!
+                                              ? FadeInUp(
+                                                  child: GestureDetector(
+                                                    onTap: () async {
+                                                      await provider
+                                                          .setVideoPath(
+                                                              element);
+                                                      await _initalizeNewVideo();
+                                                    },
+                                                    child: ClipRRect(
+                                                      child: LoadedImage(
+                                                          path: element),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
                                                     ),
-                                                  )
-                                                : BlurredLoadingImage(
-                                                    path: element);
-                                      },
-                                    ))
+                                                  ),
+                                                )
+                                              : BlurredLoadingImage(
+                                                  path: element);
+                                    },
+                                  ),
+                                )
                                 .toList(),
                           ],
                         ),
@@ -176,7 +185,7 @@ class _GalleryState extends State<Gallery> {
 
   _initalizeNewVideo() async {
     _videoPlayerController =
-        VideoPlayerController.file(File(provider.videoPath));
+        VideoPlayerController.file(File(provider.videoPath!));
     await _videoPlayerController.initialize();
     _videoPlayerController.play();
   }
