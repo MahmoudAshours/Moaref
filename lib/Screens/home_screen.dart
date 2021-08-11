@@ -1,6 +1,10 @@
 import 'package:konmoaref/Provider/data_provider.dart';
+import 'package:konmoaref/Provider/gallery_provider.dart';
+import 'package:konmoaref/Provider/record_provider.dart';
+import 'package:konmoaref/Provider/upload_provider.dart';
 import 'package:konmoaref/Screens/AudioUpload/upload_file.dart';
 import 'package:konmoaref/Screens/Categories/category_screen.dart';
+import 'package:konmoaref/Screens/FFmpegOps/ffmpegop.dart';
 import 'package:konmoaref/Screens/Gallery/gallery.dart';
 import 'package:konmoaref/Screens/Recording/recording.dart';
 import 'package:konmoaref/Themes/theme.dart';
@@ -18,7 +22,12 @@ class _HomeScreenState extends State<HomeScreen>
   bool get wantKeepAlive => true;
 
   late DataProvider _dataProvider;
-
+  late UploadProvider _uploadProvider;
+  late RecordProvider _recordProvider;
+  late GalleryProvider _galleryProvider;
+  bool _audioReady = false;
+  bool _videoReady = false;
+  double ready = 0;
   @override
   void initState() {
     super.initState();
@@ -27,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void didChangeDependencies() async {
     _dataProvider = Provider.of<DataProvider>(context, listen: true);
-
+    _uploadProvider = Provider.of<UploadProvider>(context, listen: true);
+    _recordProvider = Provider.of<RecordProvider>(context, listen: true);
+    _galleryProvider = Provider.of<GalleryProvider>(context, listen: true);
     super.didChangeDependencies();
   }
 
@@ -39,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    _readyIndicator();
     super.build(context);
     return WillPopScope(
       onWillPop: () async => false,
@@ -130,20 +142,82 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
             ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () => _readyIndicator() == 1.0
+                      ? Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => FFmpegOperations('hello')))
+                      : DoNothingAction(),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Stack(
+                      fit: StackFit.passthrough,
+                      children: [
+                        Container(
+                            child: CircularProgressIndicator(
+                              value: _readyIndicator(),
+                              color: _readyIndicator() == 1.0
+                                  ? Colors.orange
+                                  : Colors.blue,
+                            ),
+                            width: 40,
+                            height: 40),
+                        Icon(
+                          Icons.play_arrow,
+                          size: 40,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  mp3Name() => _dataProvider.mp3Picked == null
+  double? _readyIndicator() {
+    final _cloudAudioReady = _dataProvider.cloudAudioPicked != null &&
+        _dataProvider.cloudAudioPicked!.isNotEmpty;
+    final _recordingAudioReady = _recordProvider.recordPath != null &&
+        _recordProvider.recordPath!.isNotEmpty;
+    final _uploadedAudioReady = _uploadProvider.uploadedAudioPath != null &&
+        _uploadProvider.uploadedAudioPath!.isNotEmpty;
+    final _galleryVideoPath = _galleryProvider.videoPath != null &&
+        _galleryProvider.videoPath!.isNotEmpty;
+
+    print(_galleryProvider.videoPath);
+    print(_uploadProvider.uploadedAudioPath);
+    print(_recordProvider.recordPath);
+    print(_dataProvider.cloudAudioPicked);
+
+    if (_cloudAudioReady || _recordingAudioReady || _uploadedAudioReady) {
+      _audioReady = true;
+    } else {
+      _audioReady = false;
+    }
+    if (_galleryVideoPath) {
+      _videoReady = true;
+    } else {
+      _videoReady = false;
+    }
+    if (_audioReady && _videoReady) return 1.0;
+    if (!_audioReady && !_videoReady) return 0.0;
+    return 0.5;
+  }
+
+  String? cloudAudioName() => _dataProvider.cloudAudioPicked == null
       ? ''
-      : _dataProvider.mp3Picked!.contains('/')
-          ? _dataProvider.mp3Picked!.contains(RegExp("^[a-zA-Z0-9]*\$"))
-              ? _dataProvider.mp3Picked.toString().split('/')[8]
+      : _dataProvider.cloudAudioPicked!.contains('/')
+          ? _dataProvider.cloudAudioPicked!.contains(RegExp("^[a-zA-Z0-9]*\$"))
+              ? _dataProvider.cloudAudioPicked.toString().split('/')[8]
               : Uri.decodeComponent(
-                  _dataProvider.mp3Picked.toString().split('/')[8])
-          : _dataProvider.mp3Picked;
+                  _dataProvider.cloudAudioPicked.toString().split('/')[8])
+          : _dataProvider.cloudAudioPicked;
 
   Container _gridViewItems(
       {required String activeAssetPath, required String label}) {
