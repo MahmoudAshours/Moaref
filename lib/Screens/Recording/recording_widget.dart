@@ -10,6 +10,8 @@ class RecordingImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final soundProvider = Provider.of<RecordProvider>(context);
+
+    soundProvider.isRecordingListener();
     return soundProvider.recording
         ? AvatarGlow(
             glowColor: Colors.orange,
