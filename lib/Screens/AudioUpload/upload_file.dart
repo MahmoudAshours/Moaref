@@ -34,6 +34,11 @@ class _UploadFileState extends State<UploadFile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xffD9DED5),
+        toolbarHeight: 30,
+        elevation: 0,
+      ),
       backgroundColor: Color(0xffD9DED5),
       body: SafeArea(
         child: Column(
@@ -135,8 +140,7 @@ class _UploadFileState extends State<UploadFile> {
                                               RealtimePlayingInfos?
                                                   realTimeInfo) {
                                             return realTimeInfo != null
-                                                ? Text(
-                                                    "${realTimeInfo.currentPosition.inMinutes}:${realTimeInfo.currentPosition.inSeconds} -- ${realTimeInfo.duration.inMinutes} : ${realTimeInfo.duration.inSeconds}")
+                                                ? SizedBox()
                                                 : SizedBox();
                                           },
                                         )
