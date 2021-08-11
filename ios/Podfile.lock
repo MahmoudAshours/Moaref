@@ -41,6 +41,9 @@ PODS:
   - flutter_ffmpeg/full-gpl-lts (0.4.2):
     - Flutter
     - mobile-ffmpeg-full-gpl (= 4.4.LTS)
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
   - gallery_saver (0.0.1):
     - Flutter
   - libwebp (1.2.0):
@@ -63,6 +66,7 @@ PODS:
     - SDWebImage/Core (= 5.11.0)
   - SDWebImage/Core (5.11.0)
   - SwiftyGif (5.4.0)
+  - Toast (4.0.0)
   - video_player (0.0.1):
     - Flutter
   - video_thumbnail (0.0.1):
@@ -77,6 +81,7 @@ DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_ffmpeg/full-gpl-lts (from `.symlinks/plugins/flutter_ffmpeg/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
@@ -93,6 +98,7 @@ SPEC REPOS:
     - mobile-ffmpeg-full-gpl
     - SDWebImage
     - SwiftyGif
+    - Toast
 
 EXTERNAL SOURCES:
   assets_audio_player:
@@ -105,6 +111,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_ffmpeg:
     :path: ".symlinks/plugins/flutter_ffmpeg/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   gallery_saver:
     :path: ".symlinks/plugins/gallery_saver/ios"
   path_provider:
@@ -128,6 +136,7 @@ SPEC CHECKSUMS:
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_ffmpeg: 3ec3912c74649851e6c3b1885511eef78142ac4f
+  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   mobile-ffmpeg-full-gpl: 9d7a8ec95457e39f9c1efe14b848f41798efa684
@@ -136,6 +145,7 @@ SPEC CHECKSUMS:
   record: 7ee2393532f8553bbb09fa19e95478323b7c0a99
   SDWebImage: 7acbb57630ac7db4a495547fb73916ff3e432f6b
   SwiftyGif: 5d4af95df24caf1c570dbbcb32a3b8a0763bc6d7
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f

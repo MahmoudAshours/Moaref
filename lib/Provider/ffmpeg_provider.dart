@@ -4,7 +4,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:flutter_ffmpeg/log.dart';
+import 'package:flutter_ffmpeg/media_information.dart';
 import 'package:flutter_ffmpeg/statistics.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,18 +15,21 @@ import 'package:path_provider/path_provider.dart';
 class FfmpegProvider extends ChangeNotifier {
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   final FlutterFFmpegConfig _config = FlutterFFmpegConfig();
+  num? _videoDuration;
   Future createFile(String? text, String? audioPath, String? videoPath) async {
     try {
-      print('asd');
-      print(text!);
-      print(audioPath!);
-      print(videoPath!);
+      final FlutterFFprobe flutterFFprobe = FlutterFFprobe();
+      MediaInformation mediaInformation =
+          await flutterFFprobe.getMediaInformation(audioPath!);
+      Map? _mediaProperties = mediaInformation.getMediaProperties();
+      _videoDuration = double.parse(_mediaProperties!["duration"].toString());
 
       Directory? directory = await getApplicationDocumentsDirectory();
       var sound = await getSoundPath(directory);
       String fontPath = await _getFontPath(directory);
       _config.setFontDirectory(fontPath, null);
       _config.enableStatisticsCallback(this.statisticsCallback);
+
       final outputPath = join(directory.path, "output.mp4");
       final _ffmpegCommand =
           '-stream_loop -1 -i $videoPath -i $sound -shortest -map 0:v:0 -map 1:a:0 -y -vf "drawtext=fontfile=${fontPath}:text="hello":x=w/2:y=h/2:fontcolor=white:fontsize=24" $outputPath';
@@ -34,7 +40,14 @@ class FfmpegProvider extends ChangeNotifier {
       _flutterFFmpeg.executeAsync(
           _ffmpegCommand,
           (d) => GallerySaver.saveVideo(outputPath).then((bool? success) {
-                print('Video is saved');
+                Fluttertoast.showToast(
+                    msg: "تم الانتهاء من المقطع",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                    fontSize: 24.0);
                 notifyListeners();
               }));
     } catch (e) {
@@ -43,20 +56,19 @@ class FfmpegProvider extends ChangeNotifier {
   }
 
   cancel() => _flutterFFmpeg.cancel();
+
   void statisticsCallback(Statistics statistics) {
-    print(
-        "Statistisadasdasdasdcs: executionId: ${statistics.executionId}, time: ${statistics.time}, size: ${statistics.size}, bitrate: ${statistics.bitrate}, speed: ${statistics.speed}, videoFrameNumber: ${statistics.videoFrameNumber}, videoQuality: ${statistics.videoQuality}, videoFps: ${statistics.videoFps}");
+    //_videoDuration
+    double percentage = ((statistics.time / 1000) / _videoDuration!) * 100;
+    Fluttertoast.showToast(
+        msg: "${percentage.toStringAsFixed(0)}\n% جاري العمل على المقطع",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.orange,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
-
-  // Future<String> getVideoPath(Directory directory) async {
-  //   var dbPath = join(directory.path, "input.mp4");
-  //   ByteData data = await rootBundle.load("assets/input.mp4");
-  //   List<int> bytes =
-  //       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  //   await File(dbPath).writeAsBytes(bytes);
-
-  //   return dbPath;
-  // }
 
   Future<String> getSoundPath(Directory directory) async {
     var soundPath = join(directory.path, "input.mp3");

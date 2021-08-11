@@ -34,13 +34,12 @@ class _GalleryState extends State<Gallery> {
     super.didChangeDependencies();
   }
 
-  Future<Uint8List>? _getThumbnails(String videofile) async {
-    final _videoUint8list = await VideoThumbnail.thumbnailData(
+  Future<Uint8List?>? _getThumbnails(String videofile) async {
+    return VideoThumbnail.thumbnailData(
       video: videofile,
       imageFormat: ImageFormat.JPEG,
       quality: 10,
     );
-    return _videoUint8list!;
   }
 
   @override
@@ -121,9 +120,9 @@ class _GalleryState extends State<Gallery> {
                                   return FutureBuilder(
                                     future: _getThumbnails(element),
                                     builder: (_,
-                                            AsyncSnapshot<Uint8List>
+                                            AsyncSnapshot<Uint8List?>?
                                                 customImagesFuture) =>
-                                        !customImagesFuture.hasData
+                                        !customImagesFuture!.hasData
                                             ? SizedBox()
                                             : GestureDetector(
                                                 onTap: () async {
