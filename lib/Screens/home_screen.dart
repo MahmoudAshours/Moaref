@@ -190,11 +190,6 @@ class _HomeScreenState extends State<HomeScreen>
     final _galleryVideoPath = _galleryProvider.videoPath != null &&
         _galleryProvider.videoPath!.isNotEmpty;
 
-    print(_galleryProvider.videoPath);
-    print(_uploadProvider.uploadedAudioPath);
-    print(_recordProvider.recordPath);
-    print(_dataProvider.cloudAudioPicked);
-
     if (_cloudAudioReady || _recordingAudioReady || _uploadedAudioReady) {
       _audioReady = true;
     } else {
@@ -209,15 +204,6 @@ class _HomeScreenState extends State<HomeScreen>
     if (!_audioReady && !_videoReady) return 0.0;
     return 0.5;
   }
-
-  String? cloudAudioName() => _dataProvider.cloudAudioPicked == null
-      ? ''
-      : _dataProvider.cloudAudioPicked!.contains('/')
-          ? _dataProvider.cloudAudioPicked!.contains(RegExp("^[a-zA-Z0-9]*\$"))
-              ? _dataProvider.cloudAudioPicked.toString().split('/')[8]
-              : Uri.decodeComponent(
-                  _dataProvider.cloudAudioPicked.toString().split('/')[8])
-          : _dataProvider.cloudAudioPicked;
 
   Container _gridViewItems(
       {required String activeAssetPath, required String label}) {
