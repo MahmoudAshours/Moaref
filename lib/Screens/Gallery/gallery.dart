@@ -9,6 +9,7 @@ import 'package:konmoaref/Screens/Gallery/loaded_image.dart';
 import 'package:konmoaref/Screens/Gallery/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:konmoaref/Utils/spinner.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -106,7 +107,7 @@ class _GalleryState extends State<Gallery> {
                   stream: provider.galleryLinks.stream,
                   builder: (c, AsyncSnapshot galleryStream) => !galleryStream
                           .hasData
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(child: Spinner())
                       : GridView.count(
                           crossAxisCount: 3,
                           crossAxisSpacing: 4,

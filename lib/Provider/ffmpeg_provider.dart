@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
-import 'package:flutter_ffmpeg/log.dart';
 import 'package:flutter_ffmpeg/media_information.dart';
 import 'package:flutter_ffmpeg/statistics.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,17 +14,19 @@ import 'package:path_provider/path_provider.dart';
 class FfmpegProvider extends ChangeNotifier {
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   final FlutterFFmpegConfig _config = FlutterFFmpegConfig();
+  final FlutterFFprobe _flutterFFprobe = FlutterFFprobe();
   num? _videoDuration;
-  Future createFile(String? text, String? audioPath, String? videoPath) async {
+
+  Future startRendering(
+      String? text, String? audioPath, String? videoPath) async {
     try {
-      final FlutterFFprobe flutterFFprobe = FlutterFFprobe();
       MediaInformation mediaInformation =
-          await flutterFFprobe.getMediaInformation(audioPath!);
+          await _flutterFFprobe.getMediaInformation(audioPath!);
       Map? _mediaProperties = mediaInformation.getMediaProperties();
       _videoDuration = double.parse(_mediaProperties!["duration"].toString());
 
       Directory? directory = await getApplicationDocumentsDirectory();
-      var sound = await getSoundPath(directory);
+      final sound = await getSoundPath(directory);
       String fontPath = await _getFontPath(directory);
       _config.setFontDirectory(fontPath, null);
       _config.enableStatisticsCallback(this.statisticsCallback);
@@ -38,28 +39,30 @@ class FfmpegProvider extends ChangeNotifier {
       //     '-i $outputPath -vf "drawtext=fontfile=${fontPath}:text=$text:fontcolor=white:fontsize=24:x=(w-text_w)/2:y=(h-text_h)/2, "drawtext=fontfile=${fontPath}:text=$text:fontcolor=white:fontsize=24:x=(w-text_w+30)/2:y=(h-text_h)/2"" -codec:a copy $outpu1';
 
       _flutterFFmpeg.executeAsync(
-          _ffmpegCommand,
-          (d) => GallerySaver.saveVideo(outputPath).then((bool? success) {
-                Fluttertoast.showToast(
-                    msg: "تم الانتهاء من المقطع",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 24.0);
-                notifyListeners();
-              }));
+        _ffmpegCommand,
+        (completed) => GallerySaver.saveVideo(outputPath).then(
+          (bool? success) {
+            Fluttertoast.showToast(
+                msg: "تم الانتهاء من المقطع",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 24.0);
+            notifyListeners();
+          },
+        ),
+      );
     } catch (e) {
       print(e);
     }
   }
 
-  cancel() => _flutterFFmpeg.cancel();
+  cancelOperation() => _flutterFFmpeg.cancel();
 
   void statisticsCallback(Statistics statistics) {
-    //_videoDuration
-    double percentage = ((statistics.time / 1000) / _videoDuration!) * 100;
+    int percentage = (statistics.time * 100) ~/ _videoDuration!;
     Fluttertoast.showToast(
         msg: "${percentage.toStringAsFixed(0)}\n% جاري العمل على المقطع",
         toastLength: Toast.LENGTH_SHORT,
@@ -80,7 +83,7 @@ class FfmpegProvider extends ChangeNotifier {
   }
 
   Future<String> _getFontPath(Directory directory) async {
-    var fontPath = join(directory.path, "arabic.ttf");
+    final fontPath = join(directory.path, "arabic.ttf");
     ByteData fontData = await rootBundle.load("assets/Fonts/NeoSansArabic.ttf");
     List<int> fontBytes = fontData.buffer
         .asUint8List(fontData.offsetInBytes, fontData.lengthInBytes);

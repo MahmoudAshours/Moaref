@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Screens/Categories/category_comp.dart';
+import 'package:konmoaref/Utils/spinner.dart';
 import 'package:provider/provider.dart';
 import 'package:konmoaref/Helpers/map_indexed.dart';
 
@@ -16,7 +17,7 @@ class CategoryDataStream extends StatelessWidget {
         stream: _dataProvider.soundLinks.stream.asBroadcastStream(),
         builder: (_, AsyncSnapshot<List<String>>? snapshot) {
           return snapshot!.data == null
-              ? Center(child: CircularProgressIndicator())
+              ? Center(child: Spinner())
               : SingleChildScrollView(
                   child: Column(
                     children: snapshot.data!

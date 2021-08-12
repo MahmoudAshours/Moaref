@@ -1,9 +1,9 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Screens/Categories/category_stream.dart';
 import 'package:konmoaref/Themes/theme.dart';
 import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
+import 'package:konmoaref/Utils/spinner.dart';
 import 'package:provider/provider.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -19,7 +19,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     _dataProvider = Provider.of<DataProvider>(context, listen: false);
     _dataProvider!.fetchLanguage();
     _dataProvider!.fetchCategory();
-    _dataProvider!.fetchSounds();
     super.didChangeDependencies();
   }
 
@@ -48,21 +47,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
               bottom: false,
               child: LanguagesDropDownList(),
             ),
-            _categoryPicker(_dataProvider!),
+            CategoryPicker(
+              context: context,
+              dataProvider: _dataProvider,
+            ),
             SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _categoryPicker(DataProvider provider) {
+class CategoryPicker extends StatelessWidget {
+  const CategoryPicker({
+    Key? key,
+    required this.context,
+    required DataProvider? dataProvider,
+  })  : _dataProvider = dataProvider,
+        super(key: key);
+
+  final BuildContext context;
+  final DataProvider? _dataProvider;
+
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<List<String>>(
-      stream: provider.categoryLinks.stream.asBroadcastStream(),
+      stream: _dataProvider!.categoryLinks.stream.asBroadcastStream(),
       builder: (_, AsyncSnapshot<List<String>> snapshot) => Center(
         child: !snapshot.hasData &&
                 snapshot.connectionState != ConnectionState.done
-            ? Center(child: CircularProgressIndicator())
+            ? Center(child: Spinner())
             : SafeArea(
                 top: false,
                 child: Container(
@@ -91,7 +106,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   ),
                                   width: 150,
                                   height: 150,
-                                  child: _categoryItem(value),
+                                  child: CategoryItem(value: value),
                                 ),
                               ),
                             ),
@@ -104,22 +119,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
     );
   }
+}
 
-  SlideInUp _categoryItem(String value) {
-    return SlideInUp(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset('assets/Images/one_category_icon.png'),
-              Padding(
-                padding: const EdgeInsets.only(top: 18.0),
+class CategoryItem extends StatelessWidget {
+  final String value;
+  const CategoryItem({
+    Key? key,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset('assets/Images/one_category_icon.png'),
+            Padding(
+              padding: const EdgeInsets.only(top: 18.0),
+              child: Center(
                 child: Text(
                   value,
-                  textDirection: TextDirection.rtl,
                   style: TextStyle(
                     color: kFontColor,
                     fontSize: 13,
@@ -127,8 +150,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

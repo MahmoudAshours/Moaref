@@ -80,7 +80,7 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchLanguage() async {
+  FutureOr<dynamic> fetchLanguage() async {
     try {
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
       final Response response = await Dio().get(apiUrl!);
@@ -107,16 +107,16 @@ class DataProvider extends ChangeNotifier {
   Future<void> fetchSounds() async {
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-        var cat = Uri.encodeComponent(category!.toString());
+        final cat = Uri.encodeComponent(category!.toString());
         apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
       } else {
-        var language = Uri.encodeComponent(lang!);
-        var cat = Uri.encodeFull(category!.toString());
+        final language = Uri.encodeComponent(lang!);
+        final cat = Uri.encodeFull(category!.toString());
         apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
       }
-      var response = await Dio().get(apiUrl!);
-      var document = parser.parse(response.data);
-      var links = linkDecoder(document);
+      final response = await Dio().get(apiUrl!);
+      final document = parser.parse(response.data);
+      final links = linkDecoder(document);
       soundLinks.sink.add(links);
     } on Exception catch (e) {
       print(e);
@@ -135,34 +135,29 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
-        //ignore unchecked_use_of_nullable_value
         final soundData = Uri.encodeComponent(snapshot.data![index]!);
-
-        var cat = Uri.encodeFull(category!);
+        final cat = Uri.encodeFull(category!);
         apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat/$soundData";
         notifyListeners();
       } else {
-        var language = Uri.encodeComponent(lang!);
-        var cat = Uri.encodeComponent(category!);
-        var soundData = Uri.encodeComponent(snapshot.data![index]!);
+        final language = Uri.encodeComponent(lang!);
+        final cat = Uri.encodeComponent(category!);
+        final soundData = Uri.encodeComponent(snapshot.data![index]!);
         apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/$soundData";
         notifyListeners();
       }
-      await assetsAudioPlayer
-          .open(
+      await assetsAudioPlayer.open(
         Audio.network(apiUrl!),
         playInBackground: PlayInBackground.enabled,
         audioFocusStrategy:
             AudioFocusStrategy.request(resumeAfterInterruption: true),
         respectSilentMode: false,
-      )
-          .whenComplete(() {
-        cloudAudioPicked = apiUrl;
-        _sound = Sound.IsPlaying;
-        notifyListeners();
-      });
+      );
+      cloudAudioPicked = apiUrl;
+      _sound = Sound.IsPlaying;
+      notifyListeners();
     } on Exception catch (e) {
       print(e);
     }
