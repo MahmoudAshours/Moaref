@@ -18,7 +18,6 @@ class _LanguagesDropDownListState extends State<LanguagesDropDownList> {
     _dataProvider = Provider.of<DataProvider>(context, listen: false);
     _dataProvider.fetchLanguage();
     _dataProvider.fetchCategory();
-    _dataProvider.fetchSounds();
     super.didChangeDependencies();
   }
 
