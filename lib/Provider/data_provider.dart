@@ -11,11 +11,11 @@ import 'package:html/parser.dart' as parser;
 class DataProvider extends ChangeNotifier {
   String? lang = 'عربي';
   String? category = 'دروس من السيرة';
-  String? apiUrl;
+  String? _apiUrl;
   Sound _sound = Sound.IsNotPlaying;
   String? cloudAudioPicked;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId('0');
-  List<bool> boolList = [];
+  List<bool> cloudAudioPlayingBool = [];
   List<String> categoryItems = [];
   // Streams controlling links of languages , categories & Audio files.
   StreamController<List<String>> languageLinks = StreamController.broadcast();
@@ -34,7 +34,7 @@ class DataProvider extends ChangeNotifier {
     assetsAudioPlayer.dispose();
     languageLinks.close();
     categoryLinks.close();
-    boolList = [];
+    cloudAudioPlayingBool = [];
     notifyListeners();
     soundLinks.close();
     super.dispose();
@@ -42,7 +42,7 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> changeCategory(String? newCategory) async {
     category = newCategory;
-    boolList = [];
+    cloudAudioPlayingBool = [];
     await fetchSounds();
     notifyListeners();
   }
@@ -53,7 +53,7 @@ class DataProvider extends ChangeNotifier {
     try {
       fetchCategory().then((List<String>? value) {
         category = value![0];
-        boolList = [];
+        cloudAudioPlayingBool = [];
       });
     } catch (e) {}
     notifyListeners();
@@ -67,8 +67,8 @@ class DataProvider extends ChangeNotifier {
   Future<List<String>?> fetchCategory() async {
     try {
       final language = Uri.encodeComponent(lang!);
-      apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
-      final Response response = await Dio().get(apiUrl!);
+      _apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
+      final Response response = await Dio().get(_apiUrl!);
       final Document document = parser.parse(response.data);
       final List<String> links = ApiDecoder.linkDecoder(document);
       categoryItems = links;
@@ -82,8 +82,8 @@ class DataProvider extends ChangeNotifier {
 
   FutureOr<dynamic> fetchLanguage() async {
     try {
-      apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
-      final Response response = await Dio().get(apiUrl!);
+      _apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
+      final Response response = await Dio().get(_apiUrl!);
       final Document document = parser.parse(response.data);
       final List<String> languages = ApiDecoder.languageDecoder(document);
       languageLinks.sink.add(languages);
@@ -93,12 +93,14 @@ class DataProvider extends ChangeNotifier {
   }
 
   fetchSoundData(AsyncSnapshot<List> snapshot, int index) {
-    if (boolList.isNotEmpty && boolList[index] == true) {
-      boolList[index] = false;
+    if (cloudAudioPlayingBool.isNotEmpty &&
+        cloudAudioPlayingBool[index] == true) {
+      cloudAudioPlayingBool[index] = false;
     } else {
-      boolList = [];
-      boolList = List.generate(snapshot.data!.length, (index) => false);
-      boolList[index] = true;
+      cloudAudioPlayingBool = [];
+      cloudAudioPlayingBool =
+          List.generate(snapshot.data!.length, (index) => false);
+      cloudAudioPlayingBool[index] = true;
       notifyListeners();
     }
     notifyListeners();
@@ -108,13 +110,13 @@ class DataProvider extends ChangeNotifier {
     try {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
         final cat = Uri.encodeComponent(category!.toString());
-        apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
+        _apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat";
       } else {
         final language = Uri.encodeComponent(lang!);
         final cat = Uri.encodeFull(category!.toString());
-        apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
+        _apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat";
       }
-      final response = await Dio().get(apiUrl!);
+      final response = await Dio().get(_apiUrl!);
       final document = parser.parse(response.data);
       final links = ApiDecoder.linkDecoder(document);
       soundLinks.sink.add(links);
@@ -125,7 +127,7 @@ class DataProvider extends ChangeNotifier {
 
   void nullifymp3() {
     cloudAudioPicked = null;
-    boolList = [];
+    cloudAudioPlayingBool = [];
     notifyListeners();
   }
 
@@ -137,25 +139,25 @@ class DataProvider extends ChangeNotifier {
       if (lang!.contains(RegExp("^[a-zA-Z0-9]*\$"))) {
         final soundData = Uri.encodeComponent(snapshot.data![index]!);
         final cat = Uri.encodeFull(category!);
-        apiUrl =
+        _apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$lang/$cat/$soundData";
         notifyListeners();
       } else {
         final language = Uri.encodeComponent(lang!);
         final cat = Uri.encodeComponent(category!);
         final soundData = Uri.encodeComponent(snapshot.data![index]!);
-        apiUrl =
+        _apiUrl =
             "https://nekhtem.com/kariem/ayat/konMoarfaan/$language/$cat/$soundData";
         notifyListeners();
       }
       await assetsAudioPlayer.open(
-        Audio.network(apiUrl!),
+        Audio.network(_apiUrl!),
         playInBackground: PlayInBackground.enabled,
         audioFocusStrategy:
             AudioFocusStrategy.request(resumeAfterInterruption: true),
         respectSilentMode: false,
       );
-      cloudAudioPicked = apiUrl;
+      cloudAudioPicked = _apiUrl;
       _sound = Sound.IsPlaying;
       notifyListeners();
     } on Exception catch (e) {

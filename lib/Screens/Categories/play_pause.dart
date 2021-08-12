@@ -27,8 +27,8 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
         player: _dataProvider.assetsAudioPlayer,
         builder: (BuildContext context, bool play) {
           return Icon(
-            _dataProvider.boolList.isNotEmpty &&
-                    _dataProvider.boolList[widget.index] == true &&
+            _dataProvider.cloudAudioPlayingBool.isNotEmpty &&
+                    _dataProvider.cloudAudioPlayingBool[widget.index] == true &&
                     play
                 ? Icons.pause
                 : Icons.play_arrow,
@@ -61,9 +61,9 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
               textColor: Colors.white,
               fontSize: 16.0);
         } else {
-          if ((_dataProvider.boolList.isNotEmpty &&
-                  !_dataProvider.boolList[widget.index]) ||
-              _dataProvider.boolList.isEmpty) {
+          if ((_dataProvider.cloudAudioPlayingBool.isNotEmpty &&
+                  !_dataProvider.cloudAudioPlayingBool[widget.index]) ||
+              _dataProvider.cloudAudioPlayingBool.isEmpty) {
             _dataProvider.assetsAudioPlayer.stop();
             _dataProvider.nullifymp3();
           } else {

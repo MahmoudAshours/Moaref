@@ -45,8 +45,8 @@ class _CategoryComponentState extends State<CategoryComponent> {
                 provider: widget.provider,
               ),
             ),
-            subtitle: widget.provider.boolList.isNotEmpty &&
-                    widget.provider.boolList[widget.index] == true
+            subtitle: widget.provider.cloudAudioPlayingBool.isNotEmpty &&
+                    widget.provider.cloudAudioPlayingBool[widget.index] == true
                 ? PlayerBuilder.realtimePlayingInfos(
                     player: widget.provider.assetsAudioPlayer,
                     builder: (context, RealtimePlayingInfos? realTimeInfo) {
