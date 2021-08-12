@@ -11,6 +11,6 @@ Future<String> assetToFile({required String assetPath}) async {
   final ByteData data = await rootBundle.load(assetPath);
   final List<int> bytes =
       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  var file = await File(path).writeAsBytes(bytes);
+  final file = await File(path).writeAsBytes(bytes);
   return file.path;
 }

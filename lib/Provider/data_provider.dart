@@ -70,7 +70,7 @@ class DataProvider extends ChangeNotifier {
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
       final Response response = await Dio().get(apiUrl!);
       final Document document = parser.parse(response.data);
-      final List<String> links = linkDecoder(document);
+      final List<String> links = ApiDecoder.linkDecoder(document);
       categoryItems = links;
       categoryLinks.sink.add(links);
       notifyListeners();
@@ -85,7 +85,7 @@ class DataProvider extends ChangeNotifier {
       apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
       final Response response = await Dio().get(apiUrl!);
       final Document document = parser.parse(response.data);
-      final List<String> languages = languageDecoder(document);
+      final List<String> languages = ApiDecoder.languageDecoder(document);
       languageLinks.sink.add(languages);
     } catch (e) {
       print(e);
@@ -116,7 +116,7 @@ class DataProvider extends ChangeNotifier {
       }
       final response = await Dio().get(apiUrl!);
       final document = parser.parse(response.data);
-      final links = linkDecoder(document);
+      final links = ApiDecoder.linkDecoder(document);
       soundLinks.sink.add(links);
     } on Exception catch (e) {
       print(e);
