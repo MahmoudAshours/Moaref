@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
 import 'package:konmoaref/Utils/downloading_progress.dart';
@@ -20,23 +21,18 @@ class BlurredLoadingImage extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$path",
+            child: CachedNetworkImage(
+              imageUrl:
+                  "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/$path",
               fit: BoxFit.fill,
               filterQuality: FilterQuality.none,
-              gaplessPlayback: false,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Container(
+                      width: 100,
+                      height: 100,
+                      child: CircularProgressIndicator(
+                          value: downloadProgress.progress)),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           ),
           GestureDetector(
