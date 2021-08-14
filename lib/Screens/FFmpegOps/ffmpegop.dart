@@ -5,6 +5,7 @@ import 'package:konmoaref/Provider/ffmpeg_provider.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FFmpegOperations extends StatefulWidget {
   final text;
@@ -24,8 +25,12 @@ class _FFmpegOperationsState extends State<FFmpegOperations> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: Image.network(
-            "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/${basename(_galleryProvider.videoPath!.replaceAll('mp4', 'jpg'))}",
+          child: CachedNetworkImage(
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                CircularProgressIndicator(value: downloadProgress.progress),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            imageUrl:
+                "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/${basename(_galleryProvider.videoPath!.replaceAll('mp4', 'jpg'))}",
             fit: BoxFit.cover,
           ),
         ),
