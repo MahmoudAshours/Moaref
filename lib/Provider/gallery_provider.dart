@@ -79,7 +79,7 @@ class GalleryProvider extends ChangeNotifier {
       }
     }
   }
-}
 
-_dioDownloadVideo(List<String> downloadData) async =>
-    await Dio().download(downloadData[0], downloadData[1]);
+  static _dioDownloadVideo(List<String> downloadData) async =>
+      await Dio().download(downloadData[0], downloadData[1]);
+}

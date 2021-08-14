@@ -20,7 +20,7 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
-  late GalleryProvider provider;
+  late GalleryProvider _provider;
   late VideoPlayerController _videoPlayerController;
   @override
   void initState() {
@@ -30,8 +30,8 @@ class _GalleryState extends State<Gallery> {
 
   @override
   void didChangeDependencies() {
-    provider = Provider.of<GalleryProvider>(context);
-    provider.getGalleryImages();
+    _provider = Provider.of<GalleryProvider>(context);
+    _provider.getGalleryImages();
     super.didChangeDependencies();
   }
 
@@ -86,7 +86,7 @@ class _GalleryState extends State<Gallery> {
             width: MediaQuery.of(context).size.width / 1.4,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
-              child: provider.videoPath!.isNotEmpty
+              child: _provider.videoPath!.isNotEmpty
                   ? VideoPlayer(_videoPlayerController)
                   : Container(
                       color: Colors.transparent,
@@ -104,7 +104,7 @@ class _GalleryState extends State<Gallery> {
                 height: MediaQuery.of(context).size.height - 300,
                 width: MediaQuery.of(context).size.width,
                 child: StreamBuilder(
-                  stream: provider.galleryLinks.stream,
+                  stream: _provider.galleryLinks.stream,
                   builder: (c, AsyncSnapshot galleryStream) => !galleryStream
                           .hasData
                       ? Center(child: Spinner())
@@ -115,8 +115,8 @@ class _GalleryState extends State<Gallery> {
                           padding: EdgeInsets.all(8),
                           children: [
                             UploadVideo(),
-                            if (provider.customWallpapers.isNotEmpty)
-                              ...provider.customWallpapers.map<Widget>(
+                            if (_provider.customWallpapers.isNotEmpty)
+                              ..._provider.customWallpapers.map<Widget>(
                                 (String element) {
                                   return FutureBuilder(
                                     future: _getThumbnails(element),
@@ -127,7 +127,7 @@ class _GalleryState extends State<Gallery> {
                                             ? SizedBox()
                                             : GestureDetector(
                                                 onTap: () async {
-                                                  await provider.setVideoPath(
+                                                  await _provider.setVideoPath(
                                                       element,
                                                       isUploaded: true);
                                                   await _initalizeNewVideo();
@@ -143,7 +143,7 @@ class _GalleryState extends State<Gallery> {
                                 .map<Widget>(
                                   (String element) => FutureBuilder(
                                     future:
-                                        provider.checkIfVideoExists(element),
+                                        _provider.checkIfVideoExists(element),
                                     builder: (context,
                                         AsyncSnapshot<bool>? snapshot) {
                                       return !snapshot!.hasData
@@ -152,7 +152,7 @@ class _GalleryState extends State<Gallery> {
                                               ? FadeInUp(
                                                   child: GestureDetector(
                                                     onTap: () async {
-                                                      await provider
+                                                      await _provider
                                                           .setVideoPath(
                                                               element);
                                                       await _initalizeNewVideo();
@@ -185,7 +185,7 @@ class _GalleryState extends State<Gallery> {
 
   _initalizeNewVideo() async {
     _videoPlayerController =
-        VideoPlayerController.file(File(provider.videoPath!));
+        VideoPlayerController.file(File(_provider.videoPath!));
     await _videoPlayerController.initialize();
     _videoPlayerController.play();
   }
