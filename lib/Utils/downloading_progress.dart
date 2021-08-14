@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:konmoaref/Utils/spinner.dart';
 
 showDownloadDialog(BuildContext context) {
   return showDialog(
@@ -14,7 +15,8 @@ showDownloadDialog(BuildContext context) {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    CircularProgressIndicator(),
+                    Spinner(
+                        firstColor: Colors.green, secondColor: Colors.yellow),
                     SizedBox(
                       height: 10,
                       width: 10,

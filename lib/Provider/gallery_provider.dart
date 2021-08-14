@@ -6,8 +6,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
+import 'package:konmoaref/Utils/connectivity_issues.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class GalleryProvider extends ChangeNotifier {
   late String url;
@@ -17,6 +19,10 @@ class GalleryProvider extends ChangeNotifier {
   late Map downloadInfo = {};
   // ignore: must_call_super
   void dispose() => galleryLinks.close();
+
+  static Future<Response> dioDownloadVideo(List<String> downloadData) async {
+    return await Dio().download(downloadData[0], downloadData[1]);
+  }
 
   Future setVideoPath(String path, {bool isUploaded = false}) async {
     if (!isUploaded) {
@@ -38,28 +44,39 @@ class GalleryProvider extends ChangeNotifier {
   }
 
   Future getGalleryImages() async {
-    try {
-      url = "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/";
-      var response = await Dio().get(url);
-      var document = parser.parse(response.data);
-      var links = ApiDecoder.languageDecoder(document);
-      galleryLinks.sink.add(links);
-    } catch (e) {}
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      ConnectivityIssues.noInternet();
+    } else {
+      try {
+        url = "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/";
+        var response = await Dio().get(url);
+        var document = parser.parse(response.data);
+        var links = ApiDecoder.languageDecoder(document);
+        galleryLinks.sink.add(links);
+      } catch (e) {}
+    }
   }
 
   Future downloadFile(String url) async {
-    final newUrl = url.replaceAll('jpg', 'mp4');
-    final videoUrl =
-        "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/$newUrl";
-    try {
-      final _dir = (await getApplicationDocumentsDirectory()).path;
-      await compute(_dioDownloadVideo, [videoUrl, "$_dir/$newUrl"]);
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      ConnectivityIssues.noInternet();
+    } else {
+      final newUrl = url.replaceAll('jpg', 'mp4');
+      final videoUrl =
+          "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/$newUrl";
+      final _dir = await getApplicationDocumentsDirectory();
+      final _dirPath = _dir.path;
+      try {
+        await compute((dioDownloadVideo), [videoUrl, "$_dirPath/$newUrl"]);
+      } catch (e) {
+        print(e);
+      }
       notifyListeners();
       downloadInfo.clear();
-    } catch (e) {
-      print(e);
+      return true;
     }
-    return true;
   }
 
   Future uploadVideoFile(BuildContext context) async {
@@ -79,7 +96,4 @@ class GalleryProvider extends ChangeNotifier {
       }
     }
   }
-
-  static _dioDownloadVideo(List<String> downloadData) async =>
-      await Dio().download(downloadData[0], downloadData[1]);
 }
