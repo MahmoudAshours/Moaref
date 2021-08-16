@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:konmoaref/Helpers/salah_remover.dart';
 
 class FfmpegProvider extends ChangeNotifier {
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
@@ -19,15 +20,31 @@ class FfmpegProvider extends ChangeNotifier {
   double? _videoDuration;
   String? fontPath;
   _drawText(String text,
-      {String height = "h/2",
-      String width = "w/2",
+      {String height = "(h-text_h)/2",
+      String width = "(w-text_w)/2",
       String fontColor = "black",
       String fontSize = "24"}) {
     return "drawtext=fontfile=${fontPath}:text=$text:x=$width:y=$height:fontcolor=$fontColor:fontsize=$fontSize";
   }
 
   Future startRendering(
-      String? text, String? audioPath, String? videoPath) async {
+      List<String?> text, String? audioPath, String? videoPath) async {
+    final _centeredText = text[0]!
+        .replaceAll('.mp3', '')
+        .replaceAll(RegExp(r'\(\d+\)'), '')
+        .remover()
+        .split('-')[0]
+        .trim();
+
+    final _topText = text[1]!.remover().trim();
+
+    final _sheikhName = text[0]!
+        .split('-')[1]
+        .replaceAll('.mp3', '')
+        .replaceAll(RegExp(r'\(\d+\)'), '')
+        .trim();
+
+    print(_topText);
     try {
       MediaInformation mediaInformation =
           await _flutterFFprobe.getMediaInformation(audioPath!);
@@ -42,11 +59,28 @@ class FfmpegProvider extends ChangeNotifier {
 
       final outputPath = join(directory.path, "output.mp4");
 
-      final _ffmpegCommand =
-          '-stream_loop -1 -i $videoPath -i $sound -shortest -map 0:v:0 -map 1:a:0 -y -vf "${_drawText('asjhdkahsdjkahsasd')}","${_drawText('dasdsas')}" $outputPath';
+      final _titleSection = _drawText(
+        '$_centeredText',
+        width: "((w-text_w)/2)",
+        height: "((h-text_h)/2)",
+        fontSize: '24',
+      );
 
-      // String _addText =
-      //     '-i $outputPath -vf "drawtext=fontfile=${fontPath}:text=$text:fontcolor=white:fontsize=24:x=(w-text_w)/2:y=(h-text_h)/2, "drawtext=fontfile=${fontPath}:text=$text:fontcolor=white:fontsize=24:x=(w-text_w+30)/2:y=(h-text_h)/2"" -codec:a copy $outpu1';
+      final _sheikhSection = _drawText('$_sheikhName',
+          width: "((w-text_w)/2)-60",
+          height: "((h-text_h)/2)+60",
+          fontSize: '18',
+          fontColor: '#FFFFFF');
+
+      final _categorySection = _drawText(
+        '$_topText',
+        width: "((w-text_w)/2)+60",
+        height: "((h-text_h)/2)-60",
+        fontSize: '18',
+        fontColor: '#FFFFFF',
+      );
+      final _ffmpegCommand =
+          '-stream_loop -1 -i $videoPath -i $sound -shortest -map 0:v:0 -map 1:a:0 -y -vf "$_sheikhSection","$_titleSection","$_categorySection" $outputPath';
 
       _flutterFFmpeg.executeAsync(
         _ffmpegCommand,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:konmoaref/Helpers/get_audioname.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/ffmpeg_provider.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
@@ -36,8 +37,10 @@ class _FFmpegOperationsState extends State<FFmpegOperations> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _ffmpegProvider.startRendering(
-            'text', _dataProvider.cloudAudioPicked, _galleryProvider.videoPath),
+        onPressed: () => _ffmpegProvider.startRendering([
+          '${FormattedAudioName.cloudAudioName(_dataProvider.cloudAudioPicked)}',
+          '${FormattedAudioName.cloudAudioCategory(_dataProvider.cloudAudioPicked)}',
+        ], _dataProvider.cloudAudioPicked, _galleryProvider.videoPath),
       ),
     );
   }
