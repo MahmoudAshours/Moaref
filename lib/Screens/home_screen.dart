@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
 import 'package:konmoaref/Provider/record_provider.dart';
@@ -147,9 +148,16 @@ class _HomeScreenState extends State<HomeScreen>
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () => _readyIndicator() == 1.0
-                      ? Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => FFmpegOperations('hello')))
-                      : DoNothingAction(),
+                      ? Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => FFmpegOperations()))
+                      : Fluttertoast.showToast(
+                          msg: "يجب عليك الانتهاء من اختيار المقطع و الصوت",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 5,
+                          backgroundColor: Colors.white,
+                          textColor: Colors.black,
+                          fontSize: 15.0),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Stack(
@@ -157,11 +165,10 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         Container(
                             child: CircularProgressIndicator(
-                              value: _readyIndicator(),
-                              color: _readyIndicator() == 1.0
-                                  ? Colors.orange
-                                  : Colors.blue,
-                            ),
+                                value: _readyIndicator(),
+                                color: _readyIndicator() == 1.0
+                                    ? Colors.orange
+                                    : Colors.blue),
                             width: 40,
                             height: 40),
                         Icon(

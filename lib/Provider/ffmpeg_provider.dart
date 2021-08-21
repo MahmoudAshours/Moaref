@@ -9,6 +9,7 @@ import 'package:flutter_ffmpeg/media_information.dart';
 import 'package:flutter_ffmpeg/statistics.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:konmoaref/Screens/FFmpegOps/rendered_preview.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:konmoaref/Helpers/salah_remover.dart';
@@ -24,27 +25,35 @@ class FfmpegProvider extends ChangeNotifier {
       String width = "(w-text_w)/2",
       String fontColor = "black",
       String fontSize = "24"}) {
-    return "drawtext=fontfile=${fontPath}:text=$text:x=$width:y=$height:fontcolor=$fontColor:fontsize=$fontSize";
+    return "drawtext=${fontPath == null ? null : 'fontfile=$fontPath'}:text=$text:x=$width:y=$height:fontcolor=$fontColor:fontsize=$fontSize";
   }
 
-  Future startRendering(
-      List<String?> text, String? audioPath, String? videoPath) async {
-    final _centeredText = text[0]!
+  Future<String> startRendering(
+    List<String?> text,
+    String? audioPath,
+    String? videoPath,
+    BuildContext context,
+    String? language,
+  ) async {
+    var _centeredText = text[0]!
         .replaceAll('.mp3', '')
         .replaceAll(RegExp(r'\(\d+\)'), '')
         .remover()
+        .replaceAll(',', '')
+        .replaceAll('"', '')
         .split('-')[0]
         .trim();
 
     final _topText = text[1]!.remover().trim();
 
-    final _sheikhName = text[0]!
-        .split('-')[1]
-        .replaceAll('.mp3', '')
-        .replaceAll(RegExp(r'\(\d+\)'), '')
-        .trim();
+    final _sheikhName = text[0]!.contains('-')
+        ? text[0]!
+            .split('-')[1]
+            .replaceAll('.mp3', '')
+            .replaceAll(RegExp(r'\(\d+\)'), '')
+            .trim()
+        : "";
 
-    print(_topText);
     try {
       MediaInformation mediaInformation =
           await _flutterFFprobe.getMediaInformation(audioPath!);
@@ -52,39 +61,45 @@ class FfmpegProvider extends ChangeNotifier {
       _videoDuration = double.parse(_mediaProperties!["duration"].toString());
 
       Directory? directory = await getApplicationDocumentsDirectory();
-      final sound = await getSoundPath(directory, audioPath);
-      fontPath = await _getFontPath(directory);
+      String sound;
+      if (!Uri.tryParse(audioPath)!.hasAbsolutePath)
+        sound = await getSoundPath(directory, audioPath);
+      sound = audioPath;
+      fontPath = await _getFontPath(directory, language!);
       _config.setFontDirectory(fontPath!, null);
+
       _config.enableStatisticsCallback(this.statisticsCallback);
 
-      final outputPath = join(directory.path, "output.mp4");
+      final _outputPath = join(directory.path, "output.mp4");
 
       final _titleSection = _drawText(
         '$_centeredText',
         width: "((w-text_w)/2)",
         height: "((h-text_h)/2)",
-        fontSize: '24',
+        fontSize: '(w/25)-${_centeredText.length}/10',
       );
 
-      final _sheikhSection = _drawText('$_sheikhName',
-          width: "((w-text_w)/2)-60",
-          height: "((h-text_h)/2)+60",
-          fontSize: '18',
-          fontColor: '#FFFFFF');
+      final _sheikhSection = _drawText(
+        '$_sheikhName',
+        width: "((w-text_w)/2)-60",
+        height: "((h-text_h)/2)+60",
+        fontSize: '(w/25)-${_sheikhName.length}/10',
+        fontColor: '#FFFFFF',
+      );
 
       final _categorySection = _drawText(
         '$_topText',
         width: "((w-text_w)/2)+60",
         height: "((h-text_h)/2)-60",
-        fontSize: '18',
+        fontSize: '(w/40)-${_topText.length}/10',
         fontColor: '#FFFFFF',
       );
       final _ffmpegCommand =
-          '-stream_loop -1 -i $videoPath -i $sound -shortest -map 0:v:0 -map 1:a:0 -y -vf "$_sheikhSection","$_titleSection","$_categorySection" $outputPath';
+          '-stream_loop -1 -i $videoPath -i $sound -shortest -map 0:v:0 -map 1:a:0 -y -vf "$_sheikhSection","$_titleSection","$_categorySection" $_outputPath';
 
       _flutterFFmpeg.executeAsync(
         _ffmpegCommand,
-        (completed) => GallerySaver.saveVideo(outputPath).then(
+        (completed) => GallerySaver.saveVideo(_outputPath).then(
           (bool? success) {
             Fluttertoast.showToast(
                 msg: "تم الانتهاء من المقطع",
@@ -94,13 +109,20 @@ class FfmpegProvider extends ChangeNotifier {
                 backgroundColor: Colors.green,
                 textColor: Colors.white,
                 fontSize: 24.0);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => RenderedVideoPreview(videoPath: _outputPath),
+              ),
+            );
             notifyListeners();
           },
         ),
       );
+      return _outputPath;
     } catch (e) {
       print(e);
     }
+    return '';
   }
 
   cancelOperation() => _flutterFFmpeg.cancel();
@@ -123,9 +145,17 @@ class FfmpegProvider extends ChangeNotifier {
     return soundPath;
   }
 
-  Future<String> _getFontPath(Directory directory) async {
-    final fontPath = join(directory.path, "arabic.ttf");
-    ByteData fontData = await rootBundle.load("assets/Fonts/NeoSansArabic.ttf");
+  Future<String> _getFontPath(Directory directory, String category) async {
+    String? fontPath;
+    ByteData fontData;
+
+    if (category == "عربي") {
+      fontPath = join(directory.path, "arabic.ttf");
+      fontData = await rootBundle.load("assets/Fonts/NeoSansArabic.ttf");
+    } else {
+      fontPath = join(directory.path, "arial.ttf");
+      fontData = await rootBundle.load("assets/Fonts/arial.ttf");
+    }
     List<int> fontBytes = fontData.buffer
         .asUint8List(fontData.offsetInBytes, fontData.lengthInBytes);
     await File(fontPath).writeAsBytes(fontBytes);

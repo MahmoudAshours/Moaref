@@ -69,7 +69,8 @@ class DataProvider extends ChangeNotifier {
       final language = Uri.encodeComponent(lang!);
       _apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/$language";
       final Response response = await Dio().get(_apiUrl!);
-      final Document document = parser.parse(response.data);
+      final Document document =
+          await compute(dataParser, response.data.toString());
       final List<String> links = ApiDecoder.linkDecoder(document);
       categoryItems = links;
       categoryLinks.sink.add(links);
@@ -84,7 +85,8 @@ class DataProvider extends ChangeNotifier {
     try {
       _apiUrl = "https://nekhtem.com/kariem/ayat/konMoarfaan/";
       final Response response = await Dio().get(_apiUrl!);
-      final Document document = parser.parse(response.data);
+      final Document document =
+          await compute(dataParser, response.data.toString());
       final List<String> languages = ApiDecoder.languageDecoder(document);
       languageLinks.sink.add(languages);
     } catch (e) {
@@ -163,5 +165,9 @@ class DataProvider extends ChangeNotifier {
     } on Exception catch (e) {
       print(e);
     }
+  }
+
+  static FutureOr<Document> dataParser(String responseData) async {
+    return await parser.parse(responseData);
   }
 }

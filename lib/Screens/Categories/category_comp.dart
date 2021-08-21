@@ -9,7 +9,7 @@ class CategoryComponent extends StatefulWidget {
   final int index;
   final AsyncSnapshot<List<String?>> snapshot;
   final String title;
-
+ 
   const CategoryComponent(
       {Key? key,
       required this.provider,

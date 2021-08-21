@@ -10,7 +10,7 @@ class CategoryScreen extends StatefulWidget {
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
-
+ 
 class _CategoryScreenState extends State<CategoryScreen> {
   DataProvider? _dataProvider;
 
