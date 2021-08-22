@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:konmoaref/Helpers/get_audioname.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
@@ -22,6 +23,8 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
   @override
   Widget build(BuildContext context) {
     final _dataProvider = Provider.of<DataProvider>(context);
+    _dataProvider.assetsAudioPlayer.isPlaying.length
+        .then((value) => print(value));
     return TextButton(
       child: PlayerBuilder.isPlaying(
         player: _dataProvider.assetsAudioPlayer,
@@ -31,7 +34,11 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
                     _dataProvider.cloudAudioPlayingBool[widget.index] == true &&
                     play
                 ? Icons.pause
-                : Icons.play_arrow,
+                : play &&
+                        _dataProvider.cloudAudioPlayingBool[widget.index] ==
+                            true
+                    ? FontAwesomeIcons.circle
+                    : Icons.play_arrow,
             color: Colors.white,
           );
         },

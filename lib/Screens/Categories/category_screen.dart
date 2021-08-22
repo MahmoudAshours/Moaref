@@ -10,7 +10,7 @@ class CategoryScreen extends StatefulWidget {
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
- 
+
 class _CategoryScreenState extends State<CategoryScreen> {
   DataProvider? _dataProvider;
 
@@ -84,7 +84,8 @@ class CategoryPicker extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height - 100,
                   child: GridView.count(
-                    crossAxisCount: 2,
+                    crossAxisCount:
+                        MediaQuery.of(context).size.width ~/ 180,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 50,
                     children: snapshot.data!
@@ -95,9 +96,8 @@ class CategoryPicker extends StatelessWidget {
                                 onTap: () {
                                   _dataProvider!.changeCategory(value);
                                   showModalBottomSheet(
-                                    context: context,
-                                    builder: (_) => CategoryDataStream(),
-                                  );
+                                      context: context,
+                                      builder: (_) => CategoryDataStream());
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
