@@ -24,13 +24,13 @@ class UploadProvider extends ChangeNotifier {
   Future<Null> uploadFile(context) async {
     FilePickerResult? result;
     try {
-      result = await FilePicker.platform.pickFiles(
-          type: FileType.custom, allowedExtensions: ['mp3,mp4,m4a,mov']);
+      result = await FilePicker.platform.pickFiles(type: FileType.audio);
     } catch (e) {
       print(e);
     }
     if (result != null) {
       File file = File(result.files.single.path!);
+      print(file.path);
       sounds!.add(file.path);
       uploadedAudioIsPlaying.add(false);
       notifyListeners();

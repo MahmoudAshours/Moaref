@@ -29,30 +29,39 @@ class FfmpegProvider extends ChangeNotifier {
   }
 
   Future<String> startRendering(
-    List<String?> text,
-    String? audioPath,
-    String? videoPath,
-    BuildContext context,
-    String? language,
-  ) async {
-    var _centeredText = text[0]!
-        .replaceAll('.mp3', '')
-        .replaceAll(RegExp(r'\(\d+\)'), '')
-        .remover()
-        .replaceAll(',', '')
-        .replaceAll('"', '')
-        .split('-')[0]
-        .trim();
+      List<String?> text,
+      String? audioPath,
+      String? videoPath,
+      BuildContext context,
+      String? language,
+      String orientation) async {
+    String _centeredText;
+    String _topText;
+    String _sheikhName;
+    if (text.length == 3) {
+      _centeredText = text[0]!;
+      _topText = text[1]!;
+      _sheikhName = text[2]!;
+    } else {
+      _centeredText = text[0]!
+          .replaceAll('.mp3', '')
+          .replaceAll(RegExp(r'\(\d+\)'), '')
+          .remover()
+          .replaceAll(',', '')
+          .replaceAll('"', '')
+          .split('-')[0]
+          .trim();
 
-    final _topText = text[1]!.remover().trim();
+      _topText = text[1]!.remover().trim();
 
-    final _sheikhName = text[0]!.contains('-')
-        ? text[0]!
-            .split('-')[1]
-            .replaceAll('.mp3', '')
-            .replaceAll(RegExp(r'\(\d+\)'), '')
-            .trim()
-        : "";
+      _sheikhName = text[0]!.contains('-')
+          ? text[0]!
+              .split('-')[1]
+              .replaceAll('.mp3', '')
+              .replaceAll(RegExp(r'\(\d+\)'), '')
+              .trim()
+          : "";
+    }
 
     try {
       MediaInformation mediaInformation =
@@ -76,26 +85,39 @@ class FfmpegProvider extends ChangeNotifier {
         '$_centeredText',
         width: "((w-text_w)/2)",
         height: "((h-text_h)/2)",
-        fontSize: '(w/25)-${_centeredText.length}/10',
+        fontSize: orientation == "mobile"
+            ? '(w/25)-${_centeredText.length}/10'
+            : '(w/30)-${_centeredText.length}/10',
       );
 
       final _sheikhSection = _drawText(
         '$_sheikhName',
-        width: "((w-text_w)/2)-60",
-        height: "((h-text_h)/2)+60",
-        fontSize: '(w/25)-${_sheikhName.length}/10',
+        width:
+            orientation == "mobile" ? "((w-text_w)/2)-60" : "((w-text_w)/2)-80",
+        height:
+            orientation == "mobile" ? "((h-text_h)/2)+60" : "((h-text_h)/2)+90",
+        fontSize: orientation == "mobile"
+            ? '(w/25)-${_sheikhName.length}/10'
+            : '(w/35)-${_sheikhName.length}/8',
         fontColor: '#FFFFFF',
       );
 
       final _categorySection = _drawText(
         '$_topText',
-        width: "((w-text_w)/2)+60",
-        height: "((h-text_h)/2)-60",
+        width:
+            orientation == "mobile" ? "((w-text_w)/2)+60" : "((w-text_w)/2)+70",
+        height:
+            orientation == "mobile" ? "((h-text_h)/2)-60" : "((h-text_h)/2)-90",
         fontSize: '(w/40)-${_topText.length}/10',
         fontColor: '#FFFFFF',
       );
+      if (orientation == 'tablet') {
+        var base = basename(videoPath!);
+        videoPath = videoPath.replaceFirst(
+            base, base.replaceFirst('mobile', 'youtube'));
+      }
       final _ffmpegCommand =
-          '-stream_loop -1 -i $videoPath -i $sound -shortest -map 0:v:0 -map 1:a:0 -y -vf "$_sheikhSection","$_titleSection","$_categorySection" $_outputPath';
+          '-stream_loop -1 -i $videoPath -i "$sound" -shortest -map 0:v:0 -map 1:a:0 -y -vf "$_sheikhSection","$_titleSection","$_categorySection" $_outputPath';
 
       _flutterFFmpeg.executeAsync(
         _ffmpegCommand,

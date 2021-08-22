@@ -24,6 +24,11 @@ class GalleryProvider extends ChangeNotifier {
     return await Dio().download(downloadData[0], downloadData[1]);
   }
 
+  static Future<Response> dioDownloadVideoTablet(
+      List<String> downloadData) async {
+    return await Dio().download(downloadData[0], downloadData[1]);
+  }
+
   Future setVideoPath(String path, {bool isUploaded = false}) async {
     if (!isUploaded) {
       String? fileName = path.replaceAll('jpg', 'mp4');
@@ -69,7 +74,11 @@ class GalleryProvider extends ChangeNotifier {
       final _dir = await getApplicationDocumentsDirectory();
       final _dirPath = _dir.path;
       try {
-        await compute((dioDownloadVideo), [videoUrl, "$_dirPath/$newUrl"]);
+        await Dio().download(videoUrl, "$_dirPath/$newUrl");
+        final _ytUrl = videoUrl.replaceFirst('mobile', 'youtube');
+        final _ytPath = "$_dirPath/${newUrl.replaceFirst('mobile', 'youtube')}";
+        await Dio().download(_ytUrl, _ytPath);
+        print(_ytPath);
       } catch (e) {
         print(e);
       }
