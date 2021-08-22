@@ -5,7 +5,6 @@ import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/record_provider.dart';
 import 'package:konmoaref/Screens/Recording/recording_info.dart';
 import 'package:konmoaref/Screens/Recording/recording_widget.dart';
-import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:konmoaref/Helpers/map_indexed.dart';
@@ -56,7 +55,6 @@ class _RecordingState extends State<Recording> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              LanguagesDropDownList(),
               SizedBox(height: 20),
               BounceInUp(
                 duration: Duration(seconds: 1),

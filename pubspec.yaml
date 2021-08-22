@@ -49,7 +49,7 @@ dependencies:
   connectivity_plus: ^1.0.6
   cached_network_image: ^3.1.0
   share_plus: ^2.1.4
-  
+   
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +61,7 @@ dev_dependencies:
 flutter_native_splash:
   image: assets/Images/logo.png
   color: "FFFFFF"
-  fill: true
+  fill: false
 
 flutter_icons:
   android: "launcher_icon"

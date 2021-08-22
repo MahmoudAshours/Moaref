@@ -2,7 +2,6 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/upload_provider.dart';
-import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +25,7 @@ class _UploadFileState extends State<UploadFile> {
   @override
   void dispose() {
     super.dispose();
-    uploadProvider.assetsAudioPlayer
-        .stop()
-        .then((value) => dataProvider.nullifymp3());
+    uploadProvider.assetsAudioPlayer.stop();
   }
 
   @override
@@ -43,7 +40,6 @@ class _UploadFileState extends State<UploadFile> {
       body: SafeArea(
         child: Column(
           children: [
-            LanguagesDropDownList(),
             SizedBox(height: 20),
             Image.asset('assets/Images/upload_media.png'),
             SizedBox(height: 7),
@@ -63,11 +59,11 @@ class _UploadFileState extends State<UploadFile> {
                       child: Column(
                         children: uploadProvider.sounds!
                             .mapIndexed(
-                              (e, i) => FadeInUp(
+                              (audioName, i) => FadeInUp(
                                 delay: Duration(milliseconds: 20 * i),
                                 child: ListTile(
-                                  trailing:
-                                      Text('${e.toString().split('/')[7]}'),
+                                  trailing: Text(
+                                      '${audioName.toString().split('/')[9]}'),
                                   leading: TextButton(
                                     child: PlayerBuilder.isPlaying(
                                       player: uploadProvider.assetsAudioPlayer,
@@ -103,9 +99,10 @@ class _UploadFileState extends State<UploadFile> {
 
                                       if (uploadProvider.sound ==
                                           Sound.IsNotPlaying) {
+                                        print(audioName);
                                         uploadProvider.playSoundData(i);
-                                        dataProvider.setAudioFile(
-                                            '${e.toString().split('/')[7]}');
+                                        uploadProvider.uploadedAudioPath =
+                                            audioName;
                                       } else {
                                         if ((uploadProvider
                                                     .uploadedAudioIsPlaying
@@ -122,7 +119,7 @@ class _UploadFileState extends State<UploadFile> {
                                         } else {
                                           uploadProvider.playSoundData(i);
                                           dataProvider.setAudioFile(
-                                              '${e.toString().split('/')[7]}');
+                                              '${audioName.toString().split('/')[7]}');
                                         }
                                       }
                                     },

@@ -84,15 +84,15 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
             Positioned(
-              top: MediaQuery.of(context).size.height / 4,
+              top: MediaQuery.of(context).size.height / 5,
               left: MediaQuery.of(context).size.width / 4.8,
               child: Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.5,
-                  height: MediaQuery.of(context).size.height / 1.5,
+                  height: MediaQuery.of(context).size.height / 1,
                   child: GridView.count(
-                    crossAxisSpacing: 30,
+                    crossAxisSpacing: MediaQuery.of(context).size.width / 7,
                     crossAxisCount: 2,
                     mainAxisSpacing: 30,
                     physics: NeverScrollableScrollPhysics(),
