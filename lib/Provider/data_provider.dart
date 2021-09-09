@@ -160,6 +160,7 @@ class DataProvider extends ChangeNotifier {
         respectSilentMode: false,
       );
       cloudAudioPicked = _apiUrl;
+      notifyListeners();
       _sound = Sound.IsPlaying;
       notifyListeners();
     } on Exception catch (e) {
