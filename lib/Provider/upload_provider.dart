@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:konmoaref/Models/sound_state.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:konmoaref/Models/sound_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
@@ -21,20 +21,20 @@ class UploadProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Null> uploadFile(context) async {
-    FilePickerResult? result;
-    try {
-      result = await FilePicker.platform.pickFiles(type: FileType.audio);
-    } catch (e) {
-      print(e);
-    }
+  Future<void> uploadFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.audio,
+    );
+
     if (result != null) {
-      File file = File(result.files.single.path!);
+      File file = File(result.files.single.path);
       print(file.path);
       sounds!.add(file.path);
       uploadedAudioIsPlaying.add(false);
       notifyListeners();
-    } else {}
+    } else {
+      print('object');
+    }
   }
 
   Future<void>? fetchSoundData(int index) {
