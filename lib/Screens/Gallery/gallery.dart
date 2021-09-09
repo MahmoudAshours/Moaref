@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
+import 'package:konmoaref/Helpers/dialog.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
 import 'package:konmoaref/Screens/Gallery/blurred_image.dart';
 import 'package:konmoaref/Screens/Gallery/custom_imageloader.dart';
@@ -15,6 +16,9 @@ import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Gallery extends StatefulWidget {
+  final String audioPath;
+
+  const Gallery({Key? key, required this.audioPath}) : super(key: key);
   @override
   _GalleryState createState() => _GalleryState();
 }
@@ -46,6 +50,15 @@ class _GalleryState extends State<Gallery> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: _provider.videoPath.isNotEmpty
+          ? FloatingActionButton.extended(
+              label: Text('أنشئ المقطع'),
+              onPressed: () => showModalBottomSheet(
+                context: context,
+                builder: (_) => CustomizedDialog(audioPicked: widget.audioPath),
+              ),
+            )
+          : SizedBox(),
       appBar: AppBar(
         backgroundColor: Color(0xff5E713B),
         toolbarHeight: 30,
@@ -81,12 +94,12 @@ class _GalleryState extends State<Gallery> {
           ),
           Positioned(
             top: 80,
-            left: 50,
+            left: MediaQuery.of(context).size.width / 4,
             height: 170,
-            width: MediaQuery.of(context).size.width / 1.4,
+            width: MediaQuery.of(context).size.width / 1.7,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
-              child: _provider.videoPath!.isNotEmpty
+              child: _provider.videoPath.isNotEmpty
                   ? VideoPlayer(_videoPlayerController)
                   : Container(
                       color: Colors.transparent,
@@ -185,7 +198,7 @@ class _GalleryState extends State<Gallery> {
 
   _initalizeNewVideo() async {
     _videoPlayerController =
-        VideoPlayerController.file(File(_provider.videoPath!));
+        VideoPlayerController.file(File(_provider.videoPath));
     await _videoPlayerController.initialize();
     _videoPlayerController.play();
   }
