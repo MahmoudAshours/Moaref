@@ -7,9 +7,7 @@ import 'package:konmoaref/Provider/ffmpeg_provider.dart';
 import 'package:konmoaref/Provider/gallery_provider.dart';
 import 'package:konmoaref/Provider/record_provider.dart';
 import 'package:konmoaref/Provider/upload_provider.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class FFmpegOperations extends StatefulWidget {
   @override
@@ -32,84 +30,50 @@ class _FFmpegOperationsState extends State<FFmpegOperations> {
     return Scaffold(
       bottomSheet: Container(
         height: 100,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('اختر مقطعك'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                if (_recordProvider.recordPath!.isNotEmpty)
-                  AudioChecked(
-                    onItemPressed: (audio) {
-                      setState(() => _audioPicked = audio);
-                    },
-                    audioPicked: _audioPicked,
-                    iconAudio: _recordProvider.recordPath!,
-                    icon: FaIcon(FontAwesomeIcons.microphoneAlt),
-                  ),
-                if (_uploadProvider.uploadedAudioPath!.isNotEmpty)
-                  AudioChecked(
-                    onItemPressed: (audio) {
-                      print(audio);
-                      setState(() => _audioPicked = audio);
-                    },
-                    audioPicked: _audioPicked,
-                    iconAudio: _uploadProvider.uploadedAudioPath!,
-                    icon: FaIcon(FontAwesomeIcons.upload),
-                  ),
-                if (_dataProvider.cloudAudioPicked != null &&
-                    _dataProvider.cloudAudioPicked!.isNotEmpty)
-                  AudioChecked(
-                    audioPicked: _audioPicked,
-                    onItemPressed: (audio) {
-                      setState(() => _audioPicked = audio);
-                    },
-                    iconAudio: _dataProvider.cloudAudioPicked!,
-                    icon: FaIcon(FontAwesomeIcons.fileAudio),
-                  )
-              ],
-            ),
-          ],
-        ),
-        color: Colors.white,
-      ),
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            fit: StackFit.expand,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CachedNetworkImage(
-                progressIndicatorBuilder: (BuildContext context, String url,
-                        DownloadProgress downloadProgress) =>
-                    CircularProgressIndicator(value: downloadProgress.progress),
-                errorWidget: (context, String url, error) => Icon(Icons.error),
-                imageUrl:
-                    "https://nekhtem.com/kariem/ayat/konMoarfaan/video_l/images/${basename(_galleryProvider.videoPath!.replaceAll('mp4', 'jpg'))}",
-                fit: BoxFit.cover,
-              ),
-              MobileChecked(
-                orientaitonPicked: _orientationPicked,
-                onItemPressed: (or) {
-                  setState(() {
-                    _orientationPicked = or;
-                  });
-                },
-              ),
-              OrientationChecked(
-                orientaitonPicked: _orientationPicked,
-                onItemPressed: (or) {
-                  setState(() {
-                    _orientationPicked = or;
-                  });
-                },
+              Text('اختر مقطعك'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  if (_recordProvider.recordPath!.isNotEmpty)
+                    AudioChecked(
+                      onItemPressed: (audio) {
+                        setState(() => _audioPicked = audio);
+                      },
+                      audioPicked: _audioPicked,
+                      iconAudio: _recordProvider.recordPath!,
+                      icon: FaIcon(FontAwesomeIcons.microphoneAlt),
+                    ),
+                  if (_uploadProvider.uploadedAudioPath!.isNotEmpty)
+                    AudioChecked(
+                      onItemPressed: (audio) {
+                        print(audio);
+                        setState(() => _audioPicked = audio);
+                      },
+                      audioPicked: _audioPicked,
+                      iconAudio: _uploadProvider.uploadedAudioPath!,
+                      icon: FaIcon(FontAwesomeIcons.upload),
+                    ),
+                  if (_dataProvider.cloudAudioPicked != null &&
+                      _dataProvider.cloudAudioPicked!.isNotEmpty)
+                    AudioChecked(
+                      audioPicked: _audioPicked,
+                      onItemPressed: (audio) {
+                        setState(() => _audioPicked = audio);
+                      },
+                      iconAudio: _dataProvider.cloudAudioPicked!,
+                      icon: FaIcon(FontAwesomeIcons.fileAudio),
+                    )
+                ],
               ),
             ],
           ),
         ),
+        color: Colors.white,
       ),
       floatingActionButton: FloatingActionButton(
         child: FaIcon(FontAwesomeIcons.play),
@@ -181,89 +145,6 @@ class _FFmpegOperationsState extends State<FFmpegOperations> {
             );
           }
         },
-      ),
-    );
-  }
-}
-
-class OrientationChecked extends StatelessWidget {
-  final String orientaitonPicked;
-
-  final ValueChanged<String> onItemPressed;
-
-  const OrientationChecked(
-      {Key? key, required this.orientaitonPicked, required this.onItemPressed})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      key: key,
-      onTap: () {
-        onItemPressed('tablet');
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Stack(
-            children: [
-              CircleAvatar(
-                child: FaIcon(
-                  FontAwesomeIcons.tablet,
-                  color: Colors.white,
-                ),
-              ),
-              orientaitonPicked == 'tablet'
-                  ? FaIcon(
-                      FontAwesomeIcons.solidCheckCircle,
-                      color: Colors.green,
-                      size: 15,
-                    )
-                  : SizedBox(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class MobileChecked extends StatelessWidget {
-  final String orientaitonPicked;
-  final ValueChanged<String> onItemPressed;
-
-  const MobileChecked(
-      {Key? key, required this.orientaitonPicked, required this.onItemPressed})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      key: key,
-      onTap: () {
-        onItemPressed('mobile');
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Stack(
-            children: [
-              CircleAvatar(
-                child: FaIcon(
-                  FontAwesomeIcons.mobile,
-                  color: Colors.white,
-                ),
-              ),
-              orientaitonPicked == 'mobile'
-                  ? FaIcon(
-                      FontAwesomeIcons.solidCheckCircle,
-                      color: Colors.green,
-                      size: 15,
-                    )
-                  : SizedBox(),
-            ],
-          ),
-        ),
       ),
     );
   }
