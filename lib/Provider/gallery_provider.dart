@@ -8,13 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:konmoaref/Utils/connectivity_issues.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class GalleryProvider extends ChangeNotifier {
   late String url;
   StreamController<List<String>> galleryLinks = StreamController.broadcast();
-  String? videoPath = "";
+  String videoPath = "";
   List<String> customWallpapers = [];
   late Map downloadInfo = {};
   // ignore: must_call_super
@@ -89,7 +88,6 @@ class GalleryProvider extends ChangeNotifier {
   }
 
   Future uploadVideoFile(BuildContext context) async {
-    Permission.accessMediaLocation.request();
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.video,
       dialogTitle: 'اختر مقطعا مناسب',
@@ -97,7 +95,7 @@ class GalleryProvider extends ChangeNotifier {
 
     if (result != null) {
       try {
-        File file = File(result.files.first.path!);
+        File file = File(result.files.first.path);
         customWallpapers.add(file.path);
         notifyListeners();
       } catch (e) {
