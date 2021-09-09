@@ -20,6 +20,7 @@ class FfmpegProvider extends ChangeNotifier {
   final FlutterFFprobe _flutterFFprobe = FlutterFFprobe();
   double? _videoDuration;
   String? fontPath;
+  double percentage = 0;
   _drawText(String text,
       {String height = "(h-text_h)/2",
       String width = "(w-text_w)/2",
@@ -76,7 +77,8 @@ class FfmpegProvider extends ChangeNotifier {
       sound = audioPath;
       fontPath = await _getFontPath(directory, language!);
       _config.setFontDirectory(fontPath!, null);
-
+      percentage = 0;
+      notifyListeners();
       _config.enableStatisticsCallback(this.statisticsCallback);
 
       final _outputPath = join(directory.path, "output.mp4");
@@ -119,27 +121,33 @@ class FfmpegProvider extends ChangeNotifier {
       final _ffmpegCommand =
           '-stream_loop -1 -i $videoPath -i "$sound" -shortest -map 0:v:0 -map 1:a:0 -y -vf "$_sheikhSection","$_titleSection","$_categorySection" $_outputPath';
 
-      _flutterFFmpeg.executeAsync(
-        _ffmpegCommand,
-        (completed) => GallerySaver.saveVideo(_outputPath).then(
-          (bool? success) {
-            Fluttertoast.showToast(
-                msg: "تم الانتهاء من المقطع",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 24.0);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => RenderedVideoPreview(videoPath: _outputPath),
-              ),
-            );
-            notifyListeners();
-          },
-        ),
-      );
+      _flutterFFmpeg.executeAsync(_ffmpegCommand, (completed) {
+        if (completed.returnCode == 0)
+          GallerySaver.saveVideo(_outputPath).then(
+            (bool? success) {
+              if (success!) {
+                percentage = 0;
+                notifyListeners();
+                Fluttertoast.showToast(
+                    msg: "تم الانتهاء من المقطع",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                    fontSize: 24.0);
+                Navigator.of(context).pop();
+                Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        RenderedVideoPreview(videoPath: _outputPath),
+                  ),
+                );
+                notifyListeners();
+              }
+            },
+          );
+      });
       return _outputPath;
     } catch (e) {
       print(e);
@@ -147,18 +155,16 @@ class FfmpegProvider extends ChangeNotifier {
     return '';
   }
 
-  cancelOperation() => _flutterFFmpeg.cancel();
+  Future<void> cancelOperation() async {
+    percentage = 0;
+    notifyListeners();
+    await _flutterFFmpeg.cancel();
+  }
 
   void statisticsCallback(Statistics statistics) {
-    double percentage = ((statistics.time / 1000) / _videoDuration!) * 100;
-    Fluttertoast.showToast(
-        msg: "${percentage.toStringAsFixed(0)}%\n جاري العمل على المقطع",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.orange,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    double _percentage = ((statistics.time / 1000) / _videoDuration!) * 100;
+    percentage = _percentage;
+    notifyListeners();
   }
 
   Future<String> getSoundPath(Directory directory, String cloudAudio) async {
