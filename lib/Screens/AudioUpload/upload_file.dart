@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/upload_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:konmoaref/Screens/Gallery/gallery.dart';
+import 'package:konmoaref/Screens/MacScreens/macgallery_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:konmoaref/Helpers/map_indexed.dart';
 
@@ -18,12 +22,13 @@ class _UploadFileState extends State<UploadFile> {
   @override
   void didChangeDependencies() {
     dataProvider = Provider.of<DataProvider>(context);
-    uploadProvider = Provider.of<UploadProvider>(context, listen: true);
+    uploadProvider = Provider.of<UploadProvider>(context, listen: false);
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
+    print('whyy');
     super.dispose();
     uploadProvider.assetsAudioPlayer.stop();
   }
@@ -31,6 +36,21 @@ class _UploadFileState extends State<UploadFile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Consumer<UploadProvider>(
+        builder: (_, s, d) => s.uploadedAudioPath!.isNotEmpty
+            ? FloatingActionButton.extended(
+                label: Text('التالي'),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => Platform.isMacOS
+                          ? MacGallery(
+                              audioPath: uploadProvider.uploadedAudioPath!)
+                          : Gallery(
+                              audioPath: uploadProvider.uploadedAudioPath!)),
+                ),
+              )
+            : SizedBox(),
+      ),
       appBar: AppBar(
         backgroundColor: Color(0xffD9DED5),
         toolbarHeight: 30,
@@ -63,7 +83,7 @@ class _UploadFileState extends State<UploadFile> {
                                 delay: Duration(milliseconds: 20 * i),
                                 child: ListTile(
                                   trailing: Text(
-                                      '${audioName.toString().split('/')[9]}'),
+                                      '${audioName.toString().split('/')[6]}'),
                                   leading: TextButton(
                                     child: PlayerBuilder.isPlaying(
                                       player: uploadProvider.assetsAudioPlayer,
@@ -149,14 +169,24 @@ class _UploadFileState extends State<UploadFile> {
                       ),
                     ),
                   ),
-            _uploadAudioButton(context),
+            UploadAudioButton(uploadProvider: uploadProvider),
           ],
         ),
       ),
     );
   }
+}
 
-  FadeInUp _uploadAudioButton(BuildContext context) {
+class UploadAudioButton extends StatelessWidget {
+  const UploadAudioButton({
+    Key? key,
+    required this.uploadProvider,
+  }) : super(key: key);
+
+  final UploadProvider uploadProvider;
+
+  @override
+  Widget build(BuildContext context) {
     return FadeInUp(
       duration: Duration(milliseconds: 500),
       child: Center(
@@ -166,7 +196,7 @@ class _UploadFileState extends State<UploadFile> {
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Color(0xff364122)),
             ),
-            onPressed: () => uploadProvider.uploadFile(context),
+            onPressed: () async => await uploadProvider.uploadFile(),
             child: Text(
               'إضافة ملف صوتي',
               style: TextStyle(color: Colors.white),
