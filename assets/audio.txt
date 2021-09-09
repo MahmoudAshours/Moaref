@@ -1,2 +1,0 @@
-file 'sound.mp3'
-outpoint 4.284
