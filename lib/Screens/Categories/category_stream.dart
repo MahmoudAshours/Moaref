@@ -7,7 +7,7 @@ import 'package:konmoaref/Helpers/map_indexed.dart';
 
 class CategoryDataStream extends StatelessWidget {
   const CategoryDataStream({Key? key}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     final _dataProvider = Provider.of<DataProvider>(context);
