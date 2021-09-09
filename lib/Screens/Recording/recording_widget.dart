@@ -14,39 +14,40 @@ class RecordingImage extends StatelessWidget {
 
     soundProvider.isRecordingListener();
     return soundProvider.recording
-        ? Center(
-            child: AvatarGlow(
-              glowColor: Colors.orange,
-              endRadius: 100.0,
-              duration: Duration(milliseconds: 2000),
-              repeat: true,
-              showTwoGlows: true,
-              repeatPauseDuration: Duration(milliseconds: 100),
-              child: Material(
-                elevation: 18.0,
-                shape: CircleBorder(),
-                child: CircleAvatar(
-                  backgroundColor: kSecondaryColor,
-                  child: GestureDetector(
-                    onTap: () => soundProvider.endRecord(),
-                    child: FaIcon(FontAwesomeIcons.microphoneAlt, size: 40),
+        ? GestureDetector(
+            onTap: () => soundProvider.endRecord(),
+            child: Center(
+              child: AvatarGlow(
+                glowColor: Colors.orange,
+                endRadius: 100.0,
+                duration: Duration(milliseconds: 2000),
+                repeat: true,
+                showTwoGlows: true,
+                repeatPauseDuration: Duration(milliseconds: 100),
+                child: Material(
+                  elevation: 18.0,
+                  shape: CircleBorder(),
+                  child: CircleAvatar(
+                    backgroundColor: kSecondaryColor,
+                    child: FaIcon(FontAwesomeIcons.stop,
+                        size: 40, color: Colors.red),
+                    radius: 80.0,
                   ),
-                  radius: 80.0,
                 ),
               ),
             ),
           )
-        : Center(
-            child: CircleAvatar(
-              backgroundColor: kSecondaryColor,
-              child: GestureDetector(
-                onTap: () async => await soundProvider.recordSound(),
+        : GestureDetector(
+            onTap: () async => await soundProvider.recordSound(),
+            child: Center(
+              child: CircleAvatar(
+                backgroundColor: kSecondaryColor,
                 child: FaIcon(
                   FontAwesomeIcons.microphoneAlt,
                   size: 40,
                 ),
+                radius: 80.0,
               ),
-              radius: 80.0,
             ),
           );
   }

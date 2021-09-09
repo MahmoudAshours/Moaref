@@ -3,6 +3,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Provider/record_provider.dart';
+import 'package:konmoaref/Screens/Gallery/gallery.dart';
 import 'package:konmoaref/Screens/Recording/recording_info.dart';
 import 'package:konmoaref/Screens/Recording/recording_widget.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,18 @@ class _RecordingState extends State<Recording> {
   Widget build(BuildContext context) {
     soundProvider.isRecordingListener();
     return Scaffold(
+      floatingActionButton: Consumer<RecordProvider>(
+        builder: (_, s, d) => s.recordPath!.isNotEmpty
+            ? FloatingActionButton.extended(
+                label: Text('التالي'),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          Gallery(audioPath: soundProvider.recordPath!)),
+                ),
+              )
+            : SizedBox(),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         toolbarHeight: 30,
