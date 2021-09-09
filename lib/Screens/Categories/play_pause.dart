@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:konmoaref/Helpers/get_audioname.dart';
 import 'package:konmoaref/Models/sound_state.dart';
 import 'package:konmoaref/Provider/data_provider.dart';
@@ -23,8 +24,7 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
   @override
   Widget build(BuildContext context) {
     final _dataProvider = Provider.of<DataProvider>(context);
-    _dataProvider.assetsAudioPlayer.isPlaying.length
-        .then((value) => print(value));
+
     return TextButton(
       child: PlayerBuilder.isPlaying(
         player: _dataProvider.assetsAudioPlayer,
@@ -34,11 +34,7 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
                     _dataProvider.cloudAudioPlayingBool[widget.index] == true &&
                     play
                 ? Icons.pause
-                : play &&
-                        _dataProvider.cloudAudioPlayingBool[widget.index] ==
-                            true
-                    ? FontAwesomeIcons.circle
-                    : Icons.play_arrow,
+                : Icons.play_arrow,
             color: Colors.white,
           );
         },
@@ -58,15 +54,8 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
 
         if (_dataProvider.sound == Sound.IsNotPlaying) {
           await _dataProvider.playSoundData(widget.snapshot, widget.index);
-          Fluttertoast.showToast(
-              msg:
-                  "تم اختيار \n${FormattedAudioName.cloudAudioName(_dataProvider.cloudAudioPicked)}",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 3,
-              backgroundColor: Colors.orange,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          if (!Platform.isMacOS) pickedToast(_dataProvider);
+          setState(() {});
         } else {
           if ((_dataProvider.cloudAudioPlayingBool.isNotEmpty &&
                   !_dataProvider.cloudAudioPlayingBool[widget.index]) ||
@@ -75,18 +64,22 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
             _dataProvider.nullifymp3();
           } else {
             _dataProvider.playSoundData(widget.snapshot, widget.index);
-            Fluttertoast.showToast(
-                msg:
-                    "تم اختيار \n${FormattedAudioName.cloudAudioName(_dataProvider.cloudAudioPicked)}",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 3,
-                backgroundColor: Colors.orange,
-                textColor: Colors.white,
-                fontSize: 16.0);
+            if (!Platform.isMacOS) pickedToast(_dataProvider);
           }
         }
       },
     );
+  }
+
+  void pickedToast(DataProvider _dataProvider) {
+    Fluttertoast.showToast(
+        msg:
+            "تم اختيار \n${FormattedAudioName.cloudAudioName(_dataProvider.cloudAudioPicked)}",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.orange,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }
