@@ -61,10 +61,10 @@ class _RenderedVideoPreviewState extends State<RenderedVideoPreview> {
 
   @override
   void dispose() async {
+    super.dispose();
     _videoPlayerController.pause();
     await _videoPlayerController.dispose();
     _chewieController!.dispose();
-    super.dispose();
   }
 
   Future _initializeVideo() async {
