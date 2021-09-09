@@ -24,7 +24,8 @@ class _LanguagesDropDownListState extends State<LanguagesDropDownList> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       textDirection: TextDirection.rtl,
       children: [
         StreamBuilder<List<String>>(
