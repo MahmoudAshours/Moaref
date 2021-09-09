@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:konmoaref/Provider/data_provider.dart';
 import 'package:konmoaref/Screens/Categories/category_stream.dart';
+import 'package:konmoaref/Screens/Gallery/gallery.dart';
+import 'package:konmoaref/Screens/MacScreens/macgallery_screen.dart';
 import 'package:konmoaref/Themes/theme.dart';
 import 'package:konmoaref/Utils/langs_categories.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +29,34 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Consumer<DataProvider>(
+        builder: (_, dataprovider, d) => dataprovider.cloudAudioPicked != null
+            ? FloatingActionButton.extended(
+                label: Text('التالي'),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => Platform.isMacOS
+                          ? MacGallery(
+                              audioPath: _dataProvider!.cloudAudioPicked!)
+                          : Gallery(
+                              audioPath: _dataProvider!.cloudAudioPicked!)),
+                ),
+              )
+            : SizedBox(),
+      ),
       appBar: AppBar(
         backgroundColor: kSecondaryColor,
-        toolbarHeight: 30,
+        toolbarHeight: 50,
         actionsIconTheme: IconThemeData(color: Colors.black),
         leading: GestureDetector(
           onTap: () => Navigator.of(context).pop(),
-          child: Icon(
-            Icons.arrow_back_ios,
-            size: 30,
-            color: Colors.black,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.arrow_back_ios,
+              size: 30,
+              color: Colors.black,
+            ),
           ),
         ),
         elevation: 0,
@@ -84,8 +106,7 @@ class CategoryPicker extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height - 100,
                   child: GridView.count(
-                    crossAxisCount:
-                        MediaQuery.of(context).size.width ~/ 180,
+                    crossAxisCount: MediaQuery.of(context).size.width ~/ 180,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 50,
                     children: snapshot.data!
